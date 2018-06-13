@@ -18,3 +18,5 @@
 requirejs(['js/Classes/Base'], function(d){
     console.log(new Base());
 });
+
+console.log()
