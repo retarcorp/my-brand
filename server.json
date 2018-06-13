@@ -1,0 +1,109 @@
+[
+    {
+        "name" : "tShirts",
+        "price" : 115.6,
+        "color" : "#f2e656",
+        "colorArray" : ["#f2e656", "#54EEF0", "#ADADAD", "#0510F8", "#E12001", "#258E29"],
+        "variants" :
+       [
+
+           {
+                "width" : 400,
+                "height" : 391,
+                "image" : "img/t-shirt2.png"
+                ,"workzone":{
+                        "x" : 115,
+                        "y" : 50,
+                        "width": 170
+                        ,"height":330
+                }
+           },
+
+           {
+               "width" : 400,
+               "height" : 389,
+               "image" : "img/t-shirt1.png"
+             ,"workzone":{
+               "x" : 115,
+               "y" : 50,
+               "width": 170
+             ,"height":330
+             }
+           },
+
+            {
+                "width" : 400,
+                "height" : 400,
+                "image" : "img/t-shirt3.png"
+                ,"workzone":{
+                    "x" : 150,
+                    "y" : 70,
+                    "width": 120
+                    ,"height":300
+                }
+            }
+
+        ]
+    },
+
+    {
+        "name" : "caps",
+        "price" : 125.6,
+        "color" : "#fff",
+       "variants" : 
+       [
+           {
+                "width" : 300,
+                "height" : 500,
+                "image" : "img/cap1.png"
+                ,"workzone":{
+                    "x" : 42,
+                    "y" : 34,
+                    "width": 150
+                    ,"height":330
+                }
+           },
+           {
+                "width" : 300,
+                "height" : 500,
+                "image" : "img/cap2.png"
+                ,"workzone":{
+                    "x" : 42,
+                    "y" : 34,
+                    "width": 150
+                    ,"height":330
+                }
+           },
+           {
+                "width" : 300,
+                "height" : 500,
+                "image" : "img/cap3.png"
+                ,"workzone":{
+                    "x" : 42,
+                    "y" : 34,
+                    "width": 150
+                    ,"height":330
+                }
+           }
+        ]
+    },
+
+    {
+        "name" : "cups",
+        "price" : 25.6,
+        "color" : "#666",
+        "variants" : [
+            {
+                "width" : 300,
+                "height" : 500,
+                "image" : "img/cup.jpg"
+                ,"workzone":{
+                     "x" : 42,
+                     "y" : 34,
+                     "width": 150
+                     ,"height":330
+                }
+            }
+        ]
+    }
+]
