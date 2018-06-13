@@ -85,6 +85,8 @@ const App = {
 
             const curr = App.GraphCore.currentWidget;
 
+            $('.btn-add-text').addClass('active');
+
             if (!(curr instanceof TextWidget)) {
                 let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof TextWidget);
 
@@ -107,6 +109,7 @@ const App = {
             this.Tabs.customization.base.removeClass('active');
 
             const curr = App.GraphCore.currentWidget;
+            $('.btn-add-text').removeClass('active');
 
             if (!(curr instanceof ImageWidget)) {
                 let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof ImageWidget);
@@ -128,6 +131,8 @@ const App = {
             this.Tabs.customization.print.removeClass('active');
             this.Tabs.customization.text.removeClass('active');
             this.Tabs.customization.base.removeClass('active');
+
+            $('.btn-add-text').removeClass('active');
         }
 
         ,onChangeText() {
@@ -357,6 +362,8 @@ const App = {
                 this.tabs.text.on('click', App.UI.onText.bind(App.UI) );
                 this.tabs.print.on('click', App.UI.onPrint.bind(App.UI) );
                 this.tabs.layer.on('click', App.UI.onLayer.bind(App.UI) );
+
+                $('.btn-add-text').addClass('active');
 
                 // Set toggling tabs on click 'em @DONE
             }
