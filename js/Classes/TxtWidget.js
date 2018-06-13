@@ -204,6 +204,8 @@ class TextWidget extends Widget {
 
                         //console.log(o_w, _w, _h, dx);
 
+                        console.log(dx)
+
                     }
 
                     break;
@@ -219,6 +221,8 @@ class TextWidget extends Widget {
 
                         this.size.width = _w;
                         resized = true;
+
+                        console.log(_h)
 
                     }
 

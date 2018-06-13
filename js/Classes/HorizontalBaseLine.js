@@ -58,6 +58,8 @@ class HorizontalBaseLine extends BaseLine {
             }else
                 curr.resizeBy(_dx, position, direction);
 
+            console.log(dx);
+
             this.attached = true;
             if (!this.directions.length) {
                 console.log('set direction')
@@ -69,12 +71,18 @@ class HorizontalBaseLine extends BaseLine {
 
         if (this.position.y - 5 < _y + _h && this.position.y + 5 > _y + _h) {
 
-            if (direction == "bottomLeft") _dx = -(this.position.y - _y - _h)/_int/_det;
-            else _dx = (this.position.y - _y - _h)/_int/_det;
+            if (direction == "bottomLeft") {
+                _dx = -(this.position.y - _y - _h)/_int/_det;
+            }
+            else {
+                _dx = (this.position.y - _y - _h)/_int/_det;
+            }
 
-            if (this.position.y - _y - _h < -2 && this.position.y - _y - _h > 2 && this.attached) {
+            //console.log(this.position.y - _y - _h);
+
+            if (this.position.y - _y - _h != 0 && this.attached) {
                 curr.resizeBy(_dx, position, "bottomLeft");
-            } else if (this.attached)
+            } else
                 curr.resizeBy(_dx, position, direction);
 
             //console.log(_dx);

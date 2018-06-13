@@ -1201,6 +1201,8 @@ const App = {
 
                     //console.log(this.resizeDirection, App.currentWorkzone.verticalLine.directions, App.currentWorkzone.horizontalLine.directions);
 
+                    console.log('start');
+
                     if ($.inArray(this.resizeDirection, App.currentWorkzone.verticalLine.directions) >= 0) {
                         App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
 
@@ -1236,6 +1238,8 @@ const App = {
 
                     this.realX = e.offsetX;
                     this.realY = e.offsetY;
+
+                    console.log('end');
 
                     //App.currentWorkzone.horizontalLine.checkSize(curr, this.resizeDirection);
                 }
