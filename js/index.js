@@ -299,6 +299,9 @@ const App = {
 
             App.isPreview = false;
 
+            $('.preview__picture')[0].style.width = App.currentProjectVariant.variant.size.width+'px';
+
+            App.UI.LightBox.content[0].style.background = "#fff";
             App.UI.LightBox.content[0].src = ctx.canvas.toDataURL('image/png');
 
         }
