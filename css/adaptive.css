@@ -1,0 +1,306 @@
+.adaptive-menu {
+    padding: 10px;
+    /* display: flex; */
+    display: none;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #363636;
+    z-index: 999999;
+}
+
+button{
+    border: none ;
+}
+
+@media screen and (max-width: 1200px){
+    .text-position{
+        flex-direction: column;
+        align-items: center;
+    }
+    .text-position> div{
+        display: flex;
+        justify-content: space-around;
+        width: 80%;
+        margin: 0;
+    }
+    .text-position> div{
+
+    }
+    .text-position> div:last-child{
+        margin-top: 10px;  
+    }
+}
+
+@media screen and (max-width: 1085px){
+    .brand-action {
+        /* flex-direction: column; */
+        width: 30%;
+        justify-content: space-between;
+    }
+    body{
+        padding-top: 60px;
+    }
+    .adaptive-menu{
+        display: flex;
+    }
+    #logo{
+        display: none;
+    }
+    .main-menu-list{
+        display: none;
+    }
+    .main-menu-list.active{
+        display: flex;
+    }
+
+    .main-menu-list{
+        display: none;
+        flex-direction: column;
+        text-align: center;
+        position: fixed;
+        background: #363636;
+        top: 50px;
+        z-index: 10000;
+    }
+
+    .main-menu-list li{
+        border-bottom: 1px solid #aaa;
+        margin: 0;
+    }
+
+    .main-menu-list li a{
+        display: block;
+        width: 100%;
+        padding: 10px;
+        height: 100%;
+    }
+    .brand-action button,
+    .brand-action .btn-add-project{
+        width: 30px;
+        height: 30px;
+        background: none;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100%;
+        border: none;
+    }
+
+    .brand-action button:hover{
+        background-color: #fff !important;
+        transform: scale(1.1);
+    }
+
+    .brand-action .btn-add-project{
+        background-image: url(../img/basket.png);
+        background-color: #fff;
+    }
+    .brand-action .btn-save-project{
+        background-image: url(../img/save-project.png);
+    }
+    .brand-action .btn-show-result{
+        background-image: url(../img/icon-show-project.png);
+    }
+    .brand-action .btn-exit{
+        background-image: url(../img/exit.png);
+    }
+    .fonts-text{
+        height: 180px;
+    }
+    .send-print-imgs{
+        height: 250px;
+    }
+}
+
+@media screen and (max-width: 768px){
+  
+
+    .editor-text .btns button{
+        color: rgba(0, 0, 0, 0);
+        width: 30px;
+    }
+
+    .editor-text .btns .btn-bold {
+        background: url(../img/bold.png) no-repeat;
+        background-position: center;
+        background-size: 100%;
+    }
+    .editor-text .btns .btn-cursive {
+        background: url(../img/italic.png) no-repeat;
+        background-position: center;
+        background-size: 100%;
+    }
+    .editor-text .btns .btn-underline {
+        background: url(../img/underline.png) no-repeat;
+        background-position: center;
+        background-size: 100%;
+    }
+
+    .copyright p {
+        font-size: 10px;
+    }
+
+    .workspace-btn-action{
+        width: 42px;
+        height: 42px;
+        background: url(../img/icon-setting.png) no-repeat;
+        background-position: center;
+        background-size: 80%;
+        cursor: pointer;
+    }
+    .brand-action {
+        /* flex-direction: column; */
+        width: 40%;
+        justify-content: space-between;
+    }
+    .brand-action button{
+        width: 30px;
+        height: 30px;
+        background: none;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100%;
+    }
+
+    .list-settings li a{
+        font-size:  16px;
+    }
+
+    .brand-action .btn-add-project{
+        background-image: url(../img/basket.png);
+    }
+    .brand-action .btn-save-project{
+        background-image: url(../img/save-project.png);
+    }
+    .brand-action .btn-exit{
+        background-image: url(../img/exit.png);
+    }
+
+    .text-position{
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+    }
+
+    .text-position>div{
+        width: 200px;
+        justify-content: space-between;
+    }
+
+    .text-position> div:last-child{
+        width: 100px;
+    }
+
+    .btn-color{
+        width: 20px;
+        margin: 0 4px;
+    }
+
+    .new-slider-workspace{
+        width: 100%;
+        left: 0;
+    }
+}
+
+@media screen and (max-width: 400px){
+    body, html{
+        height: auto;
+        overflow-x: hidden;
+    }
+    #main{
+        flex-direction: column;
+    }
+    .left-menu{
+        width: 100%;
+    }
+
+    .workspace{
+        margin: 0;
+    }
+    .slider-workspace{
+        position: static;
+        width: 60%;
+        margin: 0 auto;
+    }
+    .slider-workspace .img-slider{
+        width: 50%;
+    }
+    .right-workspace .settings{
+        order: 1;
+        margin-top: 15px;
+    }
+
+    .main-footer{
+        flex-direction: column;
+    }
+
+    #logo-footer{
+        width: 100%;
+    }
+
+    #logo-footer h1{
+        padding: 15px 15px 0;
+    }
+
+    .copyright{
+        padding: 10px 15px;
+    }
+
+    .text-position> div{
+        width: 50%;
+        justify-content: space-between;
+    }
+    .workspace-menu{
+        position: relative;
+    }
+    .brand-action{
+        width: 50%;
+    }
+    .workspace-menu{
+        height: 80px;
+        padding: 25px 20px;
+    }
+    .text-position> div:last-child{
+        margin-top: 0;  
+    }
+    .right-workspace .settings{
+        width: 100%;
+    }
+    .slider-arrow-left,
+    .slider-arrow-right{
+        width: 50px;
+        height: 50px;
+    }
+}
+
+.btn-ad-menu{
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background: url(../img/menu.png) no-repeat;
+    background-position: center;
+    background-size: 70%;
+}
+
+.logo{
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.logo h1,
+.logo span{
+    color: #eee !important; 
+}
+
+
+@media screen and (max-height: 600px){
+    #wrapper{
+        height: auto;
+    }
+}
+

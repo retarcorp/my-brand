@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/left-list.css">
+	<link rel="stylesheet" href="css/workspace.css">
+	<link rel="stylesheet" href="css/adaptive.css">
+	<link rel="stylesheet" href="css/jquery.mCustomScrollbar.css" />
+	<!-- <script src="server.json"></script> -->
+
+
+
+	<title>Мой бренд</title>
+</head>
+<body>
+	
+	<style>
+		</style>
+	<div id="wrapper">
+		<div class="adaptive-menu">
+			<button class="btn-ad-menu"></button>
+			<div class="logo">
+				<a href="#"><h1>Мой <span>бренд</span></h1></a>
+			</div>
+		</div>
+		<header class="main-header">
+			<div id="logo">
+				<a href="#"><h1>Мой <span>бренд</span></h1></a>
+			</div>
+			<nav class="main-menu">
+				<ul class="main-menu-list">
+					<li><a href="#">Каталог продуктов</a></li>
+					<li><a href="#">Доставка и оплата</a></li>
+					<li><a href="#">О проекте</a></li>
+					<li><a href="#">Связаться с нами</a></li>
+					<li><a href="#">Выход</a></li>
+				</ul>
+			</nav>
+		</header>
+		<main id="main">
+			<section class="left-menu">
+				<div class="main-list-item">
+					<ul class="list-settings">
+						<li class="text-set">
+							<a href="#">Текст</a>
+							<button class="btn-add-text new__text-widget"></button>
+						</li>
+						<div class="addition-text active">
+							<!-- <header>Добавление текста</header> -->
+							<div class="editor-text">
+								<textarea id="text-workspace" rows="4"></textarea>
+								<div class="btns">
+
+									<div class="text-position text-decoration">
+										<div>
+											<button class="btn-bold text_style" data-style="bold">Полужирный</button>
+											<button class="btn-cursive text_style" data-style="italic">Курсив</button>
+											<button class="btn-underline text_style" data-style="underline">Подчеркнутый</button>	
+										</div>
+										<div>
+											<input class="btn-color" id="colorValue" value="" name="имя" type="hidden">
+											<button class="btn-color jscolor {valueElement:'colorValue'}"></button>
+											<input class="btn-size" type="number" min="0" value="14">	
+										</div>
+										
+									</div>
+									
+								</div>
+								<div class="fonts-text" data-mcs-theme="dark">
+									<ul class="list-fonts">
+										<li class="fire cross">
+											<p class="text-value">MyLittlePonny</p>
+											<p class="font-name">Releway</p>
+										</li>
+										<li class="fire">Releway</li>
+										<li class="cross">Harrington</li>
+										<li class="fire cross">CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li>CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li>CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li class="fire">Releway</li>
+										<li class="cross">Harrington</li>
+										<li class="fire cross">CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li>CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li>CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li class="fire">Releway</li>
+										<li class="cross">Harrington</li>
+										<li class="fire cross">CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li>CASTELLAR</li>
+										<li>ALGERIAN</li>
+										<li>CASTELLAR</li>
+										<li>ALGERIAN</li>
+									</ul>
+								</div>
+							</div> 
+						</div>
+						<li class="print-set"><a href="#">Изображение</a></li>
+						<div class="addition-print">
+							<!-- <button class="new__image-widget _widget _simple">Создать виджет</button> -->
+							<div class="editor-print">
+								<ul class="controller-print">
+									<li class="pr-opt gallery active">База картинок</li>
+									<li class="pr-opt">Загрузить изображение</li>
+								</ul>
+								<div class="gallery-print active" data-mcs-theme="dark">
+									<div class="container-print">
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+										<div class="print-img">
+											<img src="http://place-hold.it/100x100" alt="">
+										</div>
+									</div>
+									
+								</div>
+
+								<div class="file-print">
+									<!-- <input type="file" value="Выберите картинку">
+									<button class="print__send button_simple">Отправить</button> -->
+									<div class="file_upload">
+										<button type="button print__send button_simple">Выбрать картинку</button>
+										
+										<input type="file">
+										<div>Файл не выбран</div>
+											
+									</div>
+									<div class="send-print-imgs" data-mcs-theme="dark">
+										<div class="new-print-container">
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<li class="basis-set"><a href="#">Слои</a></li>
+						<div class="addition-layer">
+							<div class="layers-set">
+								<div class="layers" data-mcs-theme="dark">
+									<ul class="layers__list">
+										<li class="text layer">
+											<p>Юностьssssssssssssssssssssssssssssssssssssssssssssssssssssssssss</p>
+											<p class="layer_btns">
+												<button class="to-top__layer"></button>
+												<button class="to-bottom__layer"></button>
+												<button class="delete__layer"></button>
+											</p>
+										</li>
+										<li class="space layer">
+											<p>Рабочая область</p>
+											<p class="layer_btns">
+												<button class="to-top__layer"></button>
+												<button class="to-bottom__layer"></button>
+												<button class="delete__layer"></button>
+											</p>
+										</li>
+									</ul>
+		
+									<!-- <button class="layer__up _widget _simple">Слой вверх</button>
+									<button class="layer__down _widget _simple">Слой вниз</button> -->
+									<!--<button class="delete__layer _simple _remove">Удалить слой</button>-->
+		
+								</div>
+							</div>
+		
+						</div>
+						<!-- <li class="basis-set"><a href="#"></a></li> -->
+					</ul>
+				</div>
+			</section>
+			<div class="preview">
+				
+				<div class="preview__picture picture">
+					<button class="preview__btn"></button>
+					<img class="picture__img" src="img/t-shirt1.png" alt="">
+				</div>
+			</div>
+			<!-- <section class="configuration">
+				<div class="addition-basis">
+					<header>Выберите основу</header>
+					<div class="basis-gallery" id="bases-container">
+						<div class="basis-img">
+							<img src="" alt="">
+						</div>
+					</div>
+					
+				</div>
+
+
+			</section> -->
+			<section class="right-workspace">
+				<div class="workspace-menu">
+					<button class="btn-create-brand">Создать бренд</button>
+					<!-- <div class="workspace-btn-action">
+						<button class="btn-work-action"></button>
+					</div> -->
+					<div class="brand-action">
+						<p title="Добавить в корзину"><button class="btn-add-project">Добавить в корзину</button></p>
+						<p title="Сохранить в свои проекты"><button class="btn-save-project">Сохранить в свои проекты</button>
+						<p title="Предпросмотр"><button class="btn-show-result">Предпросмотр</button>
+						<p title="Выйти без сохранения"><button class="btn-exit">Выйти без сохранения</button></p>
+					</div>
+				</div>
+				<div class="workspace">
+					<canvas width="400" height="400"></canvas>
+				</div>
+				<div class="workspace-color">
+					<button class="color"></button>
+					<button class="color"></button>
+					<button class="color"></button>
+					<button class="color"></button>
+					<button class="color"></button>
+					<button class="color"></button>
+					<button class="color"></button>
+				</div>
+				<div class="settings">
+					
+					<div class="slider-container">
+						
+					</div>
+
+					<div class="new-slider-workspace">
+						<button class="slider-arrow-left arrows"></button>
+						<button class="slider-arrow-right arrows"></button>
+					</div>
+					<!-- <div class="price">
+						<div class="costs">
+							<p>Стоимость:</p>
+							<p></p>
+						</div>
+						<button class="btn-buy">Купить</button>
+					</div> -->
+				</div>
+			</section>
+			<!-- <section class="description-basis">
+				<div class="basis-desciption">
+					<header>Футболка мужская классическая</header>
+					<p>Классическая футболка. 
+						Печать на футболке осуществляется
+						на специальном струйном принтере.
+						Кроме того, для футболок доступна
+						ручная и машинная вышивка
+						некоторых принтов и шрифтов.</p>
+					<div class="color-basis-set">
+						<label for="basis-color">Цвет основы: </label>
+						<input id="basis-color" name="имя" value="" type="hidden">
+						<button class="jscolor {valueElement: 'basis-color'}"></button>
+					</div>
+					<div class="price">
+						<div class="costs">
+							<p>Стоимость:</p>
+							<p></p>
+						</div>
+						<button class="btn-buy">Заказать</button>
+					</div>
+				</div>
+				
+			</section> -->
+		</main>
+		<section class="dialog-pay">
+			<form class="pay-form">
+				<input type="text">
+				<input type="text">
+				<input type="text">
+				<div class="pay-btns">
+					<input type="submit" value="Оплатить">
+					<input class="pay-cancel" type="button" value="Отмена">        
+				</div>
+			</form> 
+		</section>
+		<footer class="main-footer">
+			<div id="logo-footer">
+				<a href="#"><h1>Мой <span>бренд</span></h1></a>
+			</div>
+			<div class="copyright">
+				<p>Мой бренд (с) 2018. Все права защищены. Копирование и использование материалов сайта запрещено.</p>
+			</div>
+		</footer>
+	</div>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+	<script src = "js/require.js"> </script>
+    <script src = "js/TemplateFactory.js"> </script>  
+	<script src="js/index.js"></script>
+	<script src="js/jscolor.js"></script>
+
+	<script>
+		var btnAddaptiveMenu = document.querySelector('.btn-ad-menu');
+		var mainMenu = document.querySelector('.main-menu-list');
+		
+		//clear value brand action buttons
+		if (window.innerWidth <= 1085){
+			var btns = document.querySelectorAll('.brand-action button');
+			btns.forEach((btn) => {
+				btn.innerHTML = "";
+			});
+		}
+
+		btnAddaptiveMenu.addEventListener('click', (e) => {
+			e.preventDefault;
+			mainMenu.classList.toggle('active');
+		});
+	</script>
+
+	<script>
+		(function($){
+			$(window).on("load",function(){
+				$(".fonts-text").mCustomScrollbar({
+					theme:"dark"
+				});
+				$(".gallery-print").mCustomScrollbar({
+					theme:"dark"
+				});
+				$(".send-print-imgs").mCustomScrollbar({
+					theme:"dark"
+				});
+				$(".layers ul").mCustomScrollbar({
+					theme:"dark"
+				});
+			});
+		})(jQuery);
+	</script>
+	
+</body>
+</html>
