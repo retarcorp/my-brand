@@ -53,10 +53,14 @@ const App = {
 
             this.Keyboard.init();
 
+            this.Logos.init();
+
             this.Print.init();
             this.Canvas.init();
             this.Create.init();
         }
+
+        ,leftMenu: $('.left-menu')
 
         /**
          * Функция обработчик для событий. Срабатывает при выборе таба основы.
@@ -185,12 +189,14 @@ const App = {
         }
 
         ,onBaseColor(e) {
-            let data = $(e.target).data('color'),
-                image = App.currentProjectVariant.variant.image;
+            if (!App.isPreview) {
+                let data = $(e.target).data('color'),
+                    image = App.currentProjectVariant.variant.image;
 
-            if (data) {
-                App.currentProjectVariant.variant.setImageData(App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, image, data));
-                App.Project.settings.color = data;
+                if (data) {
+                    App.currentProjectVariant.variant.setImageData(App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, image, data));
+                    App.Project.settings.color = data;
+                }
             }
         }
 
@@ -286,23 +292,33 @@ const App = {
             }
         }
 
-        ,onPreview() {
-            App.UI.LightBox.box.addClass('active');
-            App.isPreview = true;
+        ,onPreview(e) {
+            //App.UI.LightBox.box.addClass('active');
+           // App.UI.LightBox.preview.addClass('active');
 
-            let ctx = document.createElement('canvas').getContext('2d');
+            if (App.isPreview) {
+                App.UI.LightBox.closeBlock(e)
+            } else {
+                App.UI.leftMenu.addClass('on-preview');
+                App.UI.BaseList.colorContainer.addClass('on-preview');
+                App.isPreview = true;
+            }
 
-            ctx.canvas.width = App.currentProjectVariant.variant.size.width;
-            ctx.canvas.height = App.currentProjectVariant.variant.size.height;
 
-            App.currentProjectVariant.render(ctx);
 
-            App.isPreview = false;
-
-            $('.preview__picture')[0].style.width = App.currentProjectVariant.variant.size.width+'px';
-
-            App.UI.LightBox.content[0].style.background = "#fff";
-            App.UI.LightBox.content[0].src = ctx.canvas.toDataURL('image/png');
+            // let ctx = document.createElement('canvas').getContext('2d');
+            //
+            // ctx.canvas.width = App.currentProjectVariant.variant.size.width;
+            // ctx.canvas.height = App.currentProjectVariant.variant.size.height;
+            //
+            // App.currentProjectVariant.render(ctx);
+            //
+            // App.isPreview = false;
+            //
+            // $('.preview__picture')[0].style.width = App.currentProjectVariant.variant.size.width+'px';
+            //
+            // App.UI.LightBox.content[0].style.background = "#fff";
+            // App.UI.LightBox.content[0].src = ctx.canvas.toDataURL('image/png');
 
         }
 
@@ -845,10 +861,13 @@ const App = {
             }
 
             ,closeBlock(e) {
-                e.stopPropagation();
 
-                if ($(e.target).hasClass('preview') || $(e.target).hasClass('preview__btn'))
-                    this.box.removeClass('active');
+                App.isPreview = false;
+                App.UI.leftMenu.removeClass('on-preview');
+                App.UI.BaseList.colorContainer.removeClass('on-preview');
+
+                // if ($(e.target).hasClass('preview') || $(e.target).hasClass('preview__btn'))
+                //     this.box.removeClass('active');
             }
 
             ,box: $('.preview')
@@ -859,6 +878,16 @@ const App = {
             init() {
                 document.addEventListener('keydown', App.UI.onDelete);
             }
+        }
+
+        ,Logos: {
+            init() {
+                this.workspace.addClass('active');
+                this.logo.removeClass('active');
+            }
+
+            ,workspace: $('.right-workspace')
+            ,logo: $('.workspace-print')
         }
 
         /**
@@ -959,14 +988,14 @@ const App = {
          * @param {string} path - путь к серверу.
          */
 
-        ,postJSON(path){
+        ,postJSON(path, data = null){
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest;
                 xhr.open("POST",path, true);
                 xhr.onload = () => {
                     resolve(JSON.parse(xhr.responseText));
                 }
-                xhr.send(null);
+                xhr.send(data);
                 
             });
         }
@@ -1161,26 +1190,29 @@ const App = {
         }
 
         ,mouseDown(e) {
-            const curr  = this.findSprite( new Position(e.offsetX, e.offsetY));
-            let resizeOpt;
-            this.setCurrentWidget(curr);
+            if (!App.isPreview) {
 
-            if (curr) {
-                if ( (resizeOpt = curr.resizeOn(new Position(e.offsetX, e.offsetY))).resize ) {
-                    this.resize = true;
-                    this.resizeDirection = resizeOpt.direction;
-                } else {
-                    this.dragged = true;
+                const curr  = this.findSprite( new Position(e.offsetX, e.offsetY));
+                let resizeOpt;
+                this.setCurrentWidget(curr);
+
+                if (curr) {
+                    if ( (resizeOpt = curr.resizeOn(new Position(e.offsetX, e.offsetY))).resize ) {
+                        this.resize = true;
+                        this.resizeDirection = resizeOpt.direction;
+                    } else {
+                        this.dragged = true;
+                    }
+
+                    $('body').addClass('_no-select');
                 }
 
-                $('body').addClass('_no-select');
+                this.lastX = e.offsetX;
+                this.lastY = e.offsetY;
+
+                this.realX = e.offsetX;
+                this.realY = e.offsetY;
             }
-
-            this.lastX = e.offsetX;
-            this.lastY = e.offsetY;
-
-            this.realX = e.offsetX;
-            this.realY = e.offsetY;
         }
 
         ,mouseUp(e) {
@@ -1190,86 +1222,87 @@ const App = {
         }
 
         ,mouseMove(e) {
-            const curr = this.currentWidget;
-
-            if (this.resize) {
-                if (curr) {
-                    let dx = e.offsetX - this.lastX,
-                        dsx = e.offsetX - this.realX,
-                        dy = e.offsetY - this.lastY,
-                        dsy = e.offsetY - this.realY;
-
-                    // console.log("Vertical: ", App.currentWorkzone.verticalLine.directions)
-                    // console.log("Horizontal: ", App.currentWorkzone.horizontalLine.directions)
-
-                    //console.log(this.resizeDirection, App.currentWorkzone.verticalLine.directions, App.currentWorkzone.horizontalLine.directions);
-
-                    console.log('start');
-
-                    if ($.inArray(this.resizeDirection, App.currentWorkzone.verticalLine.directions) >= 0) {
-                        App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-
-                    } else if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) >= 0) {
-                        if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
-                        App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                        //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-
-                    } else {
-                        //console.log(dsx)
-                        App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                    }
-
-                    // if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) < 0 && !isResized) {
-                    //     App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                    // } else if (!isResized) {
-                    //     if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
-                    //     App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                    // }
-
-                    //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-
-                    let outX = !App.currentWorkzone.verticalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
-                    let outY = !App.currentWorkzone.horizontalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
-
-                    if (outX) {
-                        this.lastX = e.offsetX;
-                    }
-
-                    if (outY) {
-                        this.lastY = e.offsetY;
-                    }
-
-                    this.realX = e.offsetX;
-                    this.realY = e.offsetY;
-
-                    console.log('end');
-
-                    //App.currentWorkzone.horizontalLine.checkSize(curr, this.resizeDirection);
-                }
-            }
-
-            if(this.dragged) {
+            if (!App.isPreview) {
                 const curr = this.currentWidget;
 
-                if (curr) {
-                    let dx = e.offsetX - this.lastX;
-                    let dy = e.offsetY - this.lastY;
+                if (this.resize) {
+                    if (curr) {
+                        let dx = e.offsetX - this.lastX,
+                            dsx = e.offsetX - this.realX,
+                            dy = e.offsetY - this.lastY,
+                            dsy = e.offsetY - this.realY;
 
-                    curr.moveBy(dx, dy);
+                        // console.log("Vertical: ", App.currentWorkzone.verticalLine.directions)
+                        // console.log("Horizontal: ", App.currentWorkzone.horizontalLine.directions)
 
-                    //console.log(curr.position)
+                        //console.log(this.resizeDirection, App.currentWorkzone.verticalLine.directions, App.currentWorkzone.horizontalLine.directions);
 
-                    if (!App.currentWorkzone.verticalLine.checkPosition(curr)) {
-                        this.lastX = e.offsetX;
+                        console.log('start');
+
+                        if ($.inArray(this.resizeDirection, App.currentWorkzone.verticalLine.directions) >= 0) {
+                            App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+
+                        } else if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) >= 0) {
+                            if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
+                            App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+                            //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+
+                        } else {
+                            //console.log(dsx)
+                            App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+                        }
+
+                        // if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) < 0 && !isResized) {
+                        //     App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+                        // } else if (!isResized) {
+                        //     if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
+                        //     App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+                        // }
+
+                        //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+
+                        let outX = !App.currentWorkzone.verticalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
+                        let outY = !App.currentWorkzone.horizontalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
+
+                        if (outX) {
+                            this.lastX = e.offsetX;
+                        }
+
+                        if (outY) {
+                            this.lastY = e.offsetY;
+                        }
+
+                        this.realX = e.offsetX;
+                        this.realY = e.offsetY;
+
+                        console.log('end');
+
+                        //App.currentWorkzone.horizontalLine.checkSize(curr, this.resizeDirection);
                     }
+                }
 
-                    if (!App.currentWorkzone.horizontalLine.checkPosition(curr)) {
-                        this.lastY = e.offsetY;
+                if(this.dragged) {
+                    const curr = this.currentWidget;
+
+                    if (curr) {
+                        let dx = e.offsetX - this.lastX;
+                        let dy = e.offsetY - this.lastY;
+
+                        curr.moveBy(dx, dy);
+
+                        //console.log(curr.position)
+
+                        if (!App.currentWorkzone.verticalLine.checkPosition(curr)) {
+                            this.lastX = e.offsetX;
+                        }
+
+                        if (!App.currentWorkzone.horizontalLine.checkPosition(curr)) {
+                            this.lastY = e.offsetY;
+                        }
+
                     }
-
                 }
             }
-
         }
 
         ,RenderList: {
@@ -1328,6 +1361,8 @@ requirejs.config({
  * Загрузка скриптов на страницу с помощью модуля requireJS.
  * @global
  */
+
+$('head').append(TemplateFactory.getLinkHtml('./js/css/frontend.css', 'stylesheet'));
 
 requirejs(['Base','BaseVariant','Position','Size','WorkZone','Project','VariantProject','FontSettings','Widget','ProjectSettings'],
     () => {

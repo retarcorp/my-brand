@@ -93,5 +93,8 @@ const TemplateFactory = {
         } \n`
     }
 
+    ,getLinkHtml(link, ref) {
+        return `<link rel="${ref}" href="${link}">`
+    }
 
 }

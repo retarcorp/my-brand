@@ -158,15 +158,11 @@ class TextWidget extends Widget {
         if (_y < 0) {
             this.position.y = 0;
             out.y = false;
-            console.log('y<0')
-
         }
 
         if (_y + this.size.height > workzone.size.height) {
             this.position.y = workzone.size.height - this.size.height;
             out.y = false;
-            console.log('+H<0')
-
         }
 
         return out;
@@ -203,9 +199,6 @@ class TextWidget extends Widget {
                         resized = true;
 
                         //console.log(o_w, _w, _h, dx);
-
-                        console.log(dx)
-
                     }
 
                     break;
@@ -221,9 +214,6 @@ class TextWidget extends Widget {
 
                         this.size.width = _w;
                         resized = true;
-
-                        console.log(_h)
-
                     }
 
                     break;
