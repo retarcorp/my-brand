@@ -72,7 +72,7 @@ class HorizontalBaseLine extends BaseLine {
             if (direction == "bottomLeft") _dx = -(this.position.y - _y - _h)/_int/_det;
             else _dx = (this.position.y - _y - _h)/_int/_det;
 
-            if (this.position.y - _y - _h < -2 && this.position.y - _y - _h > 2 && this.attached) {
+            if (this.position.y - _y - _h != 0 && this.attached) {
                 curr.resizeBy(_dx, position, "bottomLeft");
             } else if (this.attached)
                 curr.resizeBy(_dx, position, direction);
