@@ -58,8 +58,6 @@ class HorizontalBaseLine extends BaseLine {
             }else
                 curr.resizeBy(_dx, position, direction);
 
-            console.log(dx);
-
             this.attached = true;
             if (!this.directions.length) {
                 console.log('set direction')
