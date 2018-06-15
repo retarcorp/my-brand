@@ -297,11 +297,13 @@ const App = {
            // App.UI.LightBox.preview.addClass('active');
 
             if (App.isPreview) {
-                App.UI.LightBox.closeBlock(e)
+                App.UI.LightBox.closeBlock(e);
             } else {
                 App.UI.leftMenu.addClass('on-preview');
                 App.UI.BaseList.colorContainer.addClass('on-preview');
                 App.isPreview = true;
+
+                App.UI.LightBox.setPreviewImage();
             }
 
 
@@ -453,57 +455,59 @@ const App = {
             ,setProjectVariant(e) {
             	//if ($(e.target.parentElement).data('variant')) {
 
-                    console.log('click')
+                App.GraphCore.resetScale();
 
-            	    let right = App.UI.BaseList.right,
-                        left = App.UI.BaseList.left,
-                        center = App.UI.BaseList.center,
-                        target = $(e.target.parentElement);
+                let right = App.UI.BaseList.right,
+                    left = App.UI.BaseList.left,
+                    center = App.UI.BaseList.center,
+                    target = $(e.target.parentElement);
 
-	                if ($(e.target).hasClass('slider-arrow-right')) {
-	                    right.prev().removeClass('center');
-	                    right.addClass('center').removeClass('right-side');
+                if ($(e.target).hasClass('slider-arrow-right')) {
+                    right.prev().removeClass('center');
+                    right.addClass('center').removeClass('right-side');
 
-	                    left.next().addClass('left-side').removeClass('center');
-	                    left.addClass('right-side').removeClass('left-side');
+                    left.next().addClass('left-side').removeClass('center');
+                    left.addClass('right-side').removeClass('left-side');
 
-                        App.UI.BaseList.right = left;
-                        App.UI.BaseList.left = left.next();
-                        App.UI.BaseList.center = right;
+                    App.UI.BaseList.right = left;
+                    App.UI.BaseList.left = left.next();
+                    App.UI.BaseList.center = right;
 
-                        App.currentProjectVariant = App.UI.BaseList.center.data('variant');
-                        App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
+                    App.currentProjectVariant = App.UI.BaseList.center.data('variant');
+                    App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
 
-                        App.currentProjectVariant.variant.setColor();
-                        App.UI.Layers.loadLayers();
+                    App.currentProjectVariant.variant.setColor();
+                    App.UI.Layers.loadLayers();
 
-                        App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
+                    App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
 
-                        App.UI.BaseList.variantsSlider.prepend(left.next());
-	                    App.UI.BaseList.variantsSlider.append(left);
+                    App.UI.BaseList.variantsSlider.prepend(left.next());
+                    App.UI.BaseList.variantsSlider.append(left);
 
-                    } else if ($(e.target).hasClass('slider-arrow-left')) {
-                        left.next().removeClass('center');
-                        left.addClass('center').removeClass('left-side');
+                } else if ($(e.target).hasClass('slider-arrow-left')) {
+                    left.next().removeClass('center');
+                    left.addClass('center').removeClass('left-side');
 
-                        right.prev().addClass('right-side').removeClass(['center']);
-                        right.addClass('left-side').removeClass('right-side');
+                    right.prev().addClass('right-side').removeClass(['center']);
+                    right.addClass('left-side').removeClass('right-side');
 
-                        App.UI.BaseList.right = right.prev();
-                        App.UI.BaseList.left = right;
-                        App.UI.BaseList.center = left;
+                    App.UI.BaseList.right = right.prev();
+                    App.UI.BaseList.left = right;
+                    App.UI.BaseList.center = left;
 
-                        App.currentProjectVariant = App.UI.BaseList.center.data('variant');
-                        App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
+                    App.currentProjectVariant = App.UI.BaseList.center.data('variant');
+                    App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
 
-                        App.currentProjectVariant.variant.setColor();
-                        App.UI.Layers.loadLayers();
+                    App.currentProjectVariant.variant.setColor();
+                    App.UI.Layers.loadLayers();
 
-                        App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
+                    App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
 
-                        App.UI.BaseList.variantsSlider.prepend(right);
-                        App.UI.BaseList.variantsSlider.append(right.prev());
-                    }
+                    App.UI.BaseList.variantsSlider.prepend(right);
+                    App.UI.BaseList.variantsSlider.append(right.prev());
+                }
+
+                App.UI.LightBox.setPreviewImage();
             	//}
             }
 
@@ -739,7 +743,7 @@ const App = {
                 lastId++;
                 this.container.data('lastId', lastId);
 
-                layer = {
+                let layer = {
                     text: text
                     ,id: lastId
                     ,type: type
@@ -861,17 +865,94 @@ const App = {
             }
 
             ,closeBlock(e) {
-
                 App.isPreview = false;
                 App.UI.leftMenu.removeClass('on-preview');
                 App.UI.BaseList.colorContainer.removeClass('on-preview');
+
+                App.GraphCore.resetScale(App.GraphCore.ctx);
 
                 // if ($(e.target).hasClass('preview') || $(e.target).hasClass('preview__btn'))
                 //     this.box.removeClass('active');
             }
 
+            ,setPreviewImage() {
+                App.GraphCore.resetScale();
+                App.UI.LightBox.resetPreview();
+            }
+
+            ,resetPreview() {
+                this.resetPreviewPosition();
+
+                App.GraphCore.RenderList.render(App.GraphCore.ctx);
+
+                // let can = document.createElement('canvas'),
+                //     ct = can.getContext('2d');
+                //
+                // can.width = 800;
+                // can.height = 800;
+                //
+                // ct.putImageData(App.GraphCore.ctx.getImageData(0,0,App.GraphCore.canvas.width*2, App.GraphCore.canvas.height*2), 0 , 0);
+                //
+                // document.body.appendChild(can);
+
+                this.previewImage.image = new Image();
+                this.previewImage.image.src = App.GraphCore.canvas.toDataURL('image/png');
+            }
+
+            ,resetPreviewPosition() {
+                this.previewImage.position = new Position(0,0);
+            }
+
+            ,movePreview(e) {
+                let dx = e.offsetX - App.GraphCore.lastX,
+                    dy = e.offsetY - App.GraphCore.lastY;
+
+                this.moveBy(dx, dy);
+
+                App.GraphCore.lastX = e.offsetX;
+                App.GraphCore.lastY = e.offsetY;
+            }
+
+            ,moveBy(dx, dy) {
+                let out = this.checkBorder(dx, dy),
+                    _scale = App.GraphCore.scale;
+
+                if (out.x)
+                    this.previewImage.position.x += dx/(_scale+1);
+
+                if (out.y)
+                    this.previewImage.position.y += dy/(_scale+1);
+            }
+
+            ,checkBorder(dx, dy) {
+                let _x = this.previewImage.position.x + dx,
+                    _y = this.previewImage.position.y + dy,
+                    _w = App.GraphCore.canvas.width,
+                    _h = App.GraphCore.canvas.height,
+                    _scale = App.GraphCore.scale,
+
+                    out = {
+                        x: true,
+                        y: true
+                    };
+
+                if (_x + _w < 100 || _x * (_scale+1) > _w - 100) {
+                    out.x = false;
+                }
+
+                if (_y + _h < 100 || _y * (_scale+1) > _h - 100) {
+                    out.y = false;
+                }
+
+                return out;
+            }
+
             ,box: $('.preview')
             ,content: $('.preview__picture img')
+            ,previewImage: {
+                image: null
+                ,position: { x: 0, y: 0 }
+            }
         }
 
         ,Keyboard: {
@@ -901,6 +982,7 @@ const App = {
                 App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
                 App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
                 App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
             }
 
         }
@@ -1014,6 +1096,7 @@ const App = {
 
         init() {
             this.ctx = (this.canvas = document.querySelector('canvas')).getContext('2d');
+            this.ctx.save();
         }
 
         ,findSprite(position) {
@@ -1159,11 +1242,14 @@ const App = {
                     }
                 }
 
+                //this.image = ctx.canvas.toDataURL('image/png');
+
                 App.GraphCore.RenderList.clear();
                 return data;
             }
 
             ,getImageFilterData(ctx, image) {
+                console.log('data');
                 ctx.drawImage(image,0,0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
                 let data = ctx.getImageData(0, 0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
 
@@ -1198,7 +1284,7 @@ const App = {
 
                 if (curr) {
                     if ( (resizeOpt = curr.resizeOn(new Position(e.offsetX, e.offsetY))).resize ) {
-                        this.resize = true;
+                        this.resized = true;
                         this.resizeDirection = resizeOpt.direction;
                     } else {
                         this.dragged = true;
@@ -1212,103 +1298,149 @@ const App = {
 
                 this.realX = e.offsetX;
                 this.realY = e.offsetY;
+
+            } else {
+                this.previewDragged = true;
+
+                this.lastX = e.offsetX;
+                this.lastY = e.offsetY;
             }
         }
 
         ,mouseUp(e) {
             $('body').removeClass('_no-select');
             this.dragged = false;
-            this.resize = false;
+            this.resized = false;
+            this.previewDragged = false;
         }
 
         ,mouseMove(e) {
             if (!App.isPreview) {
-                const curr = this.currentWidget;
 
-                if (this.resize) {
-                    if (curr) {
-                        let dx = e.offsetX - this.lastX,
-                            dsx = e.offsetX - this.realX,
-                            dy = e.offsetY - this.lastY,
-                            dsy = e.offsetY - this.realY;
-
-                        // console.log("Vertical: ", App.currentWorkzone.verticalLine.directions)
-                        // console.log("Horizontal: ", App.currentWorkzone.horizontalLine.directions)
-
-                        //console.log(this.resizeDirection, App.currentWorkzone.verticalLine.directions, App.currentWorkzone.horizontalLine.directions);
-
-                        console.log('start');
-
-                        if ($.inArray(this.resizeDirection, App.currentWorkzone.verticalLine.directions) >= 0) {
-                            App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-
-                        } else if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) >= 0) {
-                            if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
-                            App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                            //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-
-                        } else {
-                            //console.log(dsx)
-                            App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                        }
-
-                        // if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) < 0 && !isResized) {
-                        //     App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                        // } else if (!isResized) {
-                        //     if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
-                        //     App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-                        // }
-
-                        //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
-
-                        let outX = !App.currentWorkzone.verticalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
-                        let outY = !App.currentWorkzone.horizontalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
-
-                        if (outX) {
-                            this.lastX = e.offsetX;
-                        }
-
-                        if (outY) {
-                            this.lastY = e.offsetY;
-                        }
-
-                        this.realX = e.offsetX;
-                        this.realY = e.offsetY;
-
-                        console.log('end');
-
-                        //App.currentWorkzone.horizontalLine.checkSize(curr, this.resizeDirection);
-                    }
+                if (this.resized) {
+                    this.resize(e);
                 }
 
                 if(this.dragged) {
-                    const curr = this.currentWidget;
-
-                    if (curr) {
-                        let dx = e.offsetX - this.lastX;
-                        let dy = e.offsetY - this.lastY;
-
-                        curr.moveBy(dx, dy);
-
-                        //console.log(curr.position)
-
-                        if (!App.currentWorkzone.verticalLine.checkPosition(curr)) {
-                            this.lastX = e.offsetX;
-                        }
-
-                        if (!App.currentWorkzone.horizontalLine.checkPosition(curr)) {
-                            this.lastY = e.offsetY;
-                        }
-
-                    }
+                    this.move(e);
                 }
+
+            } else {
+
+                if (this.previewDragged)
+                    App.UI.LightBox.movePreview(e);
+            }
+        }
+
+        ,mouseWheel(e) {
+            if (App.isPreview) {
+                this.scales(e);
+            }
+        }
+
+        ,scales(e) {
+            if (this.scale >= 0.25 && this.scale <= 2) {
+                this.ctx.translate(e.offsetX, e.offsetY);
+
+                let width = (1 + this.scale)*this.canvas.width,
+                    height = (1 + this.scale)*this.canvas.height;
+
+                console.log(e.deltaY);
+
+                if (e.deltaY < 0) this.scale = 2 * this.scale;
+                else this.scale = this.scale/2;
+
+                if (this.scale > 2) this.scale = 2;
+
+                let x = 1 + this.scale, y = 1 + this.scale;
+
+                if (this.scale <= 0.125) {
+                    x = 1; y = 1;
+                    this.scale = 0.25;
+                }
+
+                this.ctx.setTransform(x, 0, 0, y, 0, 0);
+
+                //App.UI.LightBox.setPreviewImage();
+            }
+        }
+
+        ,resetScale() {
+            this.ctx.restore();
+            this.ctx.save();
+            this.scale = 0.25;
+        }
+
+        ,resize(e) {
+            const curr = this.currentWidget;
+
+            if (curr) {
+                let dx = e.offsetX - this.lastX,
+                    dsx = e.offsetX - this.realX,
+                    dy = e.offsetY - this.lastY,
+                    dsy = e.offsetY - this.realY;
+
+                if ($.inArray(this.resizeDirection, App.currentWorkzone.verticalLine.directions) >= 0) {
+                    App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+
+                } else if ($.inArray(this.resizeDirection, App.currentWorkzone.horizontalLine.directions) >= 0) {
+                    if (this.resizeDirection == "upLeft" || this.resizeDirection == "bottomRight") dy = -dy;
+                    App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(-dy, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+                    //App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+
+                } else {
+                    App.UI.TextSettings.inputs.textSize.val(curr.resizeBy(dsx, new Position(e.offsetX, e.offsetY), this.resizeDirection));
+                }
+
+
+                let outX = !App.currentWorkzone.verticalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
+                let outY = !App.currentWorkzone.horizontalLine.checkSize(new Position(e.offsetX, e.offsetY), this.resizeDirection);
+
+                if (outX) {
+                    this.lastX = e.offsetX;
+                }
+
+                if (outY) {
+                    this.lastY = e.offsetY;
+                }
+
+                this.realX = e.offsetX;
+                this.realY = e.offsetY;
+
+            }
+        }
+
+        ,move(e) {
+            const curr = this.currentWidget;
+
+            if (curr) {
+                let dx = e.offsetX - this.lastX;
+                let dy = e.offsetY - this.lastY;
+
+                curr.moveBy(dx, dy);
+
+                //console.log(curr.position)
+
+                if (!App.currentWorkzone.verticalLine.checkPosition(curr)) {
+                    this.lastX = e.offsetX;
+                }
+
+                if (!App.currentWorkzone.horizontalLine.checkPosition(curr)) {
+                    this.lastY = e.offsetY;
+                }
+
             }
         }
 
         ,RenderList: {
-            items: [],
+            items: []
 
-            render(ctx) {
+            ,renderPreview(ctx) {
+                this.clear();
+                ctx.drawImage(App.UI.LightBox.previewImage.image, App.UI.LightBox.previewImage.position.x ,App.UI.LightBox.previewImage.position.y);
+            }
+
+            ,render(ctx) {
                 this.clear(ctx);
 
                 App.currentProjectVariant.render(ctx);
@@ -1326,7 +1458,8 @@ const App = {
         ,draggable: null
         ,currentWidget: null
         ,dragged: false
-        ,resize: false
+        ,resized: false
+        ,previewDragged: false
 
         ,lastX: 0
         ,lastY: 0
@@ -1334,13 +1467,19 @@ const App = {
         ,realX: 0
         ,realY: 0
 
+        ,scale: 0.25
+        ,scaleCount: 0
+
         ,attached: false
         ,attachedDirection: ""
 
     }
 
     ,mechanic() {
-        App.GraphCore.RenderList.render(App.GraphCore.ctx);
+        if (!App.isPreview)
+            App.GraphCore.RenderList.render(App.GraphCore.ctx);
+        else
+            App.GraphCore.RenderList.renderPreview(App.GraphCore.ctx);
 
         requestAnimationFrame(arguments.callee);
     }

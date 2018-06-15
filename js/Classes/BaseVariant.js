@@ -27,6 +27,8 @@ class BaseVariant {
     setImageData(data) {
         this.imageData = data;
 
+        console.log('setData')
+
         return this;
     }
 
@@ -53,9 +55,9 @@ class BaseVariant {
     render(ctx) {
         if (!this.imageData || !this.loaded) {
             this.imageData = App.GraphCore.Filter.getImageFilterData(App.GraphCore.ctx, this.image);
-
         } else {
             ctx.putImageData(this.imageData, 0, 0);
+            //ctx.drawImage(this.image, 0, 0, this.size.height, this.size.width)
             //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.colorFilter(ctx, this.image)
         }
 
