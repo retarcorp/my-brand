@@ -301,6 +301,8 @@ const App = {
             } else {
                 App.UI.leftMenu.addClass('on-preview');
                 App.UI.BaseList.colorContainer.addClass('on-preview');
+                App.UI.LightBox.preview.addClass('on-preview');
+
                 App.isPreview = true;
 
                 App.UI.LightBox.setPreviewImage();
@@ -869,6 +871,8 @@ const App = {
                 App.UI.leftMenu.removeClass('on-preview');
                 App.UI.BaseList.colorContainer.removeClass('on-preview');
 
+                this.preview.removeClass('on-preview');
+
                 App.GraphCore.resetScale(App.GraphCore.ctx);
 
                 // if ($(e.target).hasClass('preview') || $(e.target).hasClass('preview__btn'))
@@ -936,11 +940,11 @@ const App = {
                         y: true
                     };
 
-                if (_x + _w < 100 || _x * (_scale+1) > _w - 100) {
+                if (_x + _w < App.GraphCore.canvas.width / 1.5 || _x * (_scale+1) > _w - App.GraphCore.canvas.width / 1.5) {
                     out.x = false;
                 }
 
-                if (_y + _h < 100 || _y * (_scale+1) > _h - 100) {
+                if (_y + _h < App.GraphCore.canvas.height / 1.5 || _y * (_scale+1) > _h - App.GraphCore.canvas.height / 1.5) {
                     out.y = false;
                 }
 
@@ -1340,12 +1344,10 @@ const App = {
 
         ,scales(e) {
             if (this.scale >= 0.25 && this.scale <= 2) {
-                this.ctx.translate(e.offsetX, e.offsetY);
 
                 let width = (1 + this.scale)*this.canvas.width,
-                    height = (1 + this.scale)*this.canvas.height;
-
-                console.log(e.deltaY);
+                    height = (1 + this.scale)*this.canvas.height,
+                    scale = this.scale;
 
                 if (e.deltaY < 0) this.scale = 2 * this.scale;
                 else this.scale = this.scale/2;
@@ -1359,7 +1361,12 @@ const App = {
                     this.scale = 0.25;
                 }
 
-                this.ctx.setTransform(x, 0, 0, y, 0, 0);
+                let transfX = (e.offsetX/this.canvas.width) * this.canvas.width * (x - 1),
+                    transfY = (e.offsetY/this.canvas.height) * this.canvas.height * (y - 1);
+
+                console.log(this.canvas.width*(this.scale - scale));
+
+                this.ctx.setTransform(x, 0, 0, y, -transfX, -transfY);
 
                 //App.UI.LightBox.setPreviewImage();
             }
