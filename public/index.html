@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/constructor.css">
+    <title>My Brand</title>
+</head>
+<body>
+    <div id="wrapper">
+        <header class="header header_padding header_background">
+            <div class="header__logo logo">
+                <a href="#" class="logo__text">Мой бренд</a>
+            </div>
+            <nav class="header__main-menu main-menu">
+                <ul class="main-menu__list">
+                    <li class="main-menu__item">
+                        <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        <main class="main main_margin main_background main_shadow">
+            <section class="main__navigation main__navigation_shadow">
+                <ul class="navigation__list navigation__list_padding">
+                    <li class="navigation__item">
+                        <a href="#" class="navigation__link">Главная</a>
+                    </li>
+                    <li class="navigation__item navigation__item_margin">
+                        <a href="#" class="navigation__link">Майки</a>
+                    </li>
+                    <li class="navigation__item navigation__item_margin">Мужская толстовка</li>
+                </ul>
+            </section>
+            <section class="main__product-details product-details product-details_padding">
+                <div class="product-details__product product">
+                    <div class="product__rotate rotate_margin">
+                        <button class="rotate__btn-left"></button>
+                        <p class="rotate__text">Просмотр <span class="rotate__value">360</span></p>
+                        <button class="rotate__btn-right"></button>
+                    </div>
+                    <div class="product__preview preview preview_margin">
+                        <img class="product__img" src="img/basis/1.jpg" alt="basis">
+                    </div>
+                    <div class="product__create">
+                        <button class="create__button-create button button_gradient_yellow">
+                            <span class="button_text button_text_color">Создать бренд!</span>
+                        </button>
+                        <div class="create__btns  create__btns_margin">
+                            <button class="btns__add-text button button_disable">
+                                <span class="button_text">Добавить текст</span>
+                            </button>
+                            <button class="btns__add-print button button_disable">
+                                <span class="button_text">Добавить изображение</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-details__details details">
+                    <h1 class="details__name details__name_margin">Мужской свитшок "STAR"</h1>
+                    <div class="details__size details__block_margin">
+                        <h4 class="details__header">Выбирите размер</h4>
+                        <div class="size__container size__container_margin">
+                            <label class="size__block size__block_margin">
+                                <input class="size__radio" type="radio" name="size">
+                                <span class="size__radio-custom">S (48)</span>
+                            </label>
+                            <label class="size__block size__block_margin">
+                                <input class="size__radio" type="radio" name="size">
+                                <span class="size__radio-custom">M (50)</span>
+                            </label>
+                            <label class="size__block size__block_margin">
+                                <input class="size__radio" type="radio" name="size">
+                                <span class="size__radio-custom">L (52)</span>
+                            </label>
+                            <label class="size__block size__block_margin">
+                                <input class="size__radio" type="radio" name="size">
+                                <span class="size__radio-custom">XL (54)</span>
+                            </label>
+                            <label class="size__block size__block_margin">
+                                <input class="size__radio" type="radio" name="size">
+                                <span class="size__radio-custom">XXL (56)</span>
+                            </label>
+                            <label class="size__block size__block_margin">
+                                <input class="size__radio" type="radio" name="size">
+                                <span class="size__radio-custom">XXXL (60)</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="details__colors details__block_margin">
+                        <h4 class="details__header details__block_margin">Подходящий цвет</h4>
+                        <div class="color-btns">
+                            <input class="details__color" style="background-color: #A550A5;" readonly="" data-color="#f2e656">
+                            <input class="details__color details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
+                            <input class="details__color details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
+                            <input class="details__color details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
+                            <a href="#" class="details__link details__select-color details__color_margin">Выбрать свой</a>
+                        </div>
+                    </div>
+                    <div class="details__price details__block_margin">
+                        <p class="price">Стоимость: <span class="price__value">1340</span> P</p>
+                    </div>
+                    <div class="details__btns">
+                        <button class="details__add-basket button button_gradient_blue">
+                            <span class="button_text button_text_color">Добавить в корзину</span>
+                        </button>
+                        <a href="#" class="details__link details__link_margin">Выбрать другой продукт</a>
+                    </div>
+                </div>
+            </section>
+            <section class="main__products-similar products-similar products-similar_padding">
+                <h1 class="products-similar__header products-similar__header_margin">С этим товаром покупают</h1>
+                <div class="products-similar__slider products-similar__slider_padding">
+                    <div class="slider__btns">
+                        <button class="slider__button button button__left"></button>
+                        <button class="slider__button button button__right"></button>
+                    </div>
+                    <div class="products-similar__slide slide">
+                        <div class="slide__picture slide__picture_margin">
+                            <img src="img/basis/8.jpg" alt="" class="slide__img">
+                        </div>
+                        <p class="slide__category slide__category_font">Мужская футболка</p>
+                        <div class="slide__setting slide__setting_margin">
+                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
+                            <div class="slide__price slide__price_margin">
+                                <span class="slide__value slide__value_font">999 P</span>
+                                <button class="slide__edit button button_gradient_yellow"></button>
+                            </div>
+                        </div>
+                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                            <span class="button_text button_text_color">В корзину</span>
+                        </button>
+                    </div>
+                    <div class="products-similar__slide slide">
+                        <div class="slide__picture slide__picture_margin">
+                            <img src="img/basis/8.jpg" alt="" class="slide__img">
+                        </div>
+                        <p class="slide__category slide__category_font">Мужская футболка</p>
+                        <div class="slide__setting slide__setting_margin">
+                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
+                            <div class="slide__price slide__price_margin">
+                                <span class="slide__value slide__value_font">999 P</span>
+                                <button class="slide__edit button button_gradient_yellow"></button>
+                            </div>
+                        </div>
+                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                            <span class="button_text button_text_color">В корзину</span>
+                        </button>
+                    </div>
+                    <div class="products-similar__slide slide">
+                        <div class="slide__picture slide__picture_margin">
+                            <img src="img/basis/8.jpg" alt="" class="slide__img">
+                        </div>
+                        <p class="slide__category slide__category_font">Мужская футболка</p>
+                        <div class="slide__setting slide__setting_margin">
+                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
+                            <div class="slide__price slide__price_margin">
+                                <span class="slide__value slide__value_font">999 P</span>
+                                <button class="slide__edit button button_gradient_yellow"></button>
+                            </div>
+                        </div>
+                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                            <span class="button_text button_text_color">В корзину</span>
+                        </button>
+                    </div>
+                    <div class="products-similar__slide slide">
+                        <div class="slide__picture slide__picture_margin">
+                            <img src="img/basis/8.jpg" alt="" class="slide__img">
+                        </div>
+                        <p class="slide__category slide__category_font">Мужская футболка</p>
+                        <div class="slide__setting slide__setting_margin">
+                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
+                            <div class="slide__price slide__price_margin">
+                                <span class="slide__value slide__value_font">999 P</span>
+                                <button class="slide__edit button button_gradient_yellow"></button>
+                            </div>
+                        </div>
+                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                            <span class="button_text button_text_color">В корзину</span>
+                        </button>
+                    </div>
+                    <div class="products-similar__slide slide">
+                        <div class="slide__picture slide__picture_margin">
+                            <img src="img/basis/8.jpg" alt="" class="slide__img">
+                        </div>
+                        <p class="slide__category slide__category_font">Мужская футболка</p>
+                        <div class="slide__setting slide__setting_margin">
+                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
+                            <div class="slide__price slide__price_margin">
+                                <span class="slide__value slide__value_font">999 P</span>
+                                <button class="slide__edit button button_gradient_yellow"></button>
+                            </div>
+                        </div>
+                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                            <span class="button_text button_text_color">В корзину</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="footer footer_margin footer_background footer_padding main_shadow">
+            <div class="header__logo logo">
+                <a href="#" class="logo__text">Мой бренд</a>
+            </div>
+            <nav class="header__main-menu main-menu">
+                <ul class="main-menu__list">
+                    <li class="main-menu__item">
+                        <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+	<script src = "js/require.js"> </script>
+    <script src = "js/TemplateFactory.js"> </script>  
+	<script src="js/index.js"></script>
+	<script src="js/jscolor.js"></script>
+	
+</body>
+</html>

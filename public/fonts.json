@@ -1,0 +1,20 @@
+{
+    "fonts": [
+        {
+            "name": "Helvatica",
+            "src" : "fonts/HelveticaRegular.ttf"
+        },
+        {
+            "name": "Campanella",
+            "src" : "fonts/Campanella.ttf"
+        },
+        {
+            "name": "Chava",
+            "src" : "fonts/Chava.ttf"
+        },
+        {
+            "name": "LuckiestGuy",
+            "src" : "fonts/LuckiestGuy.ttf"
+        }
+    ]
+}

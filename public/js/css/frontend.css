@@ -1,0 +1,28 @@
+.right-workspace.active {
+    display: flex;
+}
+
+.workspace-print.active {
+    display: flex;
+}
+
+.btn-show-result.on-preview {
+    background-color: #5F5;
+}
+
+.left-menu.on-preview,
+.workspace-color.on-preview{
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.size__radio,
+.size__radio-custom {
+    pointer-events: none;
+}
+
+/*DELETE*/
+
+canvas {
+    border: 1px solid #bbb;
+}
