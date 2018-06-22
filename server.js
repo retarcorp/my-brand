@@ -80,6 +80,6 @@ app.use(function(err, req, res, next) {
   res.send('Not found ' + __dirname + req.url);
 });
 
-app.listen(3010);
+app.listen(process.env.PORT);
 
 module.exports = app;
