@@ -54,7 +54,7 @@ class BaseVariant {
 
     render(ctx) {
         if (!this.imageData || !this.loaded) {
-            if (!this.loaded)
+            if (this.loaded)
                 this.imageData = App.GraphCore.Filter.getImageFilterData(App.GraphCore.ctx, this.image);
         } else {
             ctx.putImageData(this.imageData, 0, 0);
