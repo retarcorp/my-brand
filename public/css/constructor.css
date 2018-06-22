@@ -6,10 +6,10 @@
     padding: 35px 30px;
 }
 .product-details__product{
-    width: 49%;
+    width: 45%;
 }
 .product-details__settings{
-    width: 49%;
+    width: 50%;
 }
 
 .product__rotate{
@@ -181,25 +181,30 @@
 	right: 0px;
 	bottom: 0px;
 	left: 0px;
-    background: #ccc;
+    background:  #3d71f5;
+    color: #fff;
     border-radius: 5px;
 }
 
 
 .slide{
+    box-sizing: border-box;
     width: 210px;
     display: flex;
     flex-direction: column;
     padding: 0 10px;
 }
+.slide_margin{
+    /* margin-right: 10px; */
+}
 .products-similar_padding{
-    padding: 0 30px;
+    padding: 0 30px 100px;
 }
 .products-similar__header{
     font-size: 35px;
 }
 .products-similar__header_margin{
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
     margin-top: 55px;
 }
 .products-similar__slider{
@@ -216,7 +221,7 @@
     width: 100%;
 }
 .products-similar__slider_padding{
-    padding: 0 23px;
+    padding: 0 35px;
 }
 .slide__picture{
     width: 165px;
@@ -243,10 +248,10 @@
     justify-content: space-between;
 }
 .slide__edit{
+    visibility: hidden;
     width: 27px;
     height: 27px;
     position: relative;
-    /* background: linear-gradient(-360deg, #ffbf46, #ff850c); */
 }
 .slide__edit::after{
     content: '';
@@ -271,7 +276,9 @@
 }
 
 .slide__basket{
+    visibility: hidden;
     height: 45px;
+    width: 100%;
     font-size: 17px;
 }
 
@@ -280,6 +287,7 @@
 }
 
 .slider__button{
+    position: absolute;
     width: 27px;
     height: 27px;
     background-repeat: no-repeat;
@@ -288,8 +296,43 @@
 .button__left{
     background-position: left;
     background-image: url(../img/icon/prew.png);
+    left: 0;
+    top: 120px;
 }
 .button__right{
     background-position: right;
     background-image: url(../img/icon/next.png);
+    right: 0;
+    top: 120px;
+}
+
+.slide:hover {
+    box-shadow: 0 0 49px rgba(56,49,187, 0.18);
+    border-radius: 10px;
+}
+
+.slide:hover .slide__basket,
+.slide:hover .slide__edit{
+    visibility: visible;
+}
+.slide:hover .slide__name{
+    text-decoration: underline;
+}
+
+.slider__link{
+    display: flex;
+    /* height: 100%; */
+    min-height: 100% !important;
+    flex-direction: column;
+    text-decoration: none;
+}
+
+/* SLICK */
+
+.slick-list{
+    padding: 30px !important;
+}
+
+.header__adaptive-menu{
+    display: none;
 }

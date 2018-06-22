@@ -7,11 +7,16 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">    <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/constructor.css">
+    <link rel="stylesheet" type="text/css" href="css/slick.css"/>
+    <link rel="stylesheet" href="css/papaps.css">
+    <link rel="stylesheet" href="css/adaptive.css">
+    
     <title>My Brand</title>
 </head>
 <body>
     <div id="wrapper">
         <header class="header header_padding header_background">
+            <div class="header__adaptive-menu header__adaptive-menu_margin"></div>
             <div class="header__logo logo">
                 <a href="#" class="logo__text">Мой бренд</a>
             </div>
@@ -44,7 +49,7 @@
                     <li class="navigation__item navigation__item_margin">
                         <a href="#" class="navigation__link">Майки</a>
                     </li>
-                    <li class="navigation__item navigation__item_margin">Мужская толстовка</li>
+                    <li class="navigation__item navigation__item_margin current">Мужская толстовка</li>
                 </ul>
             </section>
             <section class="main__product-details product-details product-details_padding">
@@ -57,6 +62,39 @@
                     <div class="product__preview preview preview_margin">
                         <img class="product__img" src="img/basis/1.jpg" alt="basis">
                     </div>
+
+
+
+                    <div class="product__editor editor editor_margin editor-padding">
+                        <div class="editor__text">
+                            <input class="editor__text-input" type="text">
+                        </div>
+                        <div class="editor__fonts editor__item_margin">
+                            <label for="fonts" class="button fonts-list__button">
+                            </label>
+                            <select class="editor__fonts-list" name="fonts" id="fonts">
+                                <option value="">Lato</option>
+                                <option value="">Lato</option>
+                                <option value="">Lato</option>
+                                <option value="">Lato</option>
+                                <option value="">Lato</option>
+                            </select>
+                        </div>
+                        <div class="editor__size editor__item_margin">
+                            <input class="size__input" type="number" value="11">
+                        </div>
+                        <div class="editor__decoration editor__item_margin">
+                            <button class="decoration__button button button__bold"></button>
+                            <button class="decoration__button button button__italic"></button>
+                            <button class="decoration__button button button__underline"></button>
+                        </div>
+                        <button class="jscolor{valueElement:''} button editor__color editor__item_margin"></button>
+                    </div>
+
+
+
+
+
                     <div class="product__create">
                         <button class="create__button-create button button_gradient_yellow">
                             <span class="button_text button_text_color">Создать бренд!</span>
@@ -72,9 +110,9 @@
                     </div>
                 </div>
                 <div class="product-details__details details">
-                    <h1 class="details__name details__name_margin">Мужской свитшок "STAR"</h1>
+                    <h1 class="details__name details__name_margin">Мужской свитшот "STAR"</h1>
                     <div class="details__size details__block_margin">
-                        <h4 class="details__header">Выбирите размер</h4>
+                        <h4 class="details__header">Выберите размер</h4>
                         <div class="size__container size__container_margin">
                             <label class="size__block size__block_margin">
                                 <input class="size__radio" type="radio" name="size">
@@ -109,7 +147,7 @@
                             <input class="details__color details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
                             <input class="details__color details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
                             <input class="details__color details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
-                            <a href="#" class="details__link details__select-color details__color_margin">Выбрать свой</a>
+                            <a href="#" class="jscolor details__link details__select-color details__color_margin">Выбрать свой</a>
                         </div>
                     </div>
                     <div class="details__price details__block_margin">
@@ -126,90 +164,101 @@
             <section class="main__products-similar products-similar products-similar_padding">
                 <h1 class="products-similar__header products-similar__header_margin">С этим товаром покупают</h1>
                 <div class="products-similar__slider products-similar__slider_padding">
-                    <div class="slider__btns">
+                    <!-- <div class="slider__btns">
                         <button class="slider__button button button__left"></button>
                         <button class="slider__button button button__right"></button>
-                    </div>
-                    <div class="products-similar__slide slide">
-                        <div class="slide__picture slide__picture_margin">
-                            <img src="img/basis/8.jpg" alt="" class="slide__img">
-                        </div>
-                        <p class="slide__category slide__category_font">Мужская футболка</p>
-                        <div class="slide__setting slide__setting_margin">
-                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
-                            <div class="slide__price slide__price_margin">
-                                <span class="slide__value slide__value_font">999 P</span>
-                                <button class="slide__edit button button_gradient_yellow"></button>
+                    </div> -->
+                    <a href="#" class="slider__link">
+                        <div class="products-similar__slide slide  slide_margin">
+                            <div class="slide__picture slide__picture_margin">
+                                <img src="img/basis/8.jpg" alt="" class="slide__img">
                             </div>
-                        </div>
-                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                            <span class="button_text button_text_color">В корзину</span>
-                        </button>
-                    </div>
-                    <div class="products-similar__slide slide">
-                        <div class="slide__picture slide__picture_margin">
-                            <img src="img/basis/8.jpg" alt="" class="slide__img">
-                        </div>
-                        <p class="slide__category slide__category_font">Мужская футболка</p>
-                        <div class="slide__setting slide__setting_margin">
-                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
-                            <div class="slide__price slide__price_margin">
-                                <span class="slide__value slide__value_font">999 P</span>
-                                <button class="slide__edit button button_gradient_yellow"></button>
+                            <p class="slide__category slide__category_font">Мужская футболка</p>
+                            <div class="slide__setting slide__setting_margin">
+                                <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
+                                <div class="slide__price slide__price_margin">
+                                    <span class="slide__value slide__value_font">999 P</span>
+                                    <button class="slide__edit button button_gradient_yellow"></button>
+                                </div>
                             </div>
+                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                                <span class="button_text button_text_color">В корзину</span>
+                            </button>
                         </div>
-                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                            <span class="button_text button_text_color">В корзину</span>
-                        </button>
-                    </div>
-                    <div class="products-similar__slide slide">
-                        <div class="slide__picture slide__picture_margin">
-                            <img src="img/basis/8.jpg" alt="" class="slide__img">
-                        </div>
-                        <p class="slide__category slide__category_font">Мужская футболка</p>
-                        <div class="slide__setting slide__setting_margin">
-                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
-                            <div class="slide__price slide__price_margin">
-                                <span class="slide__value slide__value_font">999 P</span>
-                                <button class="slide__edit button button_gradient_yellow"></button>
+                    </a>
+                    <a href="#" class="slider__link">
+                        <div class="products-similar__slide slide slide_margin">
+                            <div class="slide__picture slide__picture_margin">
+                                <img src="img/basis/3.jpg" alt="" class="slide__img">
                             </div>
-                        </div>
-                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                            <span class="button_text button_text_color">В корзину</span>
-                        </button>
-                    </div>
-                    <div class="products-similar__slide slide">
-                        <div class="slide__picture slide__picture_margin">
-                            <img src="img/basis/8.jpg" alt="" class="slide__img">
-                        </div>
-                        <p class="slide__category slide__category_font">Мужская футболка</p>
-                        <div class="slide__setting slide__setting_margin">
-                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
-                            <div class="slide__price slide__price_margin">
-                                <span class="slide__value slide__value_font">999 P</span>
-                                <button class="slide__edit button button_gradient_yellow"></button>
+                            <p class="slide__category slide__category_font">Мужской свитшот</p>
+                            <div class="slide__setting slide__setting_margin">
+                                <a href="" class="slide__name slide__name_font text_color_main">Supreme Ripndip</a>
+                                <div class="slide__price slide__price_margin">
+                                    <span class="slide__value slide__value_font">2100 P</span>
+                                    <button class="slide__edit button button_gradient_yellow"></button>
+                                </div>
                             </div>
+                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                                <span class="button_text button_text_color">В корзину</span>
+                            </button>
                         </div>
-                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                            <span class="button_text button_text_color">В корзину</span>
-                        </button>
-                    </div>
-                    <div class="products-similar__slide slide">
-                        <div class="slide__picture slide__picture_margin">
-                            <img src="img/basis/8.jpg" alt="" class="slide__img">
-                        </div>
-                        <p class="slide__category slide__category_font">Мужская футболка</p>
-                        <div class="slide__setting slide__setting_margin">
-                            <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
-                            <div class="slide__price slide__price_margin">
-                                <span class="slide__value slide__value_font">999 P</span>
-                                <button class="slide__edit button button_gradient_yellow"></button>
+                    </a>
+                    <a href="#" class="slider__link">
+                        <div class="products-similar__slide slide slide_margin">
+                            <div class="slide__picture slide__picture_margin">
+                                <img src="img/basis/2.jpg" alt="" class="slide__img">
                             </div>
+                            <p class="slide__category slide__category_font">Мужской свитшот</p>
+                            <div class="slide__setting slide__setting_margin">
+                                <a href="" class="slide__name slide__name_font text_color_main">Rick and Morti</a>
+                                <div class="slide__price slide__price_margin">
+                                    <span class="slide__value slide__value_font">1990 P</span>
+                                    <button class="slide__edit button button_gradient_yellow"></button>
+                                </div>
+                            </div>
+                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                                <span class="button_text button_text_color">В корзину</span>
+                            </button>
                         </div>
-                        <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                            <span class="button_text button_text_color">В корзину</span>
-                        </button>
-                    </div>
+                    </a>
+                    <a href="#" class="slider__link">
+                        <div class="products-similar__slide slide slide_margin">
+                            <div class="slide__picture slide__picture_margin">
+                                <img src="img/basis/5.jpg" alt="" class="slide__img">
+                            </div>
+                            <p class="slide__category slide__category_font">Женская футболка 3D</p>
+                            <div class="slide__setting slide__setting_margin">
+                                <a href="" class="slide__name slide__name_font text_color_main">Fashion flowers</a>
+                                <div class="slide__price slide__price_margin">
+                                    <span class="slide__value slide__value_font">1200 P</span>
+                                    <button class="slide__edit button button_gradient_yellow"></button>
+                                </div>
+                            </div>
+                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                                <span class="button_text button_text_color">В корзину</span>
+                            </button>
+                        </div>
+                    </a>
+                    <a href="#" class="slider__link">
+                        <div class="products-similar__slide slide slide_margin">
+                            <div class="slide__picture slide__picture_margin">
+                                <img src="img/basis/4.jpg" alt="" class="slide__img">
+                            </div>
+                            <p class="slide__category slide__category_font">Мужская футболка</p>
+                            <div class="slide__setting slide__setting_margin">
+                                <a href="" class="slide__name slide__name_font text_color_main">Разочарование</a>
+                                <div class="slide__price slide__price_margin">
+                                    <span class="slide__value slide__value_font">990 P</span>
+                                    <button class="slide__edit button button_gradient_yellow"></button>
+                                </div>
+                            </div>
+                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
+                                <span class="button_text button_text_color">В корзину</span>
+                            </button>
+                        </div>
+                    </a>
+                    
                 </div>
             </section>
         </main>
@@ -237,15 +286,131 @@
                 </ul>
             </nav>
         </footer>
+        <section class="add-photo">
+            <div class="file-upload">
+                <h1 class="file-upload__header file-upload__header_margin">Добавление фотографий</h1>
+                <button class="button button__close"></button>
+                <div class="file-upload__picture-list file-upload__picture-list_padding">
+                    <div class="picture-list__picture">
+                        <img src="img/1.png" alt="" class="picture__img">
+                        <div class="picture-btns">
+                            <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                            <button class="button picture__button picture__remove">Удалить</button>
+                        </div>
+                    </div>
+                    <div class="picture-list__picture picture-list__picture_margin">
+                        <img src="img/1.png" alt="" class="picture__img">
+                        <div class="picture-btns">
+                            <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                            <button class="button picture__button picture__remove">Удалить</button>
+                        </div>
+                    </div>
+                    <div class="picture-list__picture picture-list__picture_margin">
+                        <img src="img/1.png" alt="" class="picture__img">
+                        <div class="picture-btns">
+                            <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                            <button class="button picture__button picture__remove">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="file-upload__button file-upload__button_margin">
+                    <button class="button print__send button__add-photo button_gradient_blue button__add-photo_margin">
+                        <span class="button__add-photo_text button_text_color">Выбрать файлы</span>
+                    </button>
+                    <input class="" type="file">
+                </div>  
+                 
+            </div>
+        </section>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="js/slick.min.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
 
-	<script src = "js/require.js"> </script>
+    <script src = "js/require.js"> </script>
     <script src = "js/TemplateFactory.js"> </script>  
-	<script src="js/index.js"></script>
-	<script src="js/jscolor.js"></script>
-	
+    <script src="js/index.js"></script>
+    <script src="js/jscolor.js"></script>
+
+    <script>
+        var menuBtn = document.querySelector(".header__adaptive-menu"),
+        menu = document.querySelector('.main-menu');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            menu.classList.toggle("active");
+        });
+
+        // slider
+        $('.products-similar__slider').slick({
+            dots: false,
+            infinite: false,
+            speed: 300,
+            // variableWidth: true,
+            slidesToShow: 5,
+            prevArrow: '<button type="button" class="slick-prev slider__button button button__left"></button>',
+            nextArrow: '<button type="button" class="slick-prev slider__button button button__right"></button>',
+            slidesToScroll: 2,
+            responsive: [
+                {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                    infinite: true,
+                    dots: false
+                }
+                },
+                {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 1
+                }
+                },
+                {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 2
+                }
+                }
+            ]
+        });
+
+        // papaps (addPrint)
+
+        var addPrintBtn = document.querySelector('.btns__add-print');
+        var closePrintBtn = document.querySelector('.button__close');
+        var addPrintDialog = document.querySelector('.add-photo');
+
+        addPrintBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            addPrintDialog.classList.toggle('active');
+        });
+
+        closePrintBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addPrintDialog.classList.remove('active');
+        });
+
+        // papaps (addText)
+
+        var addText = document.querySelector('.btns__add-text');
+        var addTextDialog = document.querySelector(".editor");
+
+        addText.addEventListener("click", (e) => {
+            e.preventDefault();
+            addTextDialog.classList.toggle('active');
+        });
+
+        var decorationBtns = document.querySelectorAll(".decoration__button");
+        decorationBtns.forEach((item) => {
+            item.addEventListener('click', (e) => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
 </body>
 </html>

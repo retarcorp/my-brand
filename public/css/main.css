@@ -103,14 +103,17 @@ body,
     list-style: none;
     display: flex;
     font-size: 15px;
-    color: #9b9db2;
-    font-weight: 400;
+    color: #7f819c;
+    font-weight: 700;
 }
 .navigation__list_padding{
     padding: 0 30px;
 }
 .navigation__item_margin{
-    margin-left: 3px;
+    margin-left: 5px;
+}
+.navigation__item.current{
+    color: #9b9db2;
 }
 .navigation__item:not(:last-child):after{
     content: "/";
