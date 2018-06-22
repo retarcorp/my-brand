@@ -97,4 +97,13 @@ const TemplateFactory = {
         return `<link rel="${ref}" href="${link}">`
     }
 
+    ,getSizeHtml(size) {
+        return `
+            <label class="size__block size__block_margin" data-size="${size}">
+                <input class="size__radio" type="radio" name="size">
+                <span class="size__radio-custom">${size}</span>
+            </label>
+        `;
+    }
+
 }

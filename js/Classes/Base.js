@@ -6,12 +6,13 @@
  */
 
 class Base  {
-    constructor(name, price, color, colorArray) {
+    constructor(name, price, color, colorArray, size) {
         this.variants = [];
         this.price = price;
         this.name = name;
         this.color = color;
         this.colorArray = colorArray;
+        this.size = size;
     }
 
     /**
@@ -43,7 +44,7 @@ class Base  {
     static fromJSON(obj) {
         
         return (
-            new this(obj.name, obj.price, obj.color, obj.colorArray)
+            new this(obj.name, obj.price, obj.color, obj.colorArray, obj.size)
             .addVariants(
                 ...obj.variants.map(
                     variant => BaseVariant.fromJSON(variant)

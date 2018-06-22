@@ -11,6 +11,7 @@ class Project {
         this.modified = new Date();
         this.variants = [];
         this.settings = new ProjectSettings(base.color);
+        this.currentVariant = 0;
     }
 
     /**
@@ -23,4 +24,26 @@ class Project {
         });
     }
 
+    nextVariant() {
+        if (this.currentVariant < this.variants.length - 1) {
+            this.currentVariant++;
+            return this.variants[this.currentVariant];
+        } else {
+            this.currentVariant = 0;
+
+            return this.variants[0];
+        }
+    }
+
+    prevVarinat() {
+        if (this.currentVariant > 0) {
+            this.currentVariant--;
+
+            return this.variants[this.currentVariant];
+        } else {
+            this.currentVariant = this.variants.length - 1;
+
+            return this.variants[this.currentVariant];
+        }
+    }
 }

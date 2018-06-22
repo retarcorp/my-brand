@@ -15,7 +15,7 @@ const App = {
         this.Project = new Project(this.Data.Bases[0], new Date());
         this.Project.addVariants();
 
-        this.currentProjectVariant = this.Project.variants[1];
+        this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
         this.GraphCore.init();
@@ -200,6 +200,15 @@ const App = {
             }
         }
 
+        ,onBaseSize(e) {
+            let data = $(e.target).data('size');
+
+            if (data) {
+                $(e.target).addClass('selected');
+                App.Project.settings.size = data;
+            }
+        }
+
         ,onStyle(e) {
             this.classList.toggle('active');
             const curr = App.GraphCore.currentWidget;
@@ -354,6 +363,14 @@ const App = {
             }
         }
 
+        ,onSaveProject(e) {
+            let data = JSON.stringify(App.Project);
+
+           //console.log(data);
+
+            App.Ajax.postJSON('extra.json', data);
+        }
+
         /**
          * Tabs - инициализирует DOM структуру для табов. Запускает обработчики событий.
          * @constructor
@@ -419,6 +436,10 @@ const App = {
                     App.Project.base.colorArray.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)
                 );
 
+                this.setSizeHtml();
+
+                this.sizeContainer.on('click', App.UI.onBaseSize);
+
                 this.setBaseVariantsHtml(App.Data.Bases[0].variants);
 
                 // Set on click listerens on base list items, console log selected one @DONE
@@ -435,23 +456,29 @@ const App = {
                 $(e.target.parentElement).addClass('selected');
 
                 App.Project.base = $(e.target.parentElement).data('base');
-                App.UI.BaseList.setBaseVariantsHtml($(e.target.parentElement).data('base').variants);
+                App.Project.addVariants();
+                App.UI.BaseList.setBaseVariantsHtml(App.Project.base.variants)
             }
 
-            ,setBaseVariantsHtml(variants) {
-                App.UI.BaseList.variantsSlider.html(
-                   variants.reduce( (acc, variant) => acc + TemplateFactory.getBaseVariantHtml(variant), ``)
-                );
+            ,setBaseVariantsHtml() {
 
-                App.UI.BaseList.right = $(".img-slider:last-child").addClass("right-side");
-                App.UI.BaseList.center = $(".img-slider:first-child").next().addClass("center");
-                App.UI.BaseList.left = $(".img-slider:first-child").addClass("left-side");
+                //App.Project.variants.
+
+                // variants.forEach( (variant, index) => {
+                //     variant.index = index;
+                // });
 
                 this.arrows.on('click', App.UI.BaseList.setProjectVariant);
 
-                $.each(App.UI.BaseList.variantsSlider.children(), (index, child) => {
-                    $(child).data('variant', App.Project.variants[index]);
-                });
+                // $.each(App.UI.BaseList.variantsSlider.children(), (index, child) => {
+                //     $(child).data('variant', App.Project.variants[index]);
+                // });
+            }
+
+            ,setSizeHtml() {
+                this.sizeContainer.html(
+                    App.Project.base.size.reduce( (acc, size) => acc + TemplateFactory.getSizeHtml(size), ``)
+                );
             }
 
             ,setProjectVariant(e) {
@@ -459,23 +486,9 @@ const App = {
 
                 App.GraphCore.resetScale();
 
-                let right = App.UI.BaseList.right,
-                    left = App.UI.BaseList.left,
-                    center = App.UI.BaseList.center,
-                    target = $(e.target.parentElement);
+                if ($(e.target).hasClass('rotate__btn-right')) {
+                    App.currentProjectVariant = App.Project.nextVariant();
 
-                if ($(e.target).hasClass('slider-arrow-right')) {
-                    right.prev().removeClass('center');
-                    right.addClass('center').removeClass('right-side');
-
-                    left.next().addClass('left-side').removeClass('center');
-                    left.addClass('right-side').removeClass('left-side');
-
-                    App.UI.BaseList.right = left;
-                    App.UI.BaseList.left = left.next();
-                    App.UI.BaseList.center = right;
-
-                    App.currentProjectVariant = App.UI.BaseList.center.data('variant');
                     App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
 
                     App.currentProjectVariant.variant.setColor();
@@ -483,21 +496,8 @@ const App = {
 
                     App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
 
-                    App.UI.BaseList.variantsSlider.prepend(left.next());
-                    App.UI.BaseList.variantsSlider.append(left);
-
-                } else if ($(e.target).hasClass('slider-arrow-left')) {
-                    left.next().removeClass('center');
-                    left.addClass('center').removeClass('left-side');
-
-                    right.prev().addClass('right-side').removeClass(['center']);
-                    right.addClass('left-side').removeClass('right-side');
-
-                    App.UI.BaseList.right = right.prev();
-                    App.UI.BaseList.left = right;
-                    App.UI.BaseList.center = left;
-
-                    App.currentProjectVariant = App.UI.BaseList.center.data('variant');
+                } else if ($(e.target).hasClass('rotate__btn-left')) {
+                    App.currentProjectVariant = App.Project.prevVarinat();
                     App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
 
                     App.currentProjectVariant.variant.setColor();
@@ -505,8 +505,6 @@ const App = {
 
                     App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
 
-                    App.UI.BaseList.variantsSlider.prepend(right);
-                    App.UI.BaseList.variantsSlider.append(right.prev());
                 }
 
                 App.UI.LightBox.setPreviewImage();
@@ -519,9 +517,10 @@ const App = {
              */
 
             ,container: $("#bases-container")
+            ,sizeContainer: $('.size__container')
             ,variantsSlider: $('.slider-container')
             ,colorContainer: $('.workspace-color')
-            ,arrows: $('.new-slider-workspace')
+            ,arrows: $('.product__rotate')
 
             ,right: null
             ,left: null
@@ -1099,6 +1098,8 @@ const App = {
          */
 
         init() {
+            $('.product__preview').html('<canvas width="400" height="400"></canvas>');
+
             this.ctx = (this.canvas = document.querySelector('canvas')).getContext('2d');
             this.ctx.save();
         }
@@ -1246,7 +1247,9 @@ const App = {
                     }
                 }
 
+                //ctx.putImageData(data, 0, 0);
                 //this.image = ctx.canvas.toDataURL('image/png');
+                //App.currentProjectVariant.variant.image.src = ctx.canvas.toDataURL('image/png');
 
                 App.GraphCore.RenderList.clear();
                 return data;
@@ -1256,6 +1259,8 @@ const App = {
                 console.log('data');
                 ctx.drawImage(image,0,0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
                 let data = ctx.getImageData(0, 0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
+
+                //App.currentProjectVariant.variant.image.src = ctx.canvas.toDataURL('image/png');
 
                 App.GraphCore.RenderList.clear();
                 return data;
@@ -1363,8 +1368,6 @@ const App = {
 
                 let transfX = (e.offsetX/this.canvas.width) * this.canvas.width * (x - 1),
                     transfY = (e.offsetY/this.canvas.height) * this.canvas.height * (y - 1);
-
-                console.log(this.canvas.width*(this.scale - scale));
 
                 this.ctx.setTransform(x, 0, 0, y, -transfX, -transfY);
 
