@@ -18,6 +18,8 @@ class BaseVariant {
         this.image.onload = () => {
             this.loaded = true;
         }
+
+        this.filterImage = new Image();
     }
 
     getWorkzone() {
@@ -25,7 +27,7 @@ class BaseVariant {
     }
 
     setImageData(data) {
-        this.imageData = data;
+        //this.imageData = data;
 
         console.log('setData')
 
@@ -33,7 +35,7 @@ class BaseVariant {
     }
 
     setColor() {
-        this.imageData = App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
+        App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
 
         return this;
     }
@@ -53,13 +55,12 @@ class BaseVariant {
     }
 
     render(ctx) {
-        if (!this.imageData || !this.loaded) {
-            if (this.loaded)
-                this.imageData = App.GraphCore.Filter.getImageFilterData(App.GraphCore.ctx, this.image);
+        if (!this.loaded) {
+            App.GraphCore.Filter.getImageFilterData(App.GraphCore.ctx, this.image);
         } else {
-            ctx.putImageData(this.imageData, 0, 0);
+            //ctx.putImageData(this.imageData, 0, 0);
             // if (this.image)
-            //     ctx.drawImage(this.image, 0, 0, this.size.height, this.size.width)
+            ctx.drawImage(this.filterImage, 0, 0, this.size.height, this.size.width)
             //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.colorFilter(ctx, this.image)
         }
 

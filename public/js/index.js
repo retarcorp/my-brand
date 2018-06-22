@@ -1,4 +1,4 @@
-
+var glor = 100;
 /**
  * App - основное ядро, с которого стартует Приложение.
  * Запускает загрузку данных с сервера, инициализирует UI, создаёт новый проект.
@@ -190,11 +190,15 @@ const App = {
 
         ,onBaseColor(e) {
             if (!App.isPreview) {
-                let data = $(e.target).data('color'),
+                let data = $(e.target).css('background-color'),
                     image = App.currentProjectVariant.variant.image;
 
+                //data = ("HEllo999").replace(/\[^-1-9]+/, 'f');
+
+                data = (data.replace(/[^-0-9,]/gim,'')).split(',').map( (elem) => parseInt(elem));
+
                 if (data) {
-                    App.currentProjectVariant.variant.setImageData(App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, image, data));
+                    App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, image, data);
                     App.Project.settings.color = data;
                 }
             }
@@ -364,11 +368,11 @@ const App = {
         }
 
         ,onSaveProject(e) {
-            let data = JSON.stringify(App.Project);
+            let data = Object.assign({}, App.Project);
 
-           //console.log(data);
+            console.log(data);
 
-            App.Ajax.postJSON('extra.json', data);
+            App.Ajax.postJSON('/save', JSON.stringify(data));
         }
 
         /**
@@ -533,7 +537,7 @@ const App = {
                 this.color.on('click', App.UI.onBaseColor);
             }
 
-            ,color: $('.workspace-color')
+            ,color: $('.details__color')
         }
 
         /**
@@ -1237,7 +1241,11 @@ const App = {
                 var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
                     currentColor = App.Project.settings.startColor,
                     before = this.hexToRgb(currentColor),
-                    after = this.hexToRgb(color);
+                    after = (color instanceof Array) ? {
+                        r: color[0]
+                        ,g: color[1]
+                        ,b: color[2]
+                    } : this.hexToRgb(color);
 
                 for (let i = 0; i<data.data.length; i+=4) {
                     if (data.data[i+3] != 0) {
@@ -1247,9 +1255,9 @@ const App = {
                     }
                 }
 
-                //ctx.putImageData(data, 0, 0);
+                ctx.putImageData(data, 0, 0);
                 //this.image = ctx.canvas.toDataURL('image/png');
-                //App.currentProjectVariant.variant.image.src = ctx.canvas.toDataURL('image/png');
+                App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
 
                 App.GraphCore.RenderList.clear();
                 return data;
@@ -1260,7 +1268,7 @@ const App = {
                 ctx.drawImage(image,0,0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
                 let data = ctx.getImageData(0, 0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
 
-                //App.currentProjectVariant.variant.image.src = ctx.canvas.toDataURL('image/png');
+                App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
 
                 App.GraphCore.RenderList.clear();
                 return data;
