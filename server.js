@@ -12,7 +12,14 @@ var saveProject = require('./routes/save');
 
 var app = express();
 
+var Mongo = require('./modules/Mongo').init();
+
+var MClient = require('mongodb').MongoClient;
+var assert = require('assert');
+
 // var fs = require('fs');
+
+//Mongo.delete({user: 'Sergey'}, 'uniq');
 
 // fs.writeFile('test.json', JSON.stringify({ hello: 0, goodby: 1 }), 'utf8', () => {
 // 	console.log('All written');

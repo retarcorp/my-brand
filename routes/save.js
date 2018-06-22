@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
+var Mongo = require('../modules/Mongo');
+
 var URL = require('url');
 var qrs = require('querystring');
 var fs = require('fs');
@@ -13,12 +15,13 @@ router.post('/save', function(req, res, next) {
 	});
 
 	req.on('end', () => {
-		
-		fs.writeFile('project.json', parse, 'utf8', () => {
-			console.log('Saved user ID project');
+		parse = JSON.parse(parse);
+		parse.user = 'sergey';
+
+		Mongo.update(parse.user, parse, 'uniq', (data) => {
+			res.send(JSON.stringify({ status: 'saved' }));
 		});
 
-		res.send(JSON.stringify({ status: 'saved' }));
 	});
 });
 
