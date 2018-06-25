@@ -9,7 +9,7 @@ class Widget {
     constructor(position, size) {
         this.position = position;
         this.size = size;
-        this.isSelected = true;
+        this.isSelected = false;
     }
 
     /**
@@ -39,6 +39,16 @@ class Widget {
 
     pointIn() {
 
+    }
+
+    static fromJSON(json) {
+
+        if (json.type == 'TextWidget') {
+            return new TextWidget(json.position, json.text, json.color, json.fontSettings);
+
+        } else if (json.type == 'ImageWidget') {
+            return new ImageWidget(json.position, json.size, json.src);
+        }
     }
 
 }

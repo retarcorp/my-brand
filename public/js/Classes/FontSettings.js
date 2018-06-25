@@ -15,10 +15,6 @@ class FontSettings {
         this.isBold = false;
         this.isItalic = false;
         this.isUnderline = false;
-
-        this.isRight = false;
-        this.isCenter = false;
-        this.isLeft = false;
     }
 
     getFontString(){

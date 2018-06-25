@@ -106,4 +106,10 @@ const TemplateFactory = {
         `;
     }
 
+    ,getTextColorHtml() {
+        return `
+            <input type="hidden" value="" id="_color__text">
+        `
+    }
+
 }
