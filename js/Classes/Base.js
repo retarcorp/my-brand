@@ -42,7 +42,9 @@ class Base  {
      */
 
     static fromJSON(obj) {
-        
+
+        //console.log(obj.variants);
+
         return (
             new this(obj.name, obj.price, obj.color, obj.colorArray, obj.size)
             .addVariants(

@@ -9,11 +9,20 @@ const App = {
         await this.Data.getBases();
         await this.Data.getFonts();
         await this.Data.getPrints();
+        await this.Data.loadProject();
 
         this.isPreview = false;
 
-        this.Project = new Project(this.Data.Bases[0], new Date());
-        this.Project.addVariants();
+        // this.Project = Project.NewProject(this.Data.Bases[0]);
+        //
+        // console.log(this.Project);
+        //
+        // this.currentProjectVariant = this.Project.variants[0];
+        // this.currentWorkzone = this.currentProjectVariant.variant.workzone;
+
+        console.log(this.Data.Bases);
+
+        App.Project = App.getProject() || Project.NewProject(this.Data.Bases[0]);
 
         this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
@@ -146,7 +155,7 @@ const App = {
             if (data.length) {
                 if (curr instanceof TextWidget) {
                     curr.setText(data);
-                    App.UI.Layers.setText(data);
+                    //App.UI.Layers.setText(data);
                 }
 
                 if (!App.currentProjectVariant.widgets.find((w) => w instanceof TextWidget)) {
@@ -167,8 +176,9 @@ const App = {
             if (curr instanceof TextWidget) {
                 let int = curr.fontSettings.fontSize/curr.size.width;
 
-                if ( (data / int < App.currentWorkzone.size.width - 10 && curr.inWorkzone()) || data < curr.fontSettings.fontSize){
+                if ( (data / int < App.currentWorkzone.size.width - 10 && curr.inWorkzone()) || (data < curr.fontSettings.fontSize && parseInt(data) > 14)){
                     curr.setFontSize(data);
+                    // console.log(data);
                 } else {
                     $(this).val(curr.fontSettings.fontSize);
                 }
@@ -214,25 +224,33 @@ const App = {
         }
 
         ,onStyle(e) {
-            this.classList.toggle('active');
+            //this.classList.toggle('active');
             const curr = App.GraphCore.currentWidget;
 
             if (curr instanceof TextWidget) {
                 const fontSettings = curr.fontSettings;
 
-                switch ($(this).data('style')) {
-                    case FontSettings.Style.ITALIC:
-                        fontSettings.isItalic = !fontSettings.isItalic;
-                        break;
-
-                    case FontSettings.Style.BOLD:
-                        fontSettings.isBold = !fontSettings.isBold;
-                        break;
-
-                    case FontSettings.Style.UNDERLINE:
-                        fontSettings.isUnderline = !fontSettings.isUnderline;
-                        break;
+                if ($(this).hasClass('button__bold')) {
+                    fontSettings.isBold = !fontSettings.isBold;
+                } else if ($(this).hasClass('button__italic')) {
+                    fontSettings.isItalic = !fontSettings.isItalic;
+                } else if ($(this).hasClass('button__underline')) {
+                    fontSettings.isUnderline = !fontSettings.isUnderline;
                 }
+
+                // switch ($(this).data('style')) {
+                //     case FontSettings.Style.ITALIC:
+                //         fontSettings.isItalic = !fontSettings.isItalic;
+                //         break;
+                //
+                //     case FontSettings.Style.BOLD:
+                //         fontSettings.isBold = !fontSettings.isBold;
+                //         break;
+                //
+                //     case FontSettings.Style.UNDERLINE:
+                //         fontSettings.isUnderline = !fontSettings.isUnderline;
+                //         break;
+                // }
             }
         }
 
@@ -352,7 +370,7 @@ const App = {
 
                 layer.remove();
 
-            } else {
+            } else if (curr && $(e.target).hasClass('.delete')) {
                 let layer = $(e.target).parent().parent(),
                     id = layer.data('id'),
                     widget = App.currentProjectVariant.widgets.find( (w) => w.id == id);
@@ -368,9 +386,17 @@ const App = {
         }
 
         ,onSaveProject(e) {
-            let data = Object.assign({}, App.Project);
+            //let data = Object.assign({}, App.Project);
+
+            let data = {
+                variants: App.Project.variants
+                ,base: App.Project.base
+                ,settings: App.Project.settings
+            }
 
             console.log(data);
+
+            App.GraphCore.setCurrentWidget(null);
 
             App.Ajax.postJSON('/save', JSON.stringify(data));
         }
@@ -441,6 +467,7 @@ const App = {
                 );
 
                 this.setSizeHtml();
+                this.setBaseSize(App.Project.settings.size);
 
                 this.sizeContainer.on('click', App.UI.onBaseSize);
 
@@ -483,6 +510,13 @@ const App = {
                 this.sizeContainer.html(
                     App.Project.base.size.reduce( (acc, size) => acc + TemplateFactory.getSizeHtml(size), ``)
                 );
+            }
+
+            ,setBaseSize(size) {
+                $(`.size__block[data-size="${size}"]`);
+
+                $(`[data-size] > input`).attr('checked', false);
+                $(`[data-size="${size}"] > input`).attr('checked', true);
             }
 
             ,setProjectVariant(e) {
@@ -605,17 +639,19 @@ const App = {
         ,TextSettings: {
             init() {
 
+                //$('.product__editor').append(TemplateFactory.getTextColorHtml());
+
                 this.inputs = {
-                    widgetText: $('#text-workspace'),
-                    textSize: $('.btn-size'),
-                    color: $('.btn-color')
+                    widgetText: $('.editor__text-input'),
+                    textSize: $('.size__input'),
+                    color: $('#_color__text')
                 };
 
                 this.inputs.widgetText.on('input', App.UI.onChangeText);
                 this.inputs.textSize.on('input', App.UI.onSize);
                 this.inputs.color.on('change', App.UI.onColor);
 
-                (this.btnsStyle = $('.text_style')).on('click', App.UI.onStyle);
+                (this.btnsStyle = $('.decoration__button')).on('click', App.UI.onStyle);
 
                 (this.btnsAlign = $('.text_align')).on('click', App.UI.onAlign);
             }
@@ -627,7 +663,7 @@ const App = {
                     this.inputs.color.css("backgroundColor", curr.color);
                     this.inputs.color.val(curr.color);
                     this.inputs.textSize.val(curr.fontSettings.fontSize);
-                    this.inputs.widgetText.val(curr.text);
+                    $('.editor__text-input').val(curr.text);
                 }
             }
 
@@ -664,7 +700,9 @@ const App = {
             }
 
             ,createImageWidget(e){
-                const data = $('.print-img.selected').data('print');
+                //const data = $('.print-img.selected').data('print');
+
+                let data = { src: 'img/1.png', text: 'collage' };
 
                 if (data) {
                     let widget = ImageWidget.getDefault(data.src);
@@ -1044,6 +1082,11 @@ const App = {
             this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
         }
 
+        ,loadProject: async function() {
+            const project = await App.Ajax.getJSON('/load');
+            this.Project = project;
+        }
+
     }
 
     /**
@@ -1182,25 +1225,25 @@ const App = {
 
                 App.UI.TextSettings.setSettings();
 
-                if (!App.UI.Tabs.customization.layer.hasClass('active'))
-                    App.UI.onText();
+                // if (!App.UI.Tabs.customization.layer.hasClass('active'))
+                //     App.UI.onText();
 
                 if (fontSettings.isItalic) {
-                    $("[data-style='italic']").addClass('active');
+                    $(".button__italic").addClass('active');
                 } else{
-                    $("[data-style='italic']").removeClass('active');
+                    $(".button__italic").removeClass('active');
                 }
 
                 if (fontSettings.isBold){
-                    $("[data-style='bold']").addClass('active');
+                    $(".button__bold").addClass('active');
                 } else {
-                    $("[data-style='bold']").removeClass('active');
+                    $(".button__bold").removeClass('active');
                 }
 
                 if (fontSettings.isUnderline) {
-                    $("[data-style='underline']").addClass('active');
+                    $(".button__underline").addClass('active');
                 } else {
-                    $("[data-style='underline']").removeClass('active');
+                    $(".button__underline").removeClass('active');
                 }
 
                 switch (fontSettings.alignment) {
@@ -1224,8 +1267,8 @@ const App = {
             resetImageToolkit() {
                 const curr = App.GraphCore.currentWidget;
 
-                if (!App.UI.Tabs.customization.layer.hasClass('active'))
-                    App.UI.onPrint();
+                // if (!App.UI.Tabs.customization.layer.hasClass('active'))
+                //     App.UI.onPrint();
 
                 $('.print-img.selected').removeClass('selected');
                 $(`[name="${curr.text}"]`).addClass('selected');
@@ -1491,6 +1534,44 @@ const App = {
         ,attached: false
         ,attachedDirection: ""
 
+    }
+
+    ,getProject() {
+        let data = this.Data.Project[0],
+            project = null;
+
+        if (data) {
+            project = new Project(Base.fromJSON(data.base));
+            App.currentProjectVariant = project.variants[0];
+
+            //console.log(data.variants[0].widgets);
+
+            project.settings.color = data.settings.color;
+
+            data.variants.forEach( (variant, index) => {
+                project.variants[index].loaded = false;
+
+                project.variants[index].layers = variant.layers;
+                project.variants[index].widgets = variant.widgets.map( (widget, index) =>  {
+                    let w = Widget.fromJSON(widget);
+                    w.index = index;
+                    w.layer = widget.layer;
+
+                    if (w instanceof TextWidget) {
+                        w.lines = widget.lines;
+                    }
+
+                    console.log(w.layer);
+
+                    return w;
+                });
+            });
+
+            project.settings.size = data.settings.size;
+            App.GraphCore.setCurrentWidget(App.currentProjectVariant.widgets[App.currentProjectVariant.widgets.length-1]);
+        }
+
+        return project;
     }
 
     ,mechanic() {
