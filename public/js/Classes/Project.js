@@ -12,6 +12,8 @@ class Project {
         this.variants = [];
         this.settings = new ProjectSettings(base.color);
         this.currentVariant = 0;
+
+        this.addVariants();
     }
 
     /**
@@ -45,5 +47,11 @@ class Project {
 
             return this.variants[this.currentVariant];
         }
+    }
+
+    static NewProject(base, date) {
+        let project = new this(base);
+
+        return project;
     }
 }

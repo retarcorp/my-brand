@@ -25,8 +25,15 @@ class TextWidget extends Widget {
             dir: ""
         };
 
-        this.fontSettings = fontSettings;
-        this.size.height = fontSettings.fontSize;
+        if (fontSettings instanceof FontSettings) {
+            this.fontSettings = fontSettings;
+        } else {
+            this.fontSettings = new FontSettings();
+            Object.assign(this.fontSettings, fontSettings);
+        }
+
+
+        this.size.height = fontSettings.fontSize || 16;
 
         this.resizeDirection = 'upLeft';
 

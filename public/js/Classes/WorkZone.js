@@ -32,7 +32,7 @@ class WorkZone {
      */
 
     static fromJSON(json){
-        return new this(new Position(json.x, json.y), new Size(json.width, json.height));
+        return new this(json.position || new Position(json.x, json.y), json.size || new Size(json.width, json.height));
     }
 
     render(ctx) {
