@@ -15,8 +15,13 @@ class BaseVariant {
         this.image = new Image();
         this.image.src = this.src;
 
+        this.filterImage = new Image();
+
         this.image.onload = () => {
-            this.loaded = true;
+
+            this.filterImage.onload = () => {
+                this.loaded = true;
+            }
         }
     }
 
@@ -25,7 +30,7 @@ class BaseVariant {
     }
 
     setImageData(data) {
-        this.imageData = data;
+        //this.imageData = data;
 
         console.log('setData')
 
@@ -33,7 +38,7 @@ class BaseVariant {
     }
 
     setColor() {
-        this.imageData = App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
+        App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
 
         return this;
     }
@@ -45,21 +50,23 @@ class BaseVariant {
      */
 
     static fromJSON(json){
+
+        console.log(json.image);
+
         return new this( 
-            json.image             
-            ,new Size(json.width, json.height)
+            json.src || json.image
+            ,json.size || new Size(json.width, json.height)
             ,WorkZone.fromJSON(json.workzone)
         );
     }
 
     render(ctx) {
-        if (!this.imageData || !this.loaded) {
-            if (this.loaded)
-                this.imageData = App.GraphCore.Filter.getImageFilterData(App.GraphCore.ctx, this.image);
+        if (!this.loaded) {
+            App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
         } else {
-            ctx.putImageData(this.imageData, 0, 0);
+            //ctx.putImageData(this.imageData, 0, 0);
             // if (this.image)
-            //     ctx.drawImage(this.image, 0, 0, this.size.height, this.size.width)
+            ctx.drawImage(this.filterImage, 0, 0, this.size.height, this.size.width)
             //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.colorFilter(ctx, this.image)
         }
 
