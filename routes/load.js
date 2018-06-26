@@ -10,7 +10,8 @@ var fs = require('fs');
 router.get('/load', function(req, res, next) {
 	// let data = qrs.parse(URL.parse(req.url).query);
 
-	let key = { user: 'sergey' },
+	let user = req.cookies.user.name || req.session.user.name;
+		key = { user: user },
 		data = qrs.parse(URL.parse(req.url).query);
 
 	Mongo.select(key, 'uniq', (data) => {

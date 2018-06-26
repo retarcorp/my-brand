@@ -9,21 +9,23 @@ var serverRouter = require('./routes/server');
 
 var loadProject = require('./routes/load');
 var saveProject = require('./routes/save');
+var loadUser = require('./routes/Auth');
+var uploadFile = require('./routes/upload');
+var loadFonts = require('./routes/fonts');
 
 var app = express();
 
+var session = require('express-session');
+
 var Mongo = require('./modules/Mongo').init();
+//var Users = require('./modules/Users');
 
 var MClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
-// var fs = require('fs');
+var Users = require('./modules/Users');
 
-//Mongo.delete({user: 'Sergey'}, 'uniq');
-
-// fs.writeFile('test.json', JSON.stringify({ hello: 0, goodby: 1 }), 'utf8', () => {
-// 	console.log('All written');
-// });
+Users.create( { name: "Denis", password: "layout" }, (data) => console.log(data));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,36 +35,20 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'keyboard cat', cookie: {} }));
 
-app.get('/', indexRouter);
+//app.use(express.session());
+//app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/fonts', loadFonts);
 app.get('/load', loadProject);
 app.post('/save', saveProject);
+app.post('/login', loadUser);
+app.post('/upload', uploadFile);
 
 app.get('/*', serverRouter);
 
-// app.get('/**/*.css', function(req, res){
-// 	res.sendFile(__dirname + req.url);
-// });
-
-// app.get('/**/*.js', function(req, res) {
-// 	res.sendFile(__dirname + req.url);
-// });
-
-// app.get('/*.json', function(req, res) {
-// 	res.sendFile(__dirname + req.url);
-// });
-
-// app.use('/users', usersRouter);
-
-//console.log(routes);
-
 //app.get('/', indexRouter);
-
-// app.get('/', function(req, res) {
-// 	res.send('hello');
-// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
