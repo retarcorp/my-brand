@@ -18,7 +18,7 @@ class Font {
      */
 
     static fromJSON(obj) {
-        return (new this(obj.name, obj.src));
+        return (new this(obj.font, obj.src));
     }
 
 }

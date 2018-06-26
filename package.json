@@ -6,12 +6,17 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "connect-busboy": "0.0.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
+    "express-session": "^1.15.6",
     "http-errors": "~1.6.2",
     "jade": "~1.11.0",
+    "jquery": "^3.3.1",
+    "md5": "^2.2.1",
     "mongodb": "^3.0.10",
-    "morgan": "~1.9.0"
+    "morgan": "~1.9.0",
+    "multiparty": "^4.1.4"
   }
 }

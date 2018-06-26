@@ -1071,8 +1071,8 @@ const App = {
          */
 
         ,getFonts: async function() {
-            const data = await App.Ajax.getJSON('fonts.json');
-            this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
+            const data = await App.Ajax.getJSON('/fonts');
+            this.Fonts = data.map((obj) => Font.fromJSON(obj));
         }
 
         ,Prints: []
@@ -1223,6 +1223,7 @@ const App = {
             ,resetTextToolkit(){
                 const fontSettings = App.GraphCore.currentWidget.getFontSettings();
 
+                if (App.Project)
                 App.UI.TextSettings.setSettings();
 
                 // if (!App.UI.Tabs.customization.layer.hasClass('active'))
@@ -1547,6 +1548,7 @@ const App = {
             //console.log(data.variants[0].widgets);
 
             project.settings.color = data.settings.color;
+            project.id = data.id;
 
             data.variants.forEach( (variant, index) => {
                 project.variants[index].loaded = false;

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/auth-admin.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <title>Authorization</title>
+</head>
+<body>
+    <section class="auth-admin">
+        <form class="auth-admin__form form form_shadow form_radius form_padding">
+            <header class="form__header">Панель управления</header>
+            <div class="form__data">
+                <input id="login" class="input_margin form__input input_padding input_border input_text" type="text" placeholder="Ваш логин">
+                <input id="password" class="form__input input_padding input_border input_text" type="password" placeholder="Пароль">
+            </div>
+            <div class="form__btns">
+                <input type="submit" class="button_margin form__button button button_gradient_blue button_text_color" value="Вход">
+                <a href="#" class="form__link">Восстановить пароль</a>
+            </div>
+        </form>
+    </section>
+
+    <script>
+
+		document.querySelector('form').addEventListener('submit', function (){
+			event.preventDefault();
+
+			let xhr = new XMLHttpRequest(),
+				form = document.querySelector('form');
+
+			xhr.onreadystatechange = () => {
+				console.log(xhr.response);
+
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200)
+					document.location.href = '/';
+			}
+
+			// console.log(this);
+
+			// var form = new FormData();
+
+			xhr.open('POST', '/login');
+
+			xhr.send(JSON.stringify({ name: $('#login').val(), password: $('#password').val() }));
+		});
+				
+
+	</script>
+</body>
+</html>

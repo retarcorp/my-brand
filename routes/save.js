@@ -16,11 +16,15 @@ router.post('/save', function(req, res, next) {
 
 	req.on('end', () => {
 		parse = JSON.parse(parse);
-		parse.user = 'sergey';
+		parse.user = req.cookies.user.name || req.session.user.name;
 
-		Mongo.update(parse.user, parse, 'uniq', (data) => {
+		console.log(req.cookies.user, req.session.user);
+
+		Mongo.update( { user: parse.user }, parse, 'uniq', (data) => {
 			res.send(JSON.stringify({ status: 'saved' }));
 		});
+
+		//res.send(JSON.stringify({ status: 'saved' }));
 
 	});
 });
