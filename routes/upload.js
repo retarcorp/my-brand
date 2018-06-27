@@ -14,20 +14,25 @@ router.post('/upload', (req, res, next) => {
 	form.parse(req, (err, fields, files) => {
 		// console.log(fields, '\n', files);
 
+        console.log(fields);
+
 		for (file in files) {
-			let fl = files[file][0];
+			let fle = files[file];
 
-			if (fl.path) {
-				if (fl.originalFilename.indexOf('.ttf') >= 0) {
-					fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
-					Mongo.update({ font: fields.user[0] }, { font: fields.user[0], src: `public/fonts/${fl.originalFilename}` }, 'fonts');
-				}
+			fle.forEach( (fl) => {
+                if (fl.path) {
+                    if (fl.originalFilename.indexOf('.ttf') >= 0) {
+                        fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
+                        Mongo.update({ font: fields.user[0] }, { font: fields.font[0], src: `public/fonts/${fl.originalFilename}` }, 'fonts');
+                    }
 
-				if (fl.headers['content-type'].indexOf('image/') >= 0) {
-					fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/img/bases/${fl.originalFilename}`));
-				}
+                    console.log(fl.originalFilename, fl.headers['content-type']);
 
-			}
+                    if (fl.headers['content-type'].indexOf('image/png') >= 0) {
+                        fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/img/basis/${fl.originalFilename}`));
+                    }
+                }
+			})
 			
 		}
 

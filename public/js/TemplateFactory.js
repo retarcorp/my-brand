@@ -56,8 +56,12 @@ const TemplateFactory = {
 
     ,getPrintHtml(print) {
         return (`
-            <div class="print-img" name="${print.text}">
-                <img src="${print.src}" alt="${print.text}">
+            <div class="picture-list__picture picture-list__picture_margin">
+                <img src="${print.src}" alt="" class="picture__img">
+                <div class="picture-btns">
+                    <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                    <button class="button picture__button picture__remove">Удалить</button>
+                </div>
             </div>
         `);
     }
@@ -109,6 +113,16 @@ const TemplateFactory = {
     ,getTextColorHtml() {
         return `
             <input type="hidden" value="" id="_color__text">
+        `
+    }
+
+    ,getLoginHtml() {
+        return `
+            <form class="login">
+                <input type="text" name="user">
+                <input type="password" name="pass">
+                <input type="submit">
+            </form>
         `
     }
 

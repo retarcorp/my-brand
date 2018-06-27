@@ -5,7 +5,10 @@ var glor = 100;
  * @constant
  */
 const App = {
-    start: async function(){        
+    start: async function(){
+
+        this.logged = false;
+
         await this.Data.getBases();
         await this.Data.getFonts();
         await this.Data.getPrints();
@@ -20,9 +23,9 @@ const App = {
         // this.currentProjectVariant = this.Project.variants[0];
         // this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
-        console.log(this.Data.Bases);
+        this.logged = (await this.Ajax.getJSON('/onsession')).online;
 
-        App.Project = App.getProject() || Project.NewProject(this.Data.Bases[0]);
+        this.Project = (this.logged) ? this.getProject() || Project.NewProject(this.Data.Bases[0]) : Project.NewProject(this.Data.Bases[0]);
 
         this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
@@ -67,6 +70,8 @@ const App = {
             this.Print.init();
             this.Canvas.init();
             this.Create.init();
+
+            this.Profile.init();
         }
 
         ,leftMenu: $('.left-menu')
@@ -273,9 +278,12 @@ const App = {
         }
 
         ,onSelectPrint(e) {
-            if ($(e.target).hasClass('print-img')) {
-                $('.print-img.selected').removeClass('selected');
-                let data = $(e.target).addClass('selected').data('print');
+            console.log(e.target);
+
+            if ($(e.target).hasClass('picture__button')) {
+                $('.picture-list__picture').removeClass('selected');
+
+                let src = $(e.target).parent().parent().addClass('selected').find('img').attr('src');
 
                 //const curr = App.GraphCore.currentWidget;
 
@@ -307,13 +315,8 @@ const App = {
                         img.src = e.target.result;
                         print.src = img.src;
 
-                        console.log(uploads);
-
-                        uploads.data('print', print);
-                        App.UI.Print.userPrints.append(uploads);
-
-                        $('.print-img.selected').removeClass('selected');
                         uploads.addClass('selected');
+                        $('.file-upload__picture-list').append(uploads);
 
                         App.UI.Create.createImageWidget();
                     }
@@ -400,6 +403,39 @@ const App = {
 
             App.Ajax.postJSON('/save', JSON.stringify(data));
         }
+
+        ,Profile: {
+
+            init() {
+                if (App.logged) {
+                    $('.main-menu__item:last-child').css('backgroundColor', "#A0A");
+                } else {
+                    $('.main-menu__item:last-child').append(TemplateFactory.getLoginHtml());
+
+                    let login = $(".login");
+
+                    login.on('submit', this.login);
+
+                }
+            }
+
+            ,login() {
+                event.preventDefault();
+
+                let data = {
+                    name: $('input[name="user"]').val()
+                    ,password: $('input[name="pass"]').val()
+                };
+
+                alert('stay');
+
+                App.Ajax.postJSON('/login', JSON.stringify(data), (data) => {
+                    console.log(data);
+                    //location.reload();
+                });
+            }
+        }
+
 
         /**
          * Tabs - инициализирует DOM структуру для табов. Запускает обработчики событий.
@@ -700,9 +736,9 @@ const App = {
             }
 
             ,createImageWidget(e){
-                //const data = $('.print-img.selected').data('print');
+                // const data = $('.picture-list__picture.selected').data('print');
 
-                let data = { src: 'img/1.png', text: 'collage' };
+                let data = { src: $('.picture-list__picture.selected').find('img').attr('src'), text: 'collage' };
 
                 if (data) {
                     let widget = ImageWidget.getDefault(data.src);
@@ -724,7 +760,7 @@ const App = {
         ,Print: {
 
             init(){
-                this.gallery.on('click', App.UI.onSelectPrint);
+                //this.print.on('click', App.UI.onSelectPrint);
                 this.userPrints.on('click', App.UI.onSelectPrint);
 
                 this.gallery.html(
@@ -759,8 +795,9 @@ const App = {
                 }
             }
             
-            ,userPrints: $('.new-print-container')
+            ,userPrints: $('.file-upload__picture-list')
             ,gallery: $('.container-print')
+            //,print: $('.picture__button')
         }
 
         ,Layers: {
@@ -817,8 +854,6 @@ const App = {
             }
 
             ,layerEvent(e) {
-                console.log(e.target);
-
                 if ($(e.target).hasClass('delete__layer'))
                     App.UI.onDelete(e);
 
@@ -1054,7 +1089,6 @@ const App = {
 
         ,getBases: async function(){
             const data = await App.Ajax.getJSON("server.json");
-            console.log(data);
             this.Bases = data.map((obj) => Base.fromJSON(obj));
         }
 
@@ -1120,12 +1154,13 @@ const App = {
          * @param {string} path - путь к серверу.
          */
 
-        ,postJSON(path, data = null){
+        ,postJSON(path, data = null, callback){
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest;
                 xhr.open("POST",path, true);
                 xhr.onload = () => {
-                    resolve(JSON.parse(xhr.responseText));
+                    if (callback) callback(data);
+                    resolve(JSON.parse(xhr.responseText))
                 }
                 xhr.send(data);
                 
@@ -1308,7 +1343,6 @@ const App = {
             }
 
             ,getImageFilterData(ctx, image) {
-                console.log('data');
                 ctx.drawImage(image,0,0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
                 let data = ctx.getImageData(0, 0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
 
@@ -1562,8 +1596,6 @@ const App = {
                     if (w instanceof TextWidget) {
                         w.lines = widget.lines;
                     }
-
-                    console.log(w.layer);
 
                     return w;
                 });
