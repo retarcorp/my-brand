@@ -431,7 +431,7 @@ const App = {
 
                 App.Ajax.postJSON('/login', JSON.stringify(data), (data) => {
                     console.log(data);
-                    //location.reload();
+                    location.reload();
                 });
             }
         }
