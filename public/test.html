@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style>
+        input[type="file"] {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <form class="register">
+        <input type="email" required name="email">
+    </form>
+
+    <form class="upload">
+        <input type="text" name="font">
+        <input type="file">
+        <input type="file">
+        <input type="file">
+        <input type="file">
+    </form>
+
+    <script>
+
+        $('.register').on('submit', () => {
+            event.preventDefault();
+
+            let data = {},
+                xhr = new XMLHttpRequest(),
+                email = $('input[type="email"]'),
+                reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+            if (!reg.test(email.val()) == false) {
+                xhr.onload = () => {
+                    if (xhr.status == 200) {
+                        console.log(xhr.responseText)
+                    } else {
+                        console.log(xhr.responseText)
+                    }
+                }
+
+                data.name = email.val();
+
+                xhr.open('POST', '/register');
+                xhr.send(JSON.stringify(data));
+
+            } else {
+                console.log('Invalid email');
+            }
+
+
+        });
+
+        $('.upload').on('submit', () => {
+            event.preventDefault();
+
+            let xhr = new XMLHttpRequest();
+
+            xhr.onload = () => {
+                if (xhr.status == 200) {
+                    console.log('No Mistakes', xhr.responseText);
+                } else {
+                    console.log(xhr.responseText);
+                }
+            }
+
+            let data = new FormData(),
+                files = $('input[type="file"]'),
+                fields = $('input[type="text"]');
+
+            $.each(files, (index, child) => {
+                $.each(child.files, (key, value) => {
+                    data.append(key, value);
+                });
+            });
+
+            $.each(fields, (index, child) => {
+                data.append($(child).attr('name'), $(child).val());
+            });
+
+            xhr.open('POST', '/upload');
+
+            xhr.send(data);
+        })
+    </script>
+
+</body>
+</html>

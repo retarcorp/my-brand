@@ -1,6 +1,9 @@
 var express = require('express');
-var Mongo = require('./Mongo');
 var md5 = require('md5');
+
+var Mongo = require('./Mongo');
+var Templates = require('./Templates');
+var Mailer = require('./Mail').init();
 
 var router = express.Router();
 
@@ -9,24 +12,43 @@ let Users = {
 		console.log('Users initialized');
 	}
 
-	,find(user, callback) {
-		Mongo.select({ name: user.name }, 'users', callback);
+	,adminLogin(admin, callback) {
+		this.find(admin, 'admin', callback);
 	}
 
-	,create(user, callback) {
+	,find(user, collection, callback) {
+		Mongo.select({ name: user.name }, collection, callback);
+	}
+
+	,create(user, collection, callback) {
 		let salt = md5(this.genSalt()),
 			name = user.name,
 			password = md5(salt + user.password + salt),
+			admin = (user.admin) ? true : false;
 
 			User = {
 				name: name
 				,password: password
 				,salt: salt
+				,admin: admin
+				,hellos: user.password
 			}
 
-		this.find( { name: name }, (data) => {
+		this.find( { name: name }, collection, (data) => {
+			console.log(data.length)
+
 			if (!data.length) {
-				Mongo.insert(User, 'users', callback);
+				Mongo.insert(User, collection, callback);
+
+				console.log(user.name, User.name);
+
+				Mailer.send({
+					from: 'serehactka@gmail.com'
+					,to: user.name
+					,subject: 'Testing'
+					,html: Templates.getRegistrationMail(user)
+				});
+
 			} else {
 				callback("User already exist");
 			}
@@ -34,29 +56,34 @@ let Users = {
 	}
 
 	,createSession(req, res, next, user, callback) {
-		let session = req.session,
-			cookies = req.cookies.user;
+		//console.log(req.session)
 
-		session.logged = session.logged || true;
+	    let session = req.session;
+
+		session.logged = true;
 		session.user = session.user || user;
 
-		if (!cookies) {
+		if (!req.cookies.user)
 			res.cookie('user', user);
-			console.log('setCookie');
-
-		} else {
-			cookies.user = user;
-		}
 
 		if (callback) callback();
 	}
 
 	,checkCredentials(check, User) {
+		//console.log(md5(check.salt + User.password + check.salt));
 		return check.password == md5(check.salt + User.password + check.salt);
 	}
 
 	,genSalt() {
-		return 123456;
+		let salt = "",
+			code = 0;
+
+		for (let i = 0; i < 8; i++) {
+			code = Math.round(Math.random() * 76 + 48);
+			salt += String.fromCharCode(code);
+		}
+
+		return salt;
 	}
 
 	// ,checkCredentials(user) {

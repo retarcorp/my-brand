@@ -9,9 +9,17 @@ var serverRouter = require('./routes/server');
 
 var loadProject = require('./routes/load');
 var saveProject = require('./routes/save');
-var loadUser = require('./routes/Auth');
+
+var loadAdmin = require('./routes/adminAuth');
+
+var adminPanel = require('./routes/admin');
+
 var uploadFile = require('./routes/upload');
 var loadFonts = require('./routes/fonts');
+
+var register = require('./routes/register');
+var loadUser = require('./routes/login');
+var onsession = require('./routes/onsession');
 
 var app = express();
 
@@ -25,7 +33,7 @@ var assert = require('assert');
 
 var Users = require('./modules/Users');
 
-Users.create( { name: "Denis", password: "layout" }, (data) => console.log(data));
+//Users.create( { name: "serehactka", password: "1", admin: true }, 'users', (data) => console.log(data));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -43,9 +51,14 @@ app.use(session({ secret: 'keyboard cat', cookie: {} }));
 app.get('/fonts', loadFonts);
 app.get('/load', loadProject);
 app.post('/save', saveProject);
+
+app.get('/onsession', onsession);
 app.post('/login', loadUser);
+app.post('/register', register);
+
 app.post('/upload', uploadFile);
 
+app.get('/admin', adminPanel);
 app.get('/*', serverRouter);
 
 //app.get('/', indexRouter);

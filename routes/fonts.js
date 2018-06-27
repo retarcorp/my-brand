@@ -9,8 +9,6 @@ router.get('/fonts', (req, res, next) => {
 	let data = qrs.parse(URL.parse(req.url).query);
 
 	Mongo.select({}, 'fonts', (fonts) => {
-		console.log(fonts);
-
 		res.send(JSON.stringify(fonts));
 	});
 });

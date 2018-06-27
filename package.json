@@ -17,6 +17,7 @@
     "md5": "^2.2.1",
     "mongodb": "^3.0.10",
     "morgan": "~1.9.0",
-    "multiparty": "^4.1.4"
+    "multiparty": "^4.1.4",
+    "nodemailer": "^4.6.7"
   }
 }
