@@ -35,12 +35,9 @@ let Users = {
 			}
 
 		this.find( { name: name }, collection, (data) => {
-			console.log(data.length)
 
 			if (!data.length) {
 				Mongo.insert(User, collection, callback);
-
-				console.log(user.name, User.name);
 
 				Mailer.send({
 					from: 'serehactka@gmail.com'
@@ -50,7 +47,7 @@ let Users = {
 				});
 
 			} else {
-				callback("User already exist");
+				callback({ status: false, message: "User already exist!" });
 			}
 		});
 	}

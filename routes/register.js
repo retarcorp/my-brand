@@ -13,15 +13,13 @@ router.post('/register', (req, res, next) => {
     req.on('end', () => {
         let data = JSON.parse(parse);
 
-        //console.log(parse);
-
         let user = {
             password: Users.genSalt()
             ,name: data.name
         }
 
         Users.create(user, 'users', (data) => {
-            res.send('userCreated');
+            res.send(JSON.stringify( data ));
         });
     });
 

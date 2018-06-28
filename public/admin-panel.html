@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+
+    <link rel="stylesheet" href="css/admin-panel.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+</head>
+<body>
+
+    <div class="wrapper">
+        <div class="header">
+            <div class="container">
+                <a class="header__home" href="/">
+                    <h1>Мой Бренд</h1>
+                </a>
+
+                <div class="header__control">
+                    <div class="header__admin">Администратор 2</div>
+                    <div class="header__logout">Выход</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper__content">
+
+            <div class="container">
+                <div class="menu">
+                    <div class="menu__title">
+                        Навигация
+                    </div>
+
+                    <ul class="menu__list">
+                        <li class="menu__point">
+                            Список заказов
+                        </li>
+                        <li class="menu__point">
+                            Оплаченные заказы
+                        </li>
+                        <li class="menu__point">
+                            Период оплаты
+                        </li>
+                        <li class="menu__point active">
+                            Управление шрифтами
+                        </li>
+                        <li class="menu__point">
+                            Настройки
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+
+                    <div class="panel__card">
+                        <div class="panel__card-title">
+                            Добавить новый шрифт в систему
+                        </div>
+
+                        <div class="panel__content">
+                            <form class="panel__font-form">
+                                <div class="panel__info">
+                                    Название шрифта
+                                </div>
+
+                                <div class="panel__inputs">
+                                    <input type="text" name="font" placeholder="Введи название шрифта">
+                                    <input type="file" name="font_file" data-after="Выбирите файл">
+                                </div>
+
+                                <button class="panel__font-submit simple">Загрузить</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="panel__card">
+                        <div class="panel__card-title">
+                            Загруженные шрифты
+                        </div>
+
+                        <ul class="panel__font-list">
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                            <li class="panel__font-point">
+                                <div class="panel__font-type">
+                                    <p style="font-family: Calibri;">Calibri</p>
+                                    <span>Calibri</span>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="panel__card-page">
+                            <ul class="panel__page-list">
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">1</span>
+                                </li>
+                            </ul>
+
+                            <ul class="panel__page-list selected">
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">2</span>
+                                </li>
+                            </ul>
+
+                            <ul class="panel__page-list">
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">3</span>
+                                </li>
+                            </ul>
+
+                            <ul class="panel__page-list">
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">4</span>
+                                </li>
+                            </ul>
+
+                            <ul class="panel__page-list">
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">5</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="footer">
+
+        </div>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="js/require.js"></script>
+    <script src="js/TemplateFactory.js"></script>
+    <script src="js/user_api.js"></script>
+    <script src="js/admin_api.js"></script>
+    <script src="js/index.js"></script>
+
+</body>
+</html>

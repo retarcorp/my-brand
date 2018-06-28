@@ -11,7 +11,7 @@ router.get('/admin', (req, res, next) => {
 		res.sendFile('login.html', { root: 'views/'});
 	} else {
 		console.log('/admin3');
-		res.sendFile('admin_panel.html', { root: 'views/'});
+		res.sendFile('admin-panel.html', { root: 'public/'});
 	}
 
 });

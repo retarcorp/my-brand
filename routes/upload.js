@@ -11,19 +11,19 @@ router.post('/upload', (req, res, next) => {
 	
 	let form = new multiparty.Form();
 
+	console.log(req);
+
 	form.parse(req, (err, fields, files) => {
 		// console.log(fields, '\n', files);
-
-        console.log(fields);
 
 		for (file in files) {
 			let fle = files[file];
 
 			fle.forEach( (fl) => {
                 if (fl.path) {
-                    if (fl.originalFilename.indexOf('.ttf') >= 0) {
+                    if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
-                        Mongo.update({ font: fields.user[0] }, { font: fields.font[0], src: `public/fonts/${fl.originalFilename}` }, 'fonts');
+                        Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `public/fonts/${fl.originalFilename}` }, 'fonts');
                     }
 
                     console.log(fl.originalFilename, fl.headers['content-type']);
@@ -36,7 +36,7 @@ router.post('/upload', (req, res, next) => {
 			
 		}
 
-		res.send('All loaded');
+		res.send({ status: true });
 	})
 
 });

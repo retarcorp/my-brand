@@ -21,6 +21,24 @@
     pointer-events: none;
 }
 
+.auth-admin.active,
+.registration.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.congratulations.active {
+    display: flex;
+}
+
+.registration__form.active {
+    display: flex;
+}
+
+.invalid__email.active {
+    opacity: 1;
+}
+
 /*DELETE*/
 
 canvas {
