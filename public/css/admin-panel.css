@@ -1,0 +1,310 @@
+@font-face {
+    font-family: 'Roboto Condensed';
+    src: url("https://fonts.googleapis.com/css?family=Roboto+Condensed");
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-size: 62.5%;
+}
+
+body {
+    background-image: url('../img/pattern.png');
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+button {
+    border: none;
+    outline: none;
+}
+
+button.simple {
+    width: 186px;
+    height: 55px;
+    background: linear-gradient(to bottom, rgb(80, 126, 242), rgb(27,90,250));
+    color: #fff;
+    font-size: 1.7rem;
+    font-weight: bold;
+    font-family: Lato, sans-serif;
+    display: block;
+    margin: 0  0 0 auto;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button.simple:hover {
+    opacity: 0.9;
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-family: 'Roboto Condensed';
+    font-weight: bold;
+    color: #4274f5;
+}
+
+.header {
+    height: 70px;
+    padding: 0 0 9px 0;
+    background: #fff;
+}
+
+.header__home {
+
+}
+
+.container {
+    max-width: 1242px;
+    padding: 0 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.header__control {
+    height: 100%;
+    width: 200px;
+    background: #fff;
+    display: flex;
+    padding-left: 15px;
+    justify-content: end;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.header__logout,
+.header__admin {
+    font-family: Lato, sans-serif;
+    font-weight: bold;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+}
+
+.header__admin {
+    margin-right: 5px;
+}
+
+.header__admin:hover,
+.header__logout:hover {
+    border-bottom-color: #000;
+}
+
+.header__logout {
+    fonr-size: 1.4rem;
+}
+
+.wrapper__content {
+    padding-top: 15px;
+}
+
+.wrapper__content .container {
+    justify-content: start;
+    align-items: start;
+}
+
+.menu {
+    min-width: 295px;
+    flex-shrink: 1;
+    flex-basis: 295px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.menu__title,
+.panel__card-title {
+    padding: 16px 0 16px 28px;
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: #393939;
+    font-family: Lato, sans-serif;
+    position: relative;
+    box-shadow: 1px 0 30px rgba(56,49,187, 0.07);
+    border-radius: 5px 5px 0 0 ;
+    z-index: 1;
+}
+
+.menu__list {
+    /*background: #fff;*/
+    list-style: none;
+}
+
+.menu__point {
+    position: relative;
+    padding: 20px 0 20px 28px;
+    background: #fff;
+    font-size: 1.7rem;
+    font-weight: bold;
+    font-family: Lato, sans-serif;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.menu__point.active,
+.menu__point:hover {
+    background: #3d71f5;
+    color: #fff;
+}
+
+.menu__point:last-child {
+    border: none;
+}
+
+.panel {
+    width: 100%;
+    margin-left: 20px;
+}
+
+.panel__card {
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.panel__content {
+    padding: 28px;
+}
+
+.panel__info {
+    font-size: 1.6rem;
+    font-weight: bold;
+    font-family: Lato, sans-serif;
+    margin-bottom: 10px;
+}
+
+.panel__inputs {
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+input[type="text"] {
+    padding: 8px 11px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: Lato, sans-serif;
+}
+
+input[type="text"][name="font"] {
+    min-width: 37%;
+}
+
+input[type="file"] {
+    opacity: 1;
+    position: relative;
+    width: 100%;
+}
+
+input[type="file"]:focus {
+    outline: none;
+    border: none;
+}
+
+input[type="file"][name="font_file"] {
+    margin-left: 38px;
+}
+
+input[type="file"]::before {
+    content: attr(data-after);
+    background: #fff;
+    position: absolute;
+    font-family: Lato, sans-serif;
+    font-size: 1.7rem;
+    font-weight: bold;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/*.panel__inputs::after {*/
+    /*content: "";*/
+    /*background: url('../img/icon/cross.png') center center no-repeat;*/
+    /*position: absolute;*/
+    /*right: 0;*/
+    /*width: 21px;*/
+    /*height: 21px;*/
+    /*cursor: pointer;*/
+/*}*/
+
+.panel__font-list {
+    list-style: none;
+    background: #fff;
+}
+
+.panel__font-point {
+    display: flex;
+    padding: 14px 28px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.panel__font-point:nth-child(2n) {
+    background: #f7f9fe;
+}
+
+.panel__font-point::after {
+    content: '';
+    background: url('../img/icon/cross.png') center center no-repeat;
+    width: 21px;
+    height: 21px;
+    cursor: pointer;
+}
+
+.panel__font-type p,
+.panel__font-type span {
+    color: #393939;
+}
+
+.panel__font-type p {
+    font-size: 2.3rem;
+    margin-bottom: 7px;
+}
+
+.panel__font-type span {
+    font-size: 1.5rem;
+    font-family: Lato, sans-serif;
+}
+
+.panel__card-page {
+    height: 100px;
+    backround: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panel__page-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    font-weight: bold;
+    font-family: Lato, sans-serif;
+    width: 40px;
+    height: 40px;
+    margin: 0 2px;
+    cursor: pointer;
+}
+
+.panel__page-list.selected {
+    border-radius: 50%;
+    background: #55acee;
+    color: #fff;
+}

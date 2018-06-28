@@ -1,13 +1,27 @@
 body{
     background: #f5f5fc;
     display: flex;
+    margin: 0;
 }
 
-.auth-admin{
+.auth-admin,
+.registration{
     margin: auto;
+    z-index: 1;
 }
 
-.auth-admin__form{
+.registration{
+    position: fixed;
+    display: flex;
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.auth-admin__form,
+.registration__form{
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -15,6 +29,13 @@ body{
     width: 400px;
     height: 360px;
     background-color: #fff;
+}
+.registration__form{
+    position: relative;
+    margin: auto;
+    width: 800px;
+    height: 400px;
+    justify-content: flex-start;
 }
 .form_padding{
     padding: 38px;
@@ -76,4 +97,76 @@ body{
 .form__link{
     color: #393939;
     font-size: 14px;
+}
+
+.form__input-registration{
+    display: block;
+    height: 68px;
+    border-radius: 5px;
+    border: 1px solid #748898;
+    width: 470px;
+    margin: 0 auto;
+    font-size: 19px;
+}
+
+.form__header-registration{
+    font-size: 29px;
+    font-weight: 700;
+}
+.form__text-registration{
+    width: 470px;
+    margin: 0 auto;
+    text-align: center;
+    font-weight: 400;
+}
+.form__button-registration{
+    width: 283px;
+    height: 74px;
+    font-size: 19px;
+    font-weight: 700;
+    border-radius: 37px;
+}
+.invalid__email{
+    opacity: 0;
+    color: #fb5e5e;
+    font-size: 15px;
+    text-align: center;
+}
+.button__close{
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    width: 35px;
+    height: 35px;
+    background-image: url(../img/icon/cross.png);
+    background-repeat: no-repeat;
+}
+.text-registration_margin{
+    margin-top: 25px;
+}
+.form__data_margin{
+    margin-top: 45px;
+}
+
+.header-congratulations{
+    color: #5acc80;
+    margin-top: 35px;
+}
+
+.registration__form{
+    display: none;
+}
+
+.congratulations{
+    margin: auto;
+    width: 790px;
+    height: 290px;
+    /*display: flex;*/
+    flex-direction: column;
+    background-color: #fff;
+    display: none;
+}
+.text-congratulation_margin{
+    margin-top: 25px;
+    margin-bottom: 35px;
 }

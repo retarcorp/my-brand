@@ -19,6 +19,8 @@ router.post('/login', (req, res, next) => {
 
 		Users.find(user, 'users', (data) => {
 
+			console.log(user, data)
+
 			if (data.length) {
 				if (Users.checkCredentials(data[0], user)) {
 					Users.createSession(req, res, next, data[0], (data) => {

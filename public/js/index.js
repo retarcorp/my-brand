@@ -7,14 +7,22 @@ var glor = 100;
 const App = {
     start: async function(){
 
-        this.logged = false;
+        this.logged = await User.session();
+        this.isPreview = false;
 
         await this.Data.getBases();
         await this.Data.getFonts();
         await this.Data.getPrints();
-        await this.Data.loadProject();
+        await this.Data.loadProjects();
 
-        this.isPreview = false;
+        if (this.logged){
+            await this.Data.loadProjects();
+
+            (this.Data.Projects.length) ? this.setProject(this.Data.Projects[0]) : this.Project = Project.NewProject(this.Data.Bases[0]);
+
+        } else  {
+            this.Project = Project.NewProject(this.Data.Bases[0]);
+        }
 
         // this.Project = Project.NewProject(this.Data.Bases[0]);
         //
@@ -23,15 +31,13 @@ const App = {
         // this.currentProjectVariant = this.Project.variants[0];
         // this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
-        this.logged = (await this.Ajax.getJSON('/onsession')).online;
-
-        this.Project = (this.logged) ? this.getProject() || Project.NewProject(this.Data.Bases[0]) : Project.NewProject(this.Data.Bases[0]);
+        //this.Project = (this.logged) ? this.getProject() || Project.NewProject(this.Data.Bases[0]) : Project.NewProject(this.Data.Bases[0]);
 
         this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
-        this.GraphCore.init();
         this.UI.init();
+        this.GraphCore.init();
 
         //Using for tests
 
@@ -68,7 +74,7 @@ const App = {
             this.Logos.init();
 
             this.Print.init();
-            this.Canvas.init();
+            //this.Canvas.init();
             this.Create.init();
 
             this.Profile.init();
@@ -278,8 +284,6 @@ const App = {
         }
 
         ,onSelectPrint(e) {
-            console.log(e.target);
-
             if ($(e.target).hasClass('picture__button')) {
                 $('.picture-list__picture').removeClass('selected');
 
@@ -414,7 +418,7 @@ const App = {
 
                     let login = $(".login");
 
-                    login.on('submit', this.login);
+                    login.on('submit', User.login);
 
                 }
             }
@@ -427,13 +431,13 @@ const App = {
                     ,password: $('input[name="pass"]').val()
                 };
 
-                alert('stay');
-
                 App.Ajax.postJSON('/login', JSON.stringify(data), (data) => {
-                    console.log(data);
                     location.reload();
                 });
             }
+
+
+            ,
         }
 
 
@@ -469,7 +473,7 @@ const App = {
                 this.tabs.print.on('click', App.UI.onPrint.bind(App.UI) );
                 this.tabs.layer.on('click', App.UI.onLayer.bind(App.UI) );
 
-                $('.btn-add-text').addClass('active');
+                //$('.btn-add-text').addClass('active');
 
                 // Set toggling tabs on click 'em @DONE
             }
@@ -1056,16 +1060,16 @@ const App = {
          * @static
          */
 
-        ,Canvas: {
-
-            init() {
-                App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
-                App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
-                App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
-                App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
-            }
-
-        }
+        // ,Canvas: {
+        //
+        //     init() {
+        //         App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
+        //         App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
+        //         App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
+        //         App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
+        //     }
+        //
+        // }
     }
 
     /**
@@ -1116,9 +1120,9 @@ const App = {
             this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
         }
 
-        ,loadProject: async function() {
-            const project = await App.Ajax.getJSON('/load');
-            this.Project = project;
+        ,loadProjects: async function() {
+            const projects = await App.Ajax.getJSON('/load');
+            this.Projects = projects;
         }
 
     }
@@ -1180,10 +1184,38 @@ const App = {
          */
 
         init() {
-            $('.product__preview').html('<canvas width="400" height="400"></canvas>');
+            // $('.product__preview').html('<canvas width="400" height="400"></canvas>');
 
-            this.ctx = (this.canvas = document.querySelector('canvas')).getContext('2d');
+            this.canvas = document.createElement('canvas');
+
+            this.canvas.width = 400;
+            this.canvas.height = 400;
+
+            if (document.querySelector('.product__preview'))
+                $('.product__preview').html(this.canvas);
+
+            this.ctx = this.canvas.getContext('2d');
             this.ctx.save();
+
+            if(App.currentProjectVariant.widgets.length) {
+                let widgets = App.currentProjectVariant.widgets,
+                    l = widgets.length;
+
+                this.setCurrentWidget(widgets[l-1]);
+            }
+
+            this.Canvas.init();
+        }
+
+        ,Canvas: {
+
+            init() {
+                App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
+            }
+
         }
 
         ,findSprite(position) {
@@ -1258,7 +1290,6 @@ const App = {
             ,resetTextToolkit(){
                 const fontSettings = App.GraphCore.currentWidget.getFontSettings();
 
-                if (App.Project)
                 App.UI.TextSettings.setSettings();
 
                 // if (!App.UI.Tabs.customization.layer.hasClass('active'))
@@ -1571,15 +1602,13 @@ const App = {
 
     }
 
-    ,getProject() {
-        let data = this.Data.Project[0],
+    ,getProject(proj) {
+        let data = proj,
             project = null;
 
         if (data) {
             project = new Project(Base.fromJSON(data.base));
             App.currentProjectVariant = project.variants[0];
-
-            //console.log(data.variants[0].widgets);
 
             project.settings.color = data.settings.color;
             project.id = data.id;
@@ -1602,10 +1631,14 @@ const App = {
             });
 
             project.settings.size = data.settings.size;
-            App.GraphCore.setCurrentWidget(App.currentProjectVariant.widgets[App.currentProjectVariant.widgets.length-1]);
+            //App.GraphCore.setCurrentWidget(App.currentProjectVariant.widgets[App.currentProjectVariant.widgets.length-1]);
         }
 
         return project;
+    }
+
+    ,setProject(project) {
+        this.Project = this.getProject(project);
     }
 
     ,mechanic() {
@@ -1640,7 +1673,14 @@ requirejs(['Base','BaseVariant','Position','Size','WorkZone','Project','VariantP
     () => {
         requirejs(['TxtWidget','ImageWidget','ComplexWidget', 'Path', 'Font','Print', 'BaseLine',],
             () => {
-                requirejs(['VerticalBaseLine', 'HorizontalBaseLine'], () => App.start());
+                requirejs(['VerticalBaseLine', 'HorizontalBaseLine'], () => {
+                    App.start();
+                    User.init();
+                    if (Admin) {
+                        console.log(Admin);
+                        Admin.init();
+                    }
+                });
             });
     });
 

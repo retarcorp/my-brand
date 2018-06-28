@@ -48,7 +48,7 @@ module.exports = {
 			coll.insertMany(data, (err, data) => {
 				this.Assert.equal(err, null);
 				
-				if (callback) callback(data);
+				if (callback) callback({ status: true });
 
 				console.log('Data inserted');
 			});
