@@ -22,6 +22,7 @@ var loadFonts = require('./routes/fonts');
 var register = require('./routes/register');
 var loadUser = require('./routes/login');
 var onsession = require('./routes/onsession');
+var userLogout = require('./routes/logout');
 
 var app = express();
 
@@ -56,6 +57,7 @@ app.get('/delete', deleteFile);
 app.get('/load', loadProject);
 app.post('/save', saveProject);
 
+app.get('/logout', userLogout);
 app.get('/onsession', onsession);
 app.post('/login', loadUser);
 app.post('/register', register);

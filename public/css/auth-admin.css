@@ -5,12 +5,12 @@ body{
 }
 
 .auth-admin,
-.registration{
+section.registration{
     margin: auto;
     z-index: 1;
 }
 
-.registration{
+section.registration{
     position: fixed;
     display: flex;
     opacity: 0;

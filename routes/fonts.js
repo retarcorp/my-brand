@@ -12,17 +12,22 @@ router.get('/fonts', (req, res, next) => {
 	Mongo.select({}, 'fonts', (fonts) => {
 
 		let page = parseInt(data.page),
-			out = {};
+			out = {},
+			resp = [];
 
 		fonts.reverse();
 
 		console.log(fonts.length);
 
-		let resp = fonts.filter( (font, index) => {
-			if (index >= (page - 1) * 8 && index < page * 8) {
-				return font;
-			} else return false;
-		});
+		if (page != 'all') {
+            resp = fonts.filter( (font, index) => {
+                if (index >= (page - 1) * 8 && index < page * 8) {
+                    return font;
+                } else return false;
+            });
+		} else {
+			resp = fonts;
+		}
 
         out.fonts = resp;
         out.pages = Math.ceil(fonts.length/8);
