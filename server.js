@@ -14,6 +14,8 @@ var loadAdmin = require('./routes/adminAuth');
 
 var adminPanel = require('./routes/admin');
 
+var deleteFile = require('./routes/delete');
+
 var uploadFile = require('./routes/upload');
 var loadFonts = require('./routes/fonts');
 
@@ -49,6 +51,8 @@ app.use(session({ secret: 'keyboard cat', cookie: {} }));
 //app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/fonts', loadFonts);
+app.get('/delete', deleteFile);
+
 app.get('/load', loadProject);
 app.post('/save', saveProject);
 

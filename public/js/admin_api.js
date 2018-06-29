@@ -1,10 +1,6 @@
 Admin = {
-    init() {
-        $('.panel__font-form').on('submit', this.uploadFont);
-    }
 
-    ,uploadFont() {
-
+    uploadFont(callback) {
         event.preventDefault();
 
         let files = document.querySelector('input[name="font_file"]').files,
@@ -21,17 +17,11 @@ Admin = {
             data.append($(child).attr('name'), $(child).val());
         });
 
-        console.log(data);
-
         User.Ajax.post('/upload', data, (data) => {
-            console.log(data);
-
             let status = JSON.parse(data).status;
 
-
-
             if (status) {
-                location.reload();
+                if (callback) callback();
             }
         });
     }

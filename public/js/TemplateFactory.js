@@ -92,7 +92,7 @@ const TemplateFactory = {
     ,getFontStyle(font){
         return `
         @font-face {
-            font-family: '${font.name}';
+            font-family: '${font.name || font.font}';
             src: url('${font.src}');
         } \n`
     }
@@ -123,6 +123,31 @@ const TemplateFactory = {
                 <input type="password" name="pass">
                 <input type="submit">
             </form>
+        `
+    }
+
+    ,getAdminPanelFontshtml(font) {
+        return `
+            <li class="panel__font-point" data-type="font">
+                <div class="panel__font-type">
+                    <p style="font-family: ${font.font};">${font.font}</p>
+                    <span>${font.font}</span>
+                </div>
+                
+                <div class="panel__font-delete" data-src="${font.src}"></div>
+            </li>
+        `
+    }
+
+    ,getAdminPanelFontFileInput() {
+        return `<input type="file" name="font_file" data-after="Выберите файл">`;
+    }
+
+    ,getAdminPanelPages(page) {
+        return `
+            <li class="panel__page-point">
+                <span class="panel__page-num">${page}</span>
+            </li>
         `
     }
 

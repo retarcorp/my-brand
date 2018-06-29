@@ -248,6 +248,11 @@ input[type="file"]::before {
     background: #fff;
 }
 
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
 .panel__font-point {
     display: flex;
     padding: 14px 28px;
@@ -259,8 +264,7 @@ input[type="file"]::before {
     background: #f7f9fe;
 }
 
-.panel__font-point::after {
-    content: '';
+.panel__font-delete {
     background: url('../img/icon/cross.png') center center no-repeat;
     width: 21px;
     height: 21px;
@@ -294,6 +298,13 @@ input[type="file"]::before {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.panel__page-point {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     font-size: 1.7rem;
     font-weight: bold;
     font-family: Lato, sans-serif;
@@ -303,8 +314,12 @@ input[type="file"]::before {
     cursor: pointer;
 }
 
-.panel__page-list.selected {
+.panel__page-point.selected {
     border-radius: 50%;
     background: #55acee;
     color: #fff;
+}
+
+.panel__page-num {
+    pointer-events: none;
 }
