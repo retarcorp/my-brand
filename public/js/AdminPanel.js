@@ -82,6 +82,7 @@ AdminApp = {
 
         $('input[type="file"][name="font_file"]').remove();
         $('input[name="font"]').after(TemplateFactory.getAdminPanelFontFileInput());
+        $('input[type="file"]').on('change', this.updateFile);
 
         $('.panel__font-form').removeClass('loading');
     }
