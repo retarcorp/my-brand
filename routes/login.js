@@ -17,6 +17,8 @@ router.post('/login', (req, res, next) => {
 
 		let user = JSON.parse(parse);
 
+		console.log(user);
+
 		Users.find(user, 'users', (data) => {
 
 			console.log(user, data)
@@ -27,7 +29,7 @@ router.post('/login', (req, res, next) => {
 						res.send('Logged');
 					});
 				} else {
-					res.send('Error: Check your login or password!');
+					res.send('Wrong pass');
 				}
 			} else {
 				res.send('User not found');

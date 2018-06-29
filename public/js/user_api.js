@@ -63,12 +63,13 @@ User = {
     }
 
     ,Ajax: {
-        get: function(path) {
+        get: function(path, callback) {
             return new Promise( (resolve, reject) => {
                 let xhr = new XMLHttpRequest();
 
                 xhr.onload = () => {
                     if (xhr.status == 200) {
+                        if (callback) callback(xhr.responseText);
                         resolve(xhr.responseText);
                     } else {
                         reject(xhr.responseText);
@@ -104,3 +105,5 @@ User = {
 
     }
 }
+
+User.init();

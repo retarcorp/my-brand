@@ -1,5 +1,6 @@
 var express = require('express');
 var Mongo = require('../modules/Mongo');
+
 var URL = require('url');
 var qrs = require('querystring');
 
@@ -9,7 +10,24 @@ router.get('/fonts', (req, res, next) => {
 	let data = qrs.parse(URL.parse(req.url).query);
 
 	Mongo.select({}, 'fonts', (fonts) => {
-		res.send(JSON.stringify(fonts));
+
+		let page = parseInt(data.page),
+			out = {};
+
+		fonts.reverse();
+
+		console.log(fonts.length);
+
+		let resp = fonts.filter( (font, index) => {
+			if (index >= (page - 1) * 8 && index < page * 8) {
+				return font;
+			} else return false;
+		});
+
+        out.fonts = resp;
+        out.pages = Math.ceil(fonts.length/8);
+
+		res.send(JSON.stringify(out));
 	});
 });
 

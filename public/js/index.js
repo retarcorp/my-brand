@@ -1108,9 +1108,12 @@ const App = {
          * @function
          */
 
-        ,getFonts: async function() {
-            const data = await App.Ajax.getJSON('/fonts');
-            this.Fonts = data.map((obj) => Font.fromJSON(obj));
+        ,getFonts: async function(page) {
+
+            if (typeof page != 'number') page = 1;
+
+            const data = await App.Ajax.getJSON(`/fonts?page=${page}`);
+            this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
         }
 
         ,Prints: []
@@ -1675,11 +1678,6 @@ requirejs(['Base','BaseVariant','Position','Size','WorkZone','Project','VariantP
             () => {
                 requirejs(['VerticalBaseLine', 'HorizontalBaseLine'], () => {
                     App.start();
-                    User.init();
-                    if (Admin) {
-                        console.log(Admin);
-                        Admin.init();
-                    }
                 });
             });
     });
