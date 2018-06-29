@@ -4,12 +4,12 @@ User = {
         this.congrats = $('.congratulations');
         this.note = $('.invalid__email');
 
-        this.authorizing = $('.login');
+        // this.authorizing = $('.login');
         this.user = $('input[name="user"]');
         this.password = $('input[name="pass"]');
 
         this.registration.on('submit', this.register);
-        this.authorizing.on('submit', this.login);
+        // this.authorizing.on('submit', this.login);
     }
 
     ,login: async function() {
@@ -28,10 +28,8 @@ User = {
     ,register: async function() {
         event.preventDefault();
 
-        alert('stay');
-
         let data = {},
-            email = $('#login').val(),
+            email = $('#email').val(),
             reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
         if (reg.test(email) != false) {
@@ -53,8 +51,8 @@ User = {
 
     }
 
-    ,logout: function() {
-
+    ,logout: function(callback) {
+        User.Ajax.get('/logout', callback);
     }
 
     ,session: async function() {

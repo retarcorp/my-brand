@@ -66,6 +66,14 @@ let Users = {
 		if (callback) callback();
 	}
 
+	,closeSession(req, callback) {
+        req.session.destroy( (err) => {
+        	console.log(err);
+
+            if (callback) callback();
+		});
+	}
+
 	,checkCredentials(check, User) {
 		//console.log(md5(check.salt + User.password + check.salt));
 		return check.password == md5(check.salt + User.password + check.salt);

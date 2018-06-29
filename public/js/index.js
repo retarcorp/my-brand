@@ -78,6 +78,7 @@ const App = {
             this.Create.init();
 
             this.Profile.init();
+            this.Menu.init();
         }
 
         ,leftMenu: $('.left-menu')
@@ -284,7 +285,7 @@ const App = {
         }
 
         ,onSelectPrint(e) {
-            if ($(e.target).hasClass('picture__button')) {
+            if ($(e.target).hasClass('picture__clone')) {
                 $('.picture-list__picture').removeClass('selected');
 
                 let src = $(e.target).parent().parent().addClass('selected').find('img').attr('src');
@@ -298,6 +299,9 @@ const App = {
                 //     curr.setImage(data.src);
                 //     App.UI.Layers.setText(data.text);
                 // }
+
+            } else if ($(e.target).hasClass('picture__remove')) {
+                $(e.target).parent().parent().remove();
             }
         }
 
@@ -401,8 +405,6 @@ const App = {
                 ,settings: App.Project.settings
             }
 
-            console.log(data);
-
             App.GraphCore.setCurrentWidget(null);
 
             App.Ajax.postJSON('/save', JSON.stringify(data));
@@ -411,21 +413,68 @@ const App = {
         ,Profile: {
 
             init() {
+
+                this.logins = $('.authorization__form');
+                //this.logins.submit(this.login)
+
+                this.logins.on('submit', () => { this.login(); return false;});
+                $('input[type="submit"][value="Вход"]').on('click', () => this.logins.submit());
+
+                $('body').on('click', this.showLoginForm);
+                $('.main-menu__item.registration').on('click', this.showRegistrationForm);
+
+
+                $('section.registration').on('click', this.closeRegistration);
+                //$(':not(.authorization__form, .main-menu__item)').on('click', this.hideForms);
+
                 if (App.logged) {
-                    $('.main-menu__item:last-child').css('backgroundColor', "#A0A");
+                    $('.main-menu__item.login').remove();
+                    $('.main-menu__item.registration').remove();
+                    $('section.registration').remove();
+
+                    $('.main-menu__list').append(TemplateFactory.getLogoutHtml());
+                    $('.main-menu__item.logout').on('click', this.logout);
                 } else {
-                    $('.main-menu__item:last-child').append(TemplateFactory.getLoginHtml());
-
-                    let login = $(".login");
-
-                    login.on('submit', User.login);
 
                 }
             }
 
-            ,login() {
+            ,logout() {
+                User.logout( (data) => {
+                    console.log(data);
+                });
+            }
+
+            ,showLoginForm(e) {
+                if (!$('.main-menu__item.login').has($(e.target)).length) {
+                    $('.main-menu__item.login').removeClass('active');
+                } else {
+                    $('.main-menu__item.login').addClass('active');
+                }
+            }
+
+            ,showRegistrationForm(e) {
                 event.preventDefault();
 
+                if ($(e.target).hasClass('button__registration')) {
+                    $('section.registration').addClass('active');
+                }
+            }
+
+            ,closeRegistration(e) {
+                if ($(e.target).hasClass('registration') || $(e.target).hasClass('button__close')) {
+                    $('section.registration').removeClass('active');
+                }
+            }
+
+            ,hideForms(e) {
+
+                $('.main-menu__item.login').removeClass('active');
+                $('.main-menu__item.registration').removeClass('active');
+            }
+
+            ,login() {
+                event.preventDefault();
                 let data = {
                     name: $('input[name="user"]').val()
                     ,password: $('input[name="pass"]').val()
@@ -435,11 +484,23 @@ const App = {
                     location.reload();
                 });
             }
-
-
             ,
         }
 
+        ,Menu: {
+            init() {
+                this.adaptive = $('.header__adaptive-menu');
+                this.menu = $('.main-menu');
+
+                this.adaptive.on('click', this.toggleMenu.bind(this));
+            }
+
+            ,toggleMenu() {
+                console.log('toggle');
+                this.menu.toggleClass('active');
+            }
+
+        }
 
         /**
          * Tabs - инициализирует DOM структуру для табов. Запускает обработчики событий.
@@ -456,15 +517,21 @@ const App = {
             init(){
                 this.customization = {
                     base: $('.addition-basis'),
-                    text: $('.addition-text'),
-                    print: $('.addition-print'),
+                    text: $('.product__editor'),
+                    print: $('.add-photo'),
                     layer: $('.addition-layer')
                 };
 
+                this.customization.print.on('click', (e) => {
+                    if ($(e.target).hasClass('add-photo') || $(e.target).hasClass('button__close')) {
+                        this.customization.print.removeClass('active');
+                    }
+                });
+
                 this.tabs = {
                     base: $('.star-set'),
-                    text: $('.text-set'),
-                    print: $('.print-set'),
+                    text: $('.btns__add-text'),
+                    print: $('.btns__add-print'),
                     layer: $('.basis-set')
                 };
 
@@ -765,7 +832,8 @@ const App = {
 
             init(){
                 //this.print.on('click', App.UI.onSelectPrint);
-                this.userPrints.on('click', App.UI.onSelectPrint);
+
+                this.userPrints.html('');
 
                 this.gallery.html(
                     App.Data.Prints.reduce( (acc, print) => acc + TemplateFactory.getPrintHtml(print), `` )
@@ -775,32 +843,37 @@ const App = {
                     $(child).data('print', App.Data.Prints[index]);
                 });
 
+                //$('.btns__add-print').on('click', App.UI.onPrint.bind(App.UI));
+
                 this.file = $('input[type="file"]');
 
                 this.loadImage = $('.print__send');
                 this.file.on('change', App.UI.onLoadImage);
 
-                (this.btnsOptions = $('.pr-opt')).on('click', this.changeGallery);
+                (this.btnsOptions = $('.file__menu-item')).on('click', this.changeGallery);
+
+                this.userPrints.on('click', App.UI.onSelectPrint);
+                this.gallery.on('click', App.UI.onSelectPrint);
             }
 
             ,changeGallery() {
-                let $active = $('.pr-opt.active');
+                let $active = $('.file__menu-item.active');
 
                 $active.removeClass('active');
 
                 this.classList.add('active');
 
-                if ($(this).hasClass('gallery')) {
-                    $('.file-print').removeClass('active');
-                    $('.gallery-print').addClass('active');
+                if ($(this).hasClass('file-menu__addBtnTab')) {
+                    App.UI.Print.userPrints.removeClass('active');
+                    App.UI.Print.gallery.addClass('active');
                 } else {
-                    $('.file-print').addClass('active');
-                    $('.gallery-print').removeClass('active');
+                    App.UI.Print.userPrints.addClass('active');
+                    App.UI.Print.gallery.removeClass('active');
                 }
             }
             
             ,userPrints: $('.file-upload__picture-list')
-            ,gallery: $('.container-print')
+            ,gallery: $('.file__picture-list')
             //,print: $('.picture__button')
         }
 

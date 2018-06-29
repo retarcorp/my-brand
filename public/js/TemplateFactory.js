@@ -151,4 +151,10 @@ const TemplateFactory = {
         `
     }
 
+    ,getLogoutHtml() {
+        return `<li class="main-menu__item main-menu__item_margin logout">
+                    <a href="#" class="main-menu__link text_color_main">Выход</a>
+                </li>`
+    }
+
 }

@@ -39,6 +39,10 @@
     opacity: 1;
 }
 
+.main-menu__item.login.active .authorization__form {
+    display: flex;
+}
+
 /*DELETE*/
 
 canvas {
