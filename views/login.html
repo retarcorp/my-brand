@@ -34,11 +34,15 @@
 			let xhr = new XMLHttpRequest(),
 				form = document.querySelector('form');
 
-			xhr.onreadystatechange = () => {
+			xhr.onload = () => {
 				console.log(xhr.response);
 
-				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200)
-					document.location.href = '/admin';
+				if (xhr.status === 200) {
+					console.log(xhr.responseText)
+					location.reload();
+				} else {
+					console.log(xhr.responseText);
+				}
 			}
 
 			// console.log(this);

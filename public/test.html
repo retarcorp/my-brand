@@ -9,6 +9,37 @@
         input[type="file"] {
             display: block;
         }
+
+        .image {
+            width: 400px;
+            position: relative;
+        }
+
+        img[alt="base"] {
+            width: 100%
+        }
+
+        canvas {
+            position: absolute;
+            top:0;
+            left:0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .files {
+            display: flex;
+        }
+
+        .file__input {
+            width: 300px;
+            position: relative;
+        }
+
+        .file__input img {
+            width: 100%;
+        }
+
     </style>
 </head>
 <body>
@@ -17,15 +48,68 @@
         <input type="email" required name="email">
     </form>
 
+
+    <br>
+    <br>
+    <br>
+
+    <div class="image">
+        <img src="img/t-shirt1.png" alt="base" width="400" height="400">
+        <canvas width="400" height="400" style="border: 1px solid;">Your browser doesn't support canvas api</canvas>
+    </div>
+
+
     <form class="upload">
-        <input type="text" name="font">
-        <input type="file">
-        <input type="file">
-        <input type="file">
-        <input type="file">
+        <input type="text" name="base" placeholder="base">
+
+        <input type="text" name="size" placeholder="size">
+        <input type="text" name="size" placeholder="size">
+        <input type="text" name="size" placeholder="size">
+
+        <input type="text" name="price" placeholder="price">
+        <input type="text" name="color"  placeholder="color">
+
+        <input type="text" name="x" placeholder="x">
+        <input type="text" name="y" placeholder="y">
+
+        <input type="text" name="width" placeholder="width">
+        <input type="text" name="height" placeholder="height">
+
+        <div class="files">
+            <div class="file__input">
+                <input type="file">
+            </div>
+
+            <div class="file__input">
+                <input type="file">
+            </div>
+
+            <div class="file__input">
+                <input type="file">
+            </div>
+
+            <div class="file__input">
+                <input type="file">
+            </div>
+        </div>
+
+        <input type="checkbox" name="fancywork" checked>Вышивка
+        <input type="checkbox" name="print">Печать
+
+        <input type="submit">
     </form>
 
+
     <script>
+
+        let canvas = document.querySelector('canvas'),
+            ctx = canvas.getContext('2d'),
+            int = 1,
+            workzone = { x:0, y:0, width: 0, height: 0},
+            isDragged = false,
+            currImage = document.querySelector('img');
+
+        ctx.translate(0.5,0.5);
 
         $('.register').on('submit', () => {
             event.preventDefault();
@@ -52,16 +136,112 @@
             } else {
                 console.log('Invalid email');
             }
-
-
         });
+
+        $('input[type="file"]').on('change', formSendData);
+        $('canvas').on('mousedown', onDown);
+        $('canvas').on('mousemove', getWorkzone);
+        $('input[type="checkbox"]').on('click', checkbox);
+
+        function checkbox() {
+            if (!$(this).prop('checked') && $(this).attr('name') == 'fancywork') {
+                $('input[name="print"]').prop('checked', true)
+            } else if (!$(this).prop('checked') && $(this).attr('name') == 'print') {
+                $('input[name="fancywork"]').prop('checked', true)
+            }
+        }
+
+        function setCurrentImage(e) {
+            currImage = this;
+
+            console.log('set');
+
+            workzone = $(currImage).data('workzone') || { x:0, y:0, width: 0, height: 0};
+            $('.image img').attr('src', this.src);
+        }
+
+        function onDown(e) {
+            if (!isDragged) {
+                workzone.x = e.offsetX;
+                workzone.y = e.offsetY;
+
+                workzone.width = 0;
+                workzone.height = 0;
+
+                $('input[name="x"]').val(workzone.x);
+                $('input[name="y"]').val(workzone.y);
+
+                $('input[name="width"]').val(0);
+                $('input[name="height"]').val(0);
+            } else {
+                if (currImage) {
+                    $(currImage).data('workzone', workzone);
+                }
+            }
+
+            isDragged = !isDragged;
+        }
+
+        function getWorkzone(e) {
+            if (isDragged) {
+                let buf = 0;
+
+                if (e.offsetX < workzone.x + 1) {
+                    e.offsetX = workzone.x + 1;
+                }
+
+                if (e.offsetY < workzone.y + 1) {
+                    e.offsetY = workzone.y + 1;
+                }
+
+                $('input[name="x"]').val(workzone.x);
+                $('input[name="y"]').val(workzone.y);
+
+                workzone.width = e.offsetX - workzone.x;
+                workzone.height = e.offsetY - workzone.y;
+
+                $('input[name="width"]').val(workzone.width)
+                $('input[name="height"]').val(workzone.height)
+            }
+        }
+
+        function formSendData(e) {
+            let file = this.files[0];
+            let reader = new FileReader();
+
+            reader.onload = (e) => {
+
+                if (!this.img)
+                    this.img = new Image();
+
+                this.img.src = e.target.result;
+                this.img.name = file.name;
+
+                $(this).before(this.img);
+                currImage = this.img;
+
+                this.img.onload = () => {
+                    $(this.img).data('size', {
+                        width: canvas.width
+                        ,height: canvas.height * (this.img.height/this.img.width)
+                    });
+                };
+
+                $('.file__input img').on('click', setCurrentImage);
+            };
+
+            reader.readAsDataURL(file);
+        }
 
         $('.upload').on('submit', () => {
             event.preventDefault();
 
+            console.log('send')
+
             let xhr = new XMLHttpRequest();
 
             xhr.onload = () => {
+                console.log('recieve')
                 if (xhr.status == 200) {
                     console.log('No Mistakes', xhr.responseText);
                 } else {
@@ -69,9 +249,17 @@
                 }
             }
 
+            var img = new Image();
+
+            img.onload = () => {
+                console.log(img.width, img.height);
+            };
+
             let data = new FormData(),
                 files = $('input[type="file"]'),
-                fields = $('input[type="text"]');
+                fields = $('input[type="text"]'),
+                variants = $('.file__input img'),
+                types = $('input[type="checkbox"]');
 
             $.each(files, (index, child) => {
                 $.each(child.files, (key, value) => {
@@ -83,10 +271,38 @@
                 data.append($(child).attr('name'), $(child).val());
             });
 
+            $.each(variants, (index, variant) => {
+                let info = {};
+
+                info.workzone = $(variant).data('workzone');
+                info.width = $(variant).data('size').width;
+                info.height = $(variant).data('size').height;
+
+                data.append(index, JSON.stringify(info));
+            });
+
+            $.each(types, (index, type) => {
+                data.append(
+                    $(type).attr('name'),
+                    $(type).prop('checked')
+                );
+            });
+
             xhr.open('POST', '/upload');
 
             xhr.send(data);
-        })
+        });
+
+        function render() {
+            ctx.clearRect(-0.5,-0.5,canvas.width, canvas.height);
+            // ctx.strokeRect(0, 0, 100, 100);
+            ctx.strokeRect(workzone.x, workzone.y, workzone.width, workzone.height);
+
+            requestAnimationFrame(render);
+        }
+
+        render();
+
     </script>
 
 </body>
