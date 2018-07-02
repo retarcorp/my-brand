@@ -569,9 +569,9 @@ const App = {
                 //     $(child).data('base', App.Data.Bases[index]);
                 // });
 
-                this.colorContainer.html(
-                    App.Project.base.colorArray.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)
-                );
+                // this.colorContainer.html(
+                //     App.Project.base.colorArray.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)
+                // );
 
                 this.setSizeHtml();
                 this.setBaseSize(App.Project.settings.size);
@@ -1165,7 +1165,7 @@ const App = {
          */
 
         ,getBases: async function(){
-            const data = await App.Ajax.getJSON("server.json");
+            const data = await App.Ajax.getJSON("/bases");
             this.Bases = data.map((obj) => Base.fromJSON(obj));
         }
 
@@ -1271,6 +1271,7 @@ const App = {
                 $('.product__preview').html(this.canvas);
 
             this.ctx = this.canvas.getContext('2d');
+            this.ctx.translate(0.5,0.5);
             this.ctx.save();
 
             if(App.currentProjectVariant.widgets.length) {
@@ -1421,32 +1422,39 @@ const App = {
         ,Filter: {
 
             colorFilter(ctx, image, color) {
-                App.GraphCore.RenderList.clear();
-                ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
+                if (App.Project.settings.startColor) {
+                    App.GraphCore.RenderList.clear();
+                    ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
 
-                var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
-                    currentColor = App.Project.settings.startColor,
-                    before = this.hexToRgb(currentColor),
-                    after = (color instanceof Array) ? {
-                        r: color[0]
-                        ,g: color[1]
-                        ,b: color[2]
-                    } : this.hexToRgb(color);
+                    //console.log(App.Project.settings.startColor)
 
-                for (let i = 0; i<data.data.length; i+=4) {
-                    if (data.data[i+3] != 0) {
-                        data.data[i] = after.r + data.data[i] - before.r;
-                        data.data[i+1] = after.g + data.data[i+1] - before.g;
-                        data.data[i+2] = after.b + data.data[i+2] - before.b;
+                    var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
+                        currentColor = App.Project.settings.startColor;
+
+                    var before = this.hexToRgb(currentColor),
+                        after = (color instanceof Array) ? {
+                            r: color[0]
+                            ,g: color[1]
+                            ,b: color[2]
+                        } : this.hexToRgb(color || currentColor);
+
+                    for (let i = 0; i<data.data.length; i+=4) {
+                        if (data.data[i+3] != 0) {
+                            data.data[i] = after.r + data.data[i] - before.r;
+                            data.data[i+1] = after.g + data.data[i+1] - before.g;
+                            data.data[i+2] = after.b + data.data[i+2] - before.b;
+                        }
                     }
+
+                    ctx.putImageData(data, 0, 0);
+                    //this.image = ctx.canvas.toDataURL('image/png');
+                    App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
+
+                    App.GraphCore.RenderList.clear();
+                    return data;
+                } else {
+                    this.getImageColor(image.src);
                 }
-
-                ctx.putImageData(data, 0, 0);
-                //this.image = ctx.canvas.toDataURL('image/png');
-                App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
-
-                App.GraphCore.RenderList.clear();
-                return data;
             }
 
             ,getImageFilterData(ctx, image) {
@@ -1457,6 +1465,55 @@ const App = {
 
                 App.GraphCore.RenderList.clear();
                 return data;
+            }
+
+            ,getImageColor(src) {
+                let ctx = document.createElement('canvas').getContext('2d'),
+                    image = new Image();
+
+                ctx.canvas.width = 400;
+                ctx.canvas.height = 400;
+
+                image.src = src;
+                image.onload = () => {
+                    ctx.canvas.height = ctx.canvas.width * (image.height/image.width);
+                    ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+                    let data = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height),
+                        color = [0,0,0],
+                        hex = "",
+                        contrast = 0;
+
+                    for (let i = 0; i <= data.data.length - 1; i+=4) {
+                        if (data.data[i+3] != 1) {
+                            color[0] += data.data[i];
+                            color[1] += data.data[i+1];
+                            color[2] += data.data[i+2];
+                        }
+                    }
+
+                    color[0] = Math.round(color[0] / ((data.data.length - 1)/4)) * 2;
+                    color[1] = Math.round(color[1] / ((data.data.length - 1)/4)) * 2;
+                    color[2] = Math.round(color[2] / ((data.data.length - 1)/4)) * 2;
+
+                    let coloring = color.map((colors) => {
+                        if (colors > 255) return 255;
+                        return colors;
+                    });
+
+                    hex = this.rgbToHex(coloring[0],coloring[1],coloring[2]);
+
+                    App.Project.settings.startColor = hex;
+                };
+            }
+
+            ,componentToHex(c) {
+                var hex = c.toString(16);
+                return hex.length == 1 ? "0" + hex : hex;
+            }
+
+            ,rgbToHex(r, g, b) {
+                return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
             }
 
             ,hexToRgb(hex) {

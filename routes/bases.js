@@ -3,7 +3,7 @@ var router = express.Router();
 
 var Mongo = require('../modules/Mongo');
 
-router.get('/bases', () => {
+router.get('/bases', (req, res, next) => {
     Mongo.select({}, 'bases', (data) => {
         res.send(JSON.stringify(data));
     });
