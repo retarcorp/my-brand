@@ -4,8 +4,9 @@ var router = express.Router();
 var Users = require('../modules/Users');
 
 router.get('/logout', (req, res, next) => {
-    Users.closeSession(req, () => {
-        res.send(JSON.stringify({status: true}));
+    Users.closeSession(req, res, (err) => {
+        if (err) console.log(err);
+        res.redirect('/');
     });
 });
 

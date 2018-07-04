@@ -112,13 +112,21 @@ const App = {
 
             $('.btn-add-text').addClass('active');
 
-            if (!(curr instanceof TextWidget)) {
-                let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof TextWidget);
+            //if (!(curr instanceof TextWidget)) {
+            //let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof TextWidget);
 
-                App.currentProjectVariant.widgets.reverse();
+            //App.currentProjectVariant.widgets.reverse();
 
-                App.GraphCore.setCurrentWidget(widget);
-            }
+            if (!(curr instanceof TextWidget))
+                App.UI.Create.createTextWidget('Text');
+
+            // if (widget) {
+            //     App.GraphCore.setCurrentWidget(widget)
+            // } else {
+            //     App.UI.Create.createTextWidget('Text');
+            // }
+
+            //}
         }
 
         /**
@@ -314,7 +322,7 @@ const App = {
                     text: file.name,
                     src: ""
                 }
-                let uploads = $( TemplateFactory.getPrintHtml(print) );
+                let uploads = $( TemplateFactory.getPrintHtml(print, true) );
 
                 let reader = new FileReader();
 
@@ -398,16 +406,19 @@ const App = {
 
         ,onSaveProject(e) {
             //let data = Object.assign({}, App.Project);
+            if (App.logged) {
+                let data = {
+                    variants: App.Project.variants
+                    ,base: App.Project.base
+                    ,settings: App.Project.settings
+                }
 
-            let data = {
-                variants: App.Project.variants
-                ,base: App.Project.base
-                ,settings: App.Project.settings
+                App.GraphCore.setCurrentWidget(null);
+
+                App.Ajax.postJSON('/save', JSON.stringify(data));
+            } else {
+                alert('Необходимо вначале войти!');
             }
-
-            App.GraphCore.setCurrentWidget(null);
-
-            App.Ajax.postJSON('/save', JSON.stringify(data));
         }
 
         ,Profile: {
@@ -415,7 +426,6 @@ const App = {
             init() {
 
                 this.logins = $('.authorization__form');
-                //this.logins.submit(this.login)
 
                 this.logins.on('submit', () => { this.login(); return false;});
                 $('input[type="submit"][value="Вход"]').on('click', () => this.logins.submit());
@@ -425,6 +435,10 @@ const App = {
 
 
                 $('section.registration').on('click', this.closeRegistration);
+                $('.post-reg__button').on('click', (e) => {
+                    this.closeRegistration(e);
+                    $('.main-menu__item.login').addClass('active');
+                })
                 //$(':not(.authorization__form, .main-menu__item)').on('click', this.hideForms);
 
                 if (App.logged) {
@@ -442,11 +456,12 @@ const App = {
             ,logout() {
                 User.logout( (data) => {
                     console.log(data);
+                    location.reload();
                 });
             }
 
             ,showLoginForm(e) {
-                if (!$('.main-menu__item.login').has($(e.target)).length) {
+                if (!$('.main-menu__item.login').has($(e.target)).length || $(e.target).hasClass('.post-reg__button')) {
                     $('.main-menu__item.login').removeClass('active');
                 } else {
                     $('.main-menu__item.login').addClass('active');
@@ -462,7 +477,7 @@ const App = {
             }
 
             ,closeRegistration(e) {
-                if ($(e.target).hasClass('registration') || $(e.target).hasClass('button__close')) {
+                if ($(e.target).hasClass('registration') || $(e.target).hasClass('button__close') || $(e.target).hasClass('post-reg__button')) {
                     $('section.registration').removeClass('active');
                 }
             }
@@ -652,6 +667,7 @@ const App = {
 
                 }
 
+                App.GraphCore.setCurrentWidget(null);
                 App.UI.LightBox.setPreviewImage();
             	//}
             }
@@ -697,13 +713,12 @@ const App = {
 
                 this.injectFont();
 
-                this.container.html(
-                    App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
-                );
+                this.formFontsList();
 
                 this.container.on('click', this.getFont);
 
                 $.each(this.container.children(), (index, child) => {
+                    console.log(App.Data.Fonts[index]);
                     $(child).data('font', App.Data.Fonts[index]);
                 });
             }
@@ -712,6 +727,12 @@ const App = {
              * Загружает шрифты на страницу размещением DOM-объекта style.
              * @function
              */
+
+            ,formFontsList() {
+                this.container.html(
+                    App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
+                );
+            }
 
             ,injectFont() {
                 $('head').append(TemplateFactory.getStyleTag());
@@ -726,7 +747,9 @@ const App = {
                 const curr = App.GraphCore.currentWidget;
 
                 if (curr instanceof TextWidget) {
-                    curr.fontSettings.fontFamily = $(e.target).data('font').name;
+                    //console.log(e.target.selectedIndex);
+
+                    curr.fontSettings.fontFamily = $(e.target.options[e.target.selectedIndex]).data('font').name;
                 }
             }
 
@@ -735,7 +758,7 @@ const App = {
              * @member
              */
 
-            ,container: $('.list-fonts')
+            ,container: $('.editor__fonts-list')
         }
 
         /**
@@ -754,6 +777,8 @@ const App = {
                     color: $('#_color__text')
                 };
 
+                this.colorView = $('.editor__color');
+
                 this.inputs.widgetText.on('input', App.UI.onChangeText);
                 this.inputs.textSize.on('input', App.UI.onSize);
                 this.inputs.color.on('change', App.UI.onColor);
@@ -767,6 +792,7 @@ const App = {
                 const curr = App.GraphCore.currentWidget;
 
                 if (curr instanceof TextWidget) {
+                    this.colorView.css('backgroundColor', curr.color);
                     this.inputs.color.css("backgroundColor", curr.color);
                     this.inputs.color.val(curr.color);
                     this.inputs.textSize.val(curr.fontSettings.fontSize);
@@ -1197,7 +1223,7 @@ const App = {
         }
 
         ,loadProjects: async function() {
-            const projects = await App.Ajax.getJSON('/load');
+            const projects = (await App.Ajax.getJSON('/load')).projects;
             this.Projects = projects;
         }
 
@@ -1344,6 +1370,7 @@ const App = {
                     this.currentWidget.isSelected = false;
 
                 this.currentWidget = w;
+                App.currentProjectVariant.upWidget(w.index);
                 this.currentWidget.isSelected = true;
             }
 
