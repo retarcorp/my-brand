@@ -11,13 +11,15 @@ router.get('/fonts', (req, res, next) => {
 
 	Mongo.select({}, 'fonts', (fonts) => {
 
-		let page = parseInt(data.page),
+		let page = parseInt(data.page) || data.page,
 			out = {},
 			resp = [];
 
 		fonts.reverse();
 
 		console.log(fonts.length);
+
+		console.log(page);
 
 		if (page != 'all') {
             resp = fonts.filter( (font, index) => {

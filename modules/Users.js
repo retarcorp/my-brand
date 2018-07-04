@@ -66,12 +66,8 @@ let Users = {
 		if (callback) callback();
 	}
 
-	,closeSession(req, callback) {
-        req.session.destroy( (err) => {
-        	console.log(err);
-
-            if (callback) callback();
-		});
+	,closeSession(req, res, callback) {
+        req.session.destroy(callback);
 	}
 
 	,checkCredentials(check, User) {

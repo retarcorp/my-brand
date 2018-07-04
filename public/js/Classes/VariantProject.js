@@ -66,11 +66,11 @@ class VariantProject {
      */
 
     upWidget(index){
-        if (index > 0) {
-            let buffer = this.widgets[index-1];
+        if (index >= 0) {
+            let buffer = this.widgets[index];
 
-            this.widgets[index-1] = this.widgets[index];
-            this.widgets[index] = buffer;
+            this.widgets.splice(index, 1);
+            this.widgets.push(buffer);
 
             this.recountWidgets();
         }

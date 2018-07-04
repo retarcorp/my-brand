@@ -52,6 +52,8 @@ class Project {
     static NewProject(base, date) {
         let project = new this(base);
 
+        project.id = 0;
+
         return project;
     }
 }

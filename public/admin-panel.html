@@ -46,6 +46,9 @@
                             Управление шрифтами
                         </li>
                         <li class="menu__point">
+                            Добавить основу
+                        </li>
+                        <li class="menu__point">
                             Настройки
                         </li>
                     </ul>
@@ -172,6 +175,60 @@
                             </ul>
 
                         </div>
+
+                    </div>
+
+                    <div class="panel__card" style="display: none;">
+
+                        <div class="panel__card-title">
+                            Добавить новую основу
+                        </div>
+
+                        <div class="panel__content">
+                            <form class="panel__base">
+                                <div class="panel__base-main">
+                                    <div class="panel__base-main-upload">
+                                        <p class="panel__base-add-photo">Добавить фото</p>
+                                        <p class="panel__base-info">Вы можете загружать одновременно <br> до 4х фотографий</p>
+                                        <input type="file" name="upload_base">
+                                    </div>
+
+                                    <div class="panel__base-fields">
+                                        <div class="panel__base-inputs">
+                                            <div class="panel__base-input">
+                                                <div class="panel__info">Имя:</div>
+                                                <input type="text" name="base_name" required placeholder="Название основы">
+                                            </div>
+
+                                            <div class="panel__base-input">
+                                                <div class="panel__info">Тип товара:</div>
+                                                <select name="base_type">
+                                                    <option>Майка</option>
+                                                    <option>Кружка</option>
+                                                    <option>Футболка</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="panel__base-inputs">
+                                            <div class="panel__base-input">
+                                                <div class="panel__info">Задать размер:</div>
+                                                <input type="text" name="base_name" required placeholder="Название основы">
+                                            </div>
+
+                                            <div class="panel__base-input">
+                                                <div class="panel__info">Цена(Руб.):</div>
+                                                <input type="text" name="base_name" required placeholder="Название основы">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </form>
+                        </div>
+
                     </div>
 
                 </div>

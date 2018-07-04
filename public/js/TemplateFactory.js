@@ -31,11 +31,8 @@ const TemplateFactory = {
 
     ,getFontHtml(font){
         return `
-            <li>
-                <p class="text-value" style="font-family: '${font.name}';">MyLittlePonny</p>
-                <p class="font-name">${font.name}</p>
-            </li>
-            `
+            <option style="font-family: '${font.name}';">${font.name}</option>
+        `
     }
 
     ,getStyleTag() {
@@ -54,13 +51,13 @@ const TemplateFactory = {
         `);
     }
 
-    ,getPrintHtml(print) {
+    ,getPrintHtml(print, isLoad) {
         return (`
             <div class="picture-list__picture picture-list__picture_margin">
                 <img src="${print.src}" alt="" class="picture__img">
                 <div class="picture-btns">
                     <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
-                    <button class="button picture__button picture__remove">Удалить</button>
+                    ${(!isLoad) ? `` : `<button class="button picture__button picture__remove">Удалить</button>`}
                 </div>
             </div>
         `);
