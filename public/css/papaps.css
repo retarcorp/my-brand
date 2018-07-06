@@ -116,7 +116,7 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     bottom: 0;
     left: 0;
@@ -463,4 +463,79 @@
 }
 .authorization__form.active{
     display: flex;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* CHANGES */
+
+.profile__menu{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 85px;
+    right: 100px;
+    width: 220px;
+    padding: 25px 20px 25px 45px;
+    background: #fff;
+    border-radius: 7px;
+    box-shadow: 0 11px 35px rgba(21,20,55, 0.13);
+}
+.profile__link{
+    text-decoration: none;
+    font-size: 16px;
+    color: #4c4c4c;
+    position: relative;
+}
+.profile__link:not(:last-child){
+    margin-bottom: 15px;
+}
+
+.profile__menu::after {
+    content: ''; 
+    position: absolute; /* Абсолютное позиционирование */
+    right: 20px; 
+    top: -20px; /* Положение треугольника */
+    border: 10px solid transparent; /* Прозрачные границы */
+    border-bottom: 10px solid #fff; /* Добавляем треугольник */
+}
+
+.link__my-work:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -21px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 14px;
+    height: 14px;
+    background-image: url(../img/icon/like-black-heart-button.png);
+}
+
+.link__logout:after{
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: -20px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 13px;
+    height: 13px;
+    background-image: url(../img/icon/logout.png);
 }

@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">    <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/constructor.css">
+
     <link rel="stylesheet" type="text/css" href="css/slick.css"/>
     <link rel="stylesheet" href="css/papaps.css">
     <link rel="stylesheet" href="css/adaptive.css">
@@ -33,9 +34,13 @@
             <header class="form__header form__header-registration header-congratulations">ПОЗДРАВЛЯЕМ!</header>
             <p class="form__text-registration text-congratulation_margin">Регистрация успешно завершена! Мы отправили на указанный Вами электронный адрес пароль для входа.</p>
             <div class="form__btns form__btns_margin">
-                <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color post-reg__button" value="ВОЙТИ">
+                <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color" value="ВОЙТИ">
             </div>
         </section>
+    </section>
+    <section class="profile__menu">
+        <a href="#" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
+        <a href="#" class="profile__link link__logout">Выход</a>
     </section>
 
     <div id="wrapper">
@@ -82,6 +87,9 @@
                     <li class="main-menu__item main-menu__item_margin registration">
                         <button class="button button__registration">Регистрация</button>
                     </li>
+                    <li class="main-menu__item main-menu__item_margin profile">
+                        <a href="#" class="profile__name">UserName</a>
+                    </li>
                 </ul>
             </nav>
         </header>
@@ -95,6 +103,7 @@
                     <li class="navigation__item navigation__item_margin">
                         <a href="#" class="navigation__link">Майки</a>
                     </li>
+
                     <li class="navigation__item navigation__item_margin current">Мужская толстовка</li>
                 </ul>
             </section>
@@ -108,8 +117,6 @@
                     <div class="product__preview preview preview_margin">
                         <img class="product__img" src="img/basis/1.jpg" alt="basis">
                     </div>
-
-
 
                     <div class="product__editor editor editor_margin editor-padding">
                         <div class="editor__text">
@@ -140,26 +147,26 @@
 
 
 
-
-
                     <div class="product__create">
                         <button class="create__button-create button button_gradient_yellow">
                             <span class="button_text button_text_color">Создать бренд!</span>
                         </button>
                         <div class="create__btns  create__btns_margin">
-                            <button class="btns__add-text button button_disable">
-                                <span class="button_text">Добавить текст</span>
+                            <button class="btns__add-text button button_gradient_blue">
+                                <span class="button_text button_text_color">Добавить текст</span>
                             </button>
-                            <button class="btns__add-print button button_disable">
-                                <span class="button_text">Добавить изображение</span>
+                            <button class="btns__add-print button button_gradient_blue">
+                                <span class="button_text button_text_color">Добавить изображение</span>
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="product-details__details details">
+
                     <h1 class="details__name details__name_margin">Мужской свитшот "STAR"</h1>
                     <div class="details__size details__block_margin">
                         <h4 class="details__header">Выберите размер</h4>
+
                         <div class="size__container size__container_margin">
                             <label class="size__block size__block_margin">
                                 <input class="size__radio" type="radio" name="size">
@@ -194,6 +201,7 @@
                             <input class="details__color details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
                             <input class="details__color details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
                             <input class="details__color details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
+
                             <a href="#" class="jscolor details__link details__select-color details__color_margin">Выбрать свой</a>
                         </div>
                     </div>
@@ -202,9 +210,9 @@
                     </div>
                     <div class="details__btns">
                         <button class="details__add-basket button button_gradient_blue">
-                            <span class="button_text button_text_color">Добавить в корзину</span>
+                            <span class="button_text button_text_color text_bold">Добавить в корзину</span>
                         </button>
-                        <a href="#" class="details__link details__link_margin">Выбрать другой продукт</a>
+                        <a href="#" class="details__link link__change details__link_margin">Сохранить в Мои работы</a>
                     </div>
                 </div>
             </section>
@@ -305,7 +313,6 @@
                             </button>
                         </div>
                     </a>
-                    
                 </div>
             </section>
         </main>
@@ -390,7 +397,7 @@
                     <button class="button print__send button__add-photo button_gradient_blue button__add-photo_margin">
                         <span class="button__add-photo_text button_text_color">Выбрать файлы</span>
                     </button>
-                    <input class="" type="file">
+                    <input type="file" name="upload_print">
                 </div>  
                  
             </div>
@@ -446,5 +453,6 @@
         ]
     });
     </script>
+
 </body>
 </html>

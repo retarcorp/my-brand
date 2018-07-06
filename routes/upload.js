@@ -22,7 +22,7 @@ router.post('/upload', (req, res, next) => {
             size: []
         };
 
-        console.log(fields);
+        console.log(fields, files);
 
 		for (file in files) {
 			let fle = files[file];
@@ -46,28 +46,30 @@ router.post('/upload', (req, res, next) => {
                         //Bases.formBaseData(fields);
                     }
                 }
-			})
-
-            if (Base.variants.length ) {
-
-			    console.log(fields.print[0], fields.fancywork[0])
-
-			    if (fields.print[0] != 'true' && fields.fancywork[0] != 'true') {
-			        res.send({status: false});
-                } else {
-                    Base.name = fields.base[0];
-                    Base.size = fields.size;
-                    Base.price = fields.price[0];
-                    Base.fancywork = fields.fancywork[0];
-                    Base.print = fields.print[0];
-
-                    Mongo.update({ name: Base.name }, Base, 'bases', (data) => {
-                        console.log('ISERTED BASE');
-                        res.send({ status: true });
-                    });
-                }
-            }
+			});
 		}
+
+        if (Base.variants.length ) {
+
+            console.log(fields.print[0] != 'true' && fields.fancywork[0] != 'true')
+
+            if (fields.print[0] != 'true' && fields.fancywork[0] != 'true') {
+                res.send({status: false});
+            } else {
+                Base.name = fields.name[0];
+                Base.size = fields.size;
+                Base.price = fields.price[0];
+                Base.fancywork = fields.fancywork[0];
+                Base.print = fields.print[0];
+                Base.type = fields.type[0];
+
+                Mongo.update({ name: Base.name }, Base, 'bases', (data) => {
+                    console.log('ISERTED BASE');
+                    res.send({ status: true });
+                });
+            }
+        }
+
 	})
 
 });

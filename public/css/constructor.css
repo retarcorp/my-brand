@@ -194,6 +194,7 @@
     flex-direction: column;
     padding: 0 10px;
 }
+
 .slide_margin{
     /* margin-right: 10px; */
 }
@@ -335,4 +336,100 @@
 
 .header__adaptive-menu{
     display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* NEW LAYOUT */
+
+.btns__add-print{
+    text-align: left;
+    position: relative;
+}
+.btns__add-print:after{
+    content: '';
+    position: absolute;
+    top: 16px;
+    right: 12px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 19px;
+    height: 17px;
+    background-image: url(../img/icon/photo-camera.png);
+}
+
+.btns__add-text{
+    position: relative;
+}
+
+.btns__add-text:after{
+    content: '';
+    position: absolute;
+    top: 16px;
+    right: 23px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 20px;
+    height: 18px;
+    background-image: url(../img/icon/edit.png);
+}
+
+.product__create{
+    flex-direction: column-reverse;
+}
+.text_bold{
+    font-weight: 700;
+}
+.link__change{
+    position: relative;
+}
+.link__change:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -25px;
+    right: 23px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 19px;
+    height: 19px;
+    background-image: url(../img/icon/add-to-favourites.png);
+}
+
+.profile__name{
+    color: #393939;
+    position: relative;
+}
+
+.profile__name:after{
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: -20px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 12px;
+    height: 8px;
+    background-image: url(../img/icon/backward.png);
 }

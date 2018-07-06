@@ -154,4 +154,35 @@ const TemplateFactory = {
                 </li>`
     }
 
+    ,getAdminPanelBaseVariantHtml(src) {
+        return `
+            <div class="panel__uploaded-pic">
+                <button class="panel__uploaded-remove"></button>
+                <img src="${src}">
+                <div class="panel__uploaded-name">Главная</div>
+            </div>
+        `
+    }
+
+    ,getAdminPanelBaseVariantUploadHtml() {
+        return `
+            <div class="panel__uploaded-pic-add inactive">
+                <img src="img/admin-panel/camera.png" alt="">
+                <label for="new-basis">
+                    <input class="panel__file-add" type="file" id="new-basis">
+                    <span class="panel__file help-layout">Добавить</span>
+                </label>
+            </div>
+        `
+    }
+
+    ,getAdminPanelSizeHtml(size) {
+        return `
+            <div class="size-container__item">
+                <span class="size-container__value">${size}</span>
+                <button class="size-container__close"></button>
+            </div>
+        `
+    }
+
 }
