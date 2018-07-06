@@ -1223,8 +1223,10 @@ const App = {
         }
 
         ,loadProjects: async function() {
-            const projects = (await App.Ajax.getJSON('/load')).projects;
+            const data = (await App.Ajax.getJSON('/load'));
+            const projects = data.projects;
             this.Projects = projects;
+            console.log(data);
         }
 
     }

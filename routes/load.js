@@ -27,7 +27,7 @@ router.get('/load', function(req, res, next) {
             res.send( { projects: data, last_id: id });
         });
 
-    } else res.send([]);
+    } else res.send({ projects: [], last_id: 0 });
 
 
 
