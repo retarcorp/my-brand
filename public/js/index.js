@@ -871,7 +871,7 @@ const App = {
 
                 //$('.btns__add-print').on('click', App.UI.onPrint.bind(App.UI));
 
-                this.file = $('input[type="file"]');
+                this.file = $('input[name="upload_print"]');
 
                 this.loadImage = $('.print__send');
                 this.file.on('change', App.UI.onLoadImage);

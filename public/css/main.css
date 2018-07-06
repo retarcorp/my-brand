@@ -195,3 +195,15 @@ body,
     cursor: default;
 }
 
+
+
+
+
+
+
+/* CHANGES */
+
+.main-menu__list{
+    align-items: center;
+}
+
