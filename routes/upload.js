@@ -20,14 +20,16 @@ router.post('/upload', (req, res, next) => {
             price: "",
             variants: [],
             size: []
-        };
+        },
+            iterator = 0;
 
-        console.log(fields, files);
+        //console.log(files, fields);
 
 		for (file in files) {
 			let fle = files[file];
 
 			fle.forEach( (fl, index) => {
+
                 if (fl.path) {
                     if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
@@ -36,24 +38,32 @@ router.post('/upload', (req, res, next) => {
                         });
                     }
 
-                    if (fl.headers['content-type'].indexOf('image/png') >= 0) {
+                    console.log(fl.headers['content-type']);
+
+                    if (fl.headers['content-type'].indexOf('image/') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/img/basis/${fl.originalFilename}`));
 
-                        let variant = JSON.parse(fields[index]);
+                        let variant = JSON.parse(fields[iterator]);
 
-                        variant.image = "img/"+fl.originalFilename;
+                        variant.image = "img/basis/"+fl.originalFilename;
+
+                        console.log(variant);
+
                         Base.variants.push(variant);
                         //Bases.formBaseData(fields);
                     }
                 }
+
+                iterator++;
 			});
 		}
 
-        if (Base.variants.length ) {
+        if (Base.variants.length) {
 
             console.log(fields.print[0] != 'true' && fields.fancywork[0] != 'true')
 
             if (fields.print[0] != 'true' && fields.fancywork[0] != 'true') {
+                console.log("???")
                 res.send({status: false});
             } else {
                 Base.name = fields.name[0];
@@ -68,6 +78,8 @@ router.post('/upload', (req, res, next) => {
                     res.send({ status: true });
                 });
             }
+        } else {
+		    res.send({status: true});
         }
 
 	})

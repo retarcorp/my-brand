@@ -1192,7 +1192,7 @@ const App = {
 
         ,getBases: async function(){
             const data = await App.Ajax.getJSON("/bases");
-            this.Bases = data.map((obj) => Base.fromJSON(obj));
+            this.Bases = data.bases.map((obj) => Base.fromJSON(obj));
         }
 
         /**

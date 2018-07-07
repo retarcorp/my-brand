@@ -142,7 +142,7 @@ const TemplateFactory = {
 
     ,getAdminPanelPages(page) {
         return `
-            <li class="panel__page-point">
+            <li class="panel__page-point ${ (page == 1) ? "selected" : "" }">
                 <span class="panel__page-num">${page}</span>
             </li>
         `
@@ -182,6 +182,25 @@ const TemplateFactory = {
                 <span class="size-container__value">${size}</span>
                 <button class="size-container__close"></button>
             </div>
+        `
+    }
+
+    ,getAdminPanelBaseListPointHtml(base, main_variant) {
+        return `
+            <li class="panel__basis-item">
+                <div class="panel__basis-img">
+                    <img src="${main_variant.image}" alt="">
+                </div>
+                <div class="panel__basis-description">
+                    <p class="panel__basis-name">${base.name}</p>
+                    <p class="panel__basis-type">${base.type} - ${ (base.fancywork == "true") ? "вышивка" : "" } ${(base.fancywork == "true" && base.print == "true") ? "," : "" } ${ (base.print == "true") ? "принт" : "" }</p>
+                    <p class="panel__basis-price">${base.price} Р</p>
+                </div>
+                <div class="panel__basis-button">
+                    <button class="panel__basis-edit">Редактировать</button>
+                    <button class="panel__basis-remove">Удалить</button>
+                </div>
+            </li>
         `
     }
 

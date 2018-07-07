@@ -19,6 +19,7 @@ var deleteFile = require('./routes/delete');
 var uploadFile = require('./routes/upload');
 var loadFonts = require('./routes/fonts');
 var loadBases = require('./routes/bases');
+var testBlob = require('./routes/BlobTest');
 
 var register = require('./routes/register');
 var loadUser = require('./routes/login');
@@ -65,6 +66,7 @@ app.post('/login', loadUser);
 app.post('/register', register);
 
 app.post('/upload', uploadFile);
+app.post('/test_blob', testBlob);
 
 app.get('/admin', adminPanel);
 app.get('/*', serverRouter);

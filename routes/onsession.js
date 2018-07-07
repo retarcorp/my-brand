@@ -14,14 +14,14 @@ router.get('/onsession', (req, res, next) => {
             Users.createSession(req, res, next, req.cookies.user, () => {
                 res.send(JSON.stringify({online: true}));
             });
-        }
+        } else
 
         if (!req.cookies.user && req.session.user) {
             console.log('session')
             Users.createSession(req, res, next, req.session.user, () => {
                 res.send(JSON.stringify({online: true}));
             });
-        }
+        } else
 
         if (req.cookies.user && req.session.user) {
             res.send(JSON.stringify({online: true}));
