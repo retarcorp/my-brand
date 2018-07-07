@@ -185,4 +185,23 @@ const TemplateFactory = {
         `
     }
 
+    ,getAdminPanelBaseListPointHtml(base, main_variant) {
+        return `
+            <li class="panel__basis-item">
+                <div class="panel__basis-img">
+                    <img src="${main_variant.image}" alt="">
+                </div>
+                <div class="panel__basis-description">
+                    <p class="panel__basis-name">${base.name}</p>
+                    <p class="panel__basis-type">${base.type} - ${ (base.fancywork == "true") ? "вышивка" : "" } ${(base.fancywork == "true" && base.print == "true") ? "," : "" } ${ (base.print == "true") ? "принт" : "" }</p>
+                    <p class="panel__basis-price">${base.price} Р</p>
+                </div>
+                <div class="panel__basis-button">
+                    <button class="panel__basis-edit">Редактировать</button>
+                    <button class="panel__basis-remove">Удалить</button>
+                </div>
+            </li>
+        `
+    }
+
 }

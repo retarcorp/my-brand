@@ -14,7 +14,7 @@ AdminApp = {
 
         this.getFonts(1);
 
-        this.BasePanel.init();
+        this.UI.init();
 
         console.log('AdminPanel init');
     }
@@ -137,8 +137,26 @@ AdminApp = {
         });
     }
 
+    ,UI: {
+        init() {
+            this.menu.on('click', this.selectPanels)
+        }
+
+        ,selectPanels(e) {
+            if ($(e.target).hasClass('baseUI')) {
+                AdminApp.BaseList.init();
+            }
+        }
+
+        ,menu: $('.menu__list')
+
+    }
+
     ,BasePanel: {
         init() {
+
+            this.panel.addClass('active');
+
             this.upload_base_variant.on('change', this.onLoadVariant);
             this.main_file.on('change', this.onLoadVariant);
             this.variants.on('click', this.checkVariantEvent);
@@ -196,20 +214,39 @@ AdminApp = {
                 $.each(AdminApp.BasePanel.variants.children(), (index, child) => {
                     if (!$(child).hasClass('panel__uploaded-pic-add')) {
 
-                        let info = { width: 0, height: 0, workzone: null };
+                        let info = { width: 0, height: 0, workzone: null, main: false };
 
                         info.width = $(child).data('size').width;
                         info.height = $(child).data('size').height;
                         info.workzone = $(child).data('workzone');
 
+                        let _x = info.workzone.x,
+                            _y = info.workzone.y,
+                            _width = info.workzone.width,
+                            _height = info.workzone.height,
+                            _int_w = info.width/AdminApp.BasePanel.canvas.width,
+                            _int_h = info.height/AdminApp.BasePanel.canvas.height;
+
+                        info.workzone.x *= _int_w;
+                        info.workzone.y *= _int_h;
+                        info.workzone.width *= _int_w;
+                        info.workzone.height *= _int_h;
+
+                        ($(child).hasClass('main')) ? info.main = true : info.main = false;
+
                         data.append(index, $(child).data('file'));
                         data.append(index, JSON.stringify(info));
+
+                        info.workzone.x = _x;
+                        info.workzone.y = _y;
+                        info.workzone.width = _width;
+                        info.workzone.height = _height;
                     }
                 });
 
                 data.append('name', name);
                 data.append('price', price);
-                data.append('type', parseInt(AdminApp.BasePanel.inputs.type.val()));
+                data.append('type', AdminApp.BasePanel.inputs.type.val());
                 data.append('print', AdminApp.BasePanel.inputs.print.prop('checked'));
                 data.append('fancywork', AdminApp.BasePanel.inputs.fancywork.prop('checked'));
 
@@ -218,6 +255,83 @@ AdminApp = {
                 })
             }
 
+        }
+
+        ,loadData() {
+            User.Ajax.get('/bases', (data) => {
+                AdminApp.BasePanel.parseData(JSON.parse(data)[0]);
+            });
+        }
+
+        ,parseData(data) {
+            let base = data,
+                main = null;
+
+            AdminApp.BasePanel.inputs.name.val(base.name);
+            AdminApp.BasePanel.inputs.price.val(base.price);
+
+            let options = AdminApp.BasePanel.inputs.type[0].options,
+                print = base.print;
+
+            AdminApp.BasePanel.inputs.print.prop('checked', (base.print == "true") ? true : false);
+            AdminApp.BasePanel.inputs.fancywork.prop('checked', (base.fancywork == "true") ? true : false);
+
+            $.each(options, (index, option) => {
+                if (option.value == base.value) {
+                    AdminApp.BasePanel.inputs.type[0].options[index].selected = 'selected';
+                    return;
+                }
+            });
+
+            AdminApp.BasePanel.size.html(
+                base.size.reduce( (acc, size) => acc + TemplateFactory.getAdminPanelSizeHtml(size), ``)
+            );
+
+            $.each(AdminApp.BasePanel.size.children(), (index, child) => {
+                $(child).data('size', base.size[index]);
+            });
+
+            base.variants.forEach( (variant, index) => {
+                fetch(variant.image).then( data => data.blob() ).then( (blob) => {
+                    let file = new File([blob], variant.image.replace(/[a-zA-Z:]*\//g, ""), { type: blob.type, size: blob.size });
+
+                    AdminApp.BasePanel.fileCount++;
+                    AdminApp.BasePanel.checkFileSpace();
+
+                    let child = AdminApp.BasePanel.addVariant(variant.image, file),
+                        _int_w = variant.width/AdminApp.BasePanel.canvas.width,
+                        _int_h = variant.height/AdminApp.BasePanel.canvas.height;
+
+                    console.log(variant.width, variant.height, variant.width, variant.height,)
+
+                    variant.workzone.x /= _int_w;
+                    variant.workzone.y /= _int_h;
+                    variant.workzone.width /= _int_w;
+                    variant.workzone.height /= _int_h;
+
+                    child.data('workzone', variant.workzone);
+
+                    if (variant.main) main = child;
+                    if (main) AdminApp.BasePanel.setMainVariant(main);
+                });
+            });
+
+            // data.forEach( (base, index) => {
+            //     AdminApp.BasePanel.inputs.name.val(base.name);
+            //     AdminApp.BasePanel.inputs.price.val(base.price);
+            //     AdminApp.BasePanel.inputs.type.val(base.type);
+            //
+            //     AdminApp.BasePanel.size.html(
+            //         base.size.reduce( (acc, size) => acc + TemplateFactory.getAdminPanelSizeHtml(size), ``)
+            //     );
+            //
+            //     $.each(AdminApp.BasePanel.size.children(), (index, child) => {
+            //         $(child).data('size', base.size[index]);
+            //     });
+            //
+            //     base.variants
+            //
+            // });
         }
 
         ,checkVariantEvent(e) {
@@ -279,7 +393,6 @@ AdminApp = {
             image.onload = () => {
                 size.width = 400;
                 size.height = Math.round(size.width * (image.height/image.width));
-
                 size.int = image.height/image.width;
 
                 child.data('size', size);
@@ -289,6 +402,8 @@ AdminApp = {
             this.variants.prepend(child);
 
             child.data('index', this.variants.length);
+
+            return child;
         }
 
         ,setMainVariant(node) {
@@ -297,6 +412,7 @@ AdminApp = {
             this.currVariant = node;
             this.currWorkzone = node.data('workzone');
 
+            this.main_variant.addClass('active');
             this.main_variant_image.attr('src', node.find('img').attr('src'));
         }
 
@@ -383,6 +499,17 @@ AdminApp = {
             requestAnimationFrame(this.renderWorkzone.bind(this));
         }
 
+        ,clearInputs() {
+            this.variants.html(``);
+            this.size.html(``);
+
+            this.main_file.attr('type', "");
+            this.main_file.attr('type', "file");
+
+
+        }
+
+        ,panel: $('.base__add')
         ,variants: $('.panel__container-picture')
         ,main_file: $('#new-basis')
         ,main_variant: $('.panel__main-variant')
@@ -394,6 +521,57 @@ AdminApp = {
         ,workzoneResizing: false
         ,canvas: document.querySelector('.panel__main-variant canvas')
         ,size: $('.panel__size-container')
+    }
+
+    ,BaseList: {
+        init() {
+
+            this.panel.addClass('active');
+
+            User.Ajax.get('/bases', (data) => {
+                let bases = JSON.parse(data)
+                this.setBaseListHtml(bases);
+            });
+
+            this.list.on('click', this.checkBaseListEvent);
+            $('.button__add-basis').on('click', this.checkBaseListEvent)
+        }
+
+        ,checkBaseListEvent(e) {
+            if ($(e.target).hasClass('panel__basis-edit')) {
+                AdminApp.BaseList.panel.removeClass('active');
+
+                let base = $(e.target).parent().parent().data('base');
+
+                console.log($(e.target).parent().parent(),base);
+
+                AdminApp.BasePanel.init();
+                AdminApp.BasePanel.parseData(base);
+            }
+
+            if ($(e.target).hasClass('button__add-basis')) {
+                AdminApp.BaseList.panel.removeClass('active');
+                AdminApp.BasePanel.init();
+            }
+        }
+
+        ,setBaseListHtml(bases) {
+            bases.forEach( (base, index) => {
+                let main_variant = base.variants.find( (variant) => variant.main );
+
+                this.list.html(
+                    bases.reduce( (acc, base) => acc + TemplateFactory.getAdminPanelBaseListPointHtml(base, main_variant), ``)
+                );
+
+                $.each(this.list.children(), (index, child) => {
+                    $(child).data('base', bases[index]);
+                });
+
+            });
+        }
+
+        ,list: $('.panel__basis-list')
+        ,panel: $('.base-list')
     }
 }
 

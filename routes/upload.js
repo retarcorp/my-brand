@@ -20,14 +20,16 @@ router.post('/upload', (req, res, next) => {
             price: "",
             variants: [],
             size: []
-        };
+        },
+            iterator = 0;
 
-        console.log(fields, files);
+        console.log(files, fields);
 
 		for (file in files) {
 			let fle = files[file];
 
 			fle.forEach( (fl, index) => {
+
                 if (fl.path) {
                     if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
@@ -39,13 +41,18 @@ router.post('/upload', (req, res, next) => {
                     if (fl.headers['content-type'].indexOf('image/png') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/img/basis/${fl.originalFilename}`));
 
-                        let variant = JSON.parse(fields[index]);
+                        let variant = JSON.parse(fields[iterator]);
 
                         variant.image = "img/"+fl.originalFilename;
+
+                        // console.log(variant);
+
                         Base.variants.push(variant);
                         //Bases.formBaseData(fields);
                     }
                 }
+
+                iterator++;
 			});
 		}
 
@@ -68,6 +75,8 @@ router.post('/upload', (req, res, next) => {
                     res.send({ status: true });
                 });
             }
+        } else {
+		    res.send({status: true});
         }
 
 	})

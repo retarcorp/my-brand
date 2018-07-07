@@ -700,3 +700,12 @@ select{
 .panel__card{
     /* display: none; */
 }
+
+.panel__basis-img {
+    position: relative;
+    max-width: 120px;
+}
+
+.panel__basis-img img {
+    width: 100%;
+}
