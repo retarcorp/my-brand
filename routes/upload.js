@@ -23,7 +23,7 @@ router.post('/upload', (req, res, next) => {
         },
             iterator = 0;
 
-        console.log(files, fields);
+        //console.log(files, fields);
 
 		for (file in files) {
 			let fle = files[file];
@@ -38,14 +38,16 @@ router.post('/upload', (req, res, next) => {
                         });
                     }
 
-                    if (fl.headers['content-type'].indexOf('image/png') >= 0) {
+                    console.log(fl.headers['content-type']);
+
+                    if (fl.headers['content-type'].indexOf('image/') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/img/basis/${fl.originalFilename}`));
 
                         let variant = JSON.parse(fields[iterator]);
 
-                        variant.image = "img/"+fl.originalFilename;
+                        variant.image = "img/basis/"+fl.originalFilename;
 
-                        // console.log(variant);
+                        console.log(variant);
 
                         Base.variants.push(variant);
                         //Bases.formBaseData(fields);
@@ -56,11 +58,12 @@ router.post('/upload', (req, res, next) => {
 			});
 		}
 
-        if (Base.variants.length ) {
+        if (Base.variants.length) {
 
             console.log(fields.print[0] != 'true' && fields.fancywork[0] != 'true')
 
             if (fields.print[0] != 'true' && fields.fancywork[0] != 'true') {
+                console.log("???")
                 res.send({status: false});
             } else {
                 Base.name = fields.name[0];

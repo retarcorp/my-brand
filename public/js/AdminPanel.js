@@ -2,7 +2,7 @@ AdminApp = {
     init() {
         $('.panel__font-form').on('submit', this.uploadFont);
         $('input[type="file"][name="font_file"]').on('change', this.updateFile);
-        $('.panel__page-list').on('click', this.onFontsPage);
+        $('.panel__page-list.fonts').on('click', this.onFontsPage);
         //$('.panel__font-delete').on('click', this.deleteFile);
 
         this.fontsPanel = $('.panel__font-list');
@@ -15,6 +15,8 @@ AdminApp = {
         this.getFonts(1);
 
         this.UI.init();
+        this.BaseList.init();
+        this.BasePanel.init();
 
         console.log('AdminPanel init');
     }
@@ -144,7 +146,9 @@ AdminApp = {
 
         ,selectPanels(e) {
             if ($(e.target).hasClass('baseUI')) {
-                AdminApp.BaseList.init();
+                $('.panel__card').removeClass('active');
+                AdminApp.BaseList.loadBases(1, AdminApp.BaseList.loadFinishing);
+                AdminApp.BaseList.panel.addClass('active');
             }
         }
 
@@ -154,8 +158,6 @@ AdminApp = {
 
     ,BasePanel: {
         init() {
-
-            this.panel.addClass('active');
 
             this.upload_base_variant.on('change', this.onLoadVariant);
             this.main_file.on('change', this.onLoadVariant);
@@ -194,6 +196,8 @@ AdminApp = {
 
             this.ctx = this.canvas.getContext('2d');
             this.ctx.translate(0.5, 0.5);
+
+            this.clearInputs();
 
             this.renderWorkzone();
         }
@@ -267,6 +271,8 @@ AdminApp = {
             let base = data,
                 main = null;
 
+            this.clearInputs();
+
             AdminApp.BasePanel.inputs.name.val(base.name);
             AdminApp.BasePanel.inputs.price.val(base.price);
 
@@ -291,18 +297,17 @@ AdminApp = {
                 $(child).data('size', base.size[index]);
             });
 
+            AdminApp.BasePanel.fileCount = base.variants.length;
+
             base.variants.forEach( (variant, index) => {
                 fetch(variant.image).then( data => data.blob() ).then( (blob) => {
                     let file = new File([blob], variant.image.replace(/[a-zA-Z:]*\//g, ""), { type: blob.type, size: blob.size });
 
-                    AdminApp.BasePanel.fileCount++;
                     AdminApp.BasePanel.checkFileSpace();
 
                     let child = AdminApp.BasePanel.addVariant(variant.image, file),
                         _int_w = variant.width/AdminApp.BasePanel.canvas.width,
                         _int_h = variant.height/AdminApp.BasePanel.canvas.height;
-
-                    console.log(variant.width, variant.height, variant.width, variant.height,)
 
                     variant.workzone.x /= _int_w;
                     variant.workzone.y /= _int_h;
@@ -367,7 +372,6 @@ AdminApp = {
 
         ,onDeleteVariant(e) {
             let _delete = $(e.target).parent();
-            console.log(_delete.data('file'));
             this.fileCount--;
 
             if (_delete.hasClass('main')) {
@@ -417,6 +421,7 @@ AdminApp = {
         }
 
         ,checkFileSpace() {
+            console.log('check file space');
             if (this.fileCount >= 4) {
                 this.upload_base_variant.addClass('inactive');
             } else if (this.fileCount <= 0) {
@@ -500,13 +505,27 @@ AdminApp = {
         }
 
         ,clearInputs() {
-            this.variants.html(``);
+            this.variants.html(this.upload_base_variant);
             this.size.html(``);
+
+            this.main_variant.removeClass('active');
 
             this.main_file.attr('type', "");
             this.main_file.attr('type', "file");
 
+            this.currVariant = null;
+            this.currWorkzone = { x: 0, y: 0, width: 0, height: 0 };
+            this.workzoneResizing = false;
+            this.main_variant_image.attr('src', "");
 
+            this.fileCount = 0;
+            this.checkFileSpace();
+
+            this.inputs.print.prop('checked', true);
+            this.inputs.fancywork.prop('checked', true);
+            this.inputs.type[0].options[0].selected = "selected";
+            this.inputs.name.val("");
+            this.inputs.price.val("");
         }
 
         ,panel: $('.base__add')
@@ -525,53 +544,147 @@ AdminApp = {
 
     ,BaseList: {
         init() {
-
-            this.panel.addClass('active');
-
-            User.Ajax.get('/bases', (data) => {
-                let bases = JSON.parse(data)
-                this.setBaseListHtml(bases);
-            });
+            this.loadBases(1, this.loadFinishing);
 
             this.list.on('click', this.checkBaseListEvent);
-            $('.button__add-basis').on('click', this.checkBaseListEvent)
+            $('.button__add-basis').on('click', this.checkBaseListEvent);
+
+            this.pages.on('click', this.loadBasesPage)
+        }
+
+        ,loadBases(page = 1, callback) {
+            this.list.addClass('loading');
+
+            this.getBases(page, callback);
+        }
+
+        ,loadBasesPage(e) {
+            if ($(e.target).hasClass('panel__page-point')) {
+                let page = $(e.target).data('page');
+
+                console.log(page);
+
+                AdminApp.BaseList.loadBases(page, (data) => {
+                    AdminApp.BaseList.loadFinishing(data);
+
+                   // $('.panel__page-point.selected').removeClass('selected');
+                    $(e.target).addClass('selected');
+                });
+            }
+
+            console.log(e);
+        }
+
+        ,loadFinishing(data) {
+            AdminApp.BaseList.list.removeClass('loading');
+
+            let bases = JSON.parse(data);
+
+            AdminApp.BaseList.setBaseListHtml(bases.bases);
+            AdminApp.BaseList.setBasePagesHtml(bases.pages);
+        }
+
+        ,getBases(page = 1, callback) {
+            User.Ajax.get('/bases?page='+page, callback);
         }
 
         ,checkBaseListEvent(e) {
             if ($(e.target).hasClass('panel__basis-edit')) {
-                AdminApp.BaseList.panel.removeClass('active');
-
-                let base = $(e.target).parent().parent().data('base');
-
-                console.log($(e.target).parent().parent(),base);
-
-                AdminApp.BasePanel.init();
-                AdminApp.BasePanel.parseData(base);
+                AdminApp.BaseList.redactBase(e);
             }
 
             if ($(e.target).hasClass('button__add-basis')) {
-                AdminApp.BaseList.panel.removeClass('active');
-                AdminApp.BasePanel.init();
+                AdminApp.BaseList.createBase(e);
+            }
+
+            if ($(e.target).hasClass('panel__basis-remove')) {
+                AdminApp.BaseList.deleteBase(e);
             }
         }
 
-        ,setBaseListHtml(bases) {
-            bases.forEach( (base, index) => {
-                let main_variant = base.variants.find( (variant) => variant.main );
+        ,redactBase(e) {
+            let base = $(e.target).parent().parent().data('base'),
+                copy = {};
 
-                this.list.html(
-                    bases.reduce( (acc, base) => acc + TemplateFactory.getAdminPanelBaseListPointHtml(base, main_variant), ``)
-                );
+            this.panel.removeClass('active');
 
-                $.each(this.list.children(), (index, child) => {
-                    $(child).data('base', bases[index]);
-                });
+            this.copyObject(copy, base);
 
+            AdminApp.BasePanel.panel.addClass('active');
+            AdminApp.BasePanel.parseData(copy);
+        }
+
+        ,createBase(e) {
+            this.panel.removeClass('active');
+
+            AdminApp.BasePanel.clearInputs();
+            AdminApp.BasePanel.panel.addClass('active');
+        }
+
+        ,deleteBase(e) {
+            let base = $(e.target).parent().parent().data('base'),
+                variants = base.variants,
+                images = [],
+                file_string = "";
+
+            variants.forEach( (variant) => {
+                images.push(variant.image);
             });
+
+            file_string = images.join('|');
+
+            User.Ajax.get(`/delete?name=${base.name}&type=base&files=${file_string}`, (data) => {
+                this.loadBases();
+
+                console.log(data);
+            });
+        }
+
+        ,setBaseListHtml(bases) {
+            this.list.html(
+                bases.reduce( (acc, base) => acc + TemplateFactory.getAdminPanelBaseListPointHtml(base, base.variants.find( (variant) => variant.main)), ``));
+
+            $.each(this.list.children(), (index, child) => {
+                $(child).data('base', bases[index]);
+            });
+        }
+
+        ,setBasePagesHtml(pages) {
+            this.pages.html('');
+
+            for (let page = 1; page <= pages; page++) {
+                this.pages.append(TemplateFactory.getAdminPanelPages(page));
+                this.pages.children(":last-child").data('page', page);
+            }
+        }
+
+        ,setBasePages(pages) {
+            let pages = null;
+        }
+
+        ,copyObject(copy, object) {
+            for (let key in object) {
+
+                if (typeof object[key] == "object") {
+
+                    if (object[key].length) {
+                        copy[key] = [];
+                        this.copyObject(copy[key], object[key]);
+                    } else {
+                        copy[key] = {};
+                        this.copyObject(copy[key], object[key]);
+                    }
+
+                } else {
+                    copy[key] = object[key];
+                }
+
+            }
         }
 
         ,list: $('.panel__basis-list')
         ,panel: $('.base-list')
+        ,pages: $('.panel__page-list.bases')
     }
 }
 

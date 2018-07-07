@@ -31,6 +31,23 @@ router.get('/delete', (req, res, next) => {
 
                 break;
 
+            case 'base':
+                let files = data.files.split("|");
+
+                files.forEach( (file) => {
+                    fs.unlink("./public/"+file, (err) => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                });
+
+                Mongo.delete({ name: data.name }, 'bases', () => {
+                    res.send({status: true});
+                });
+
+                break;
+
             default:
                 res.send('Nothing to delete');
         }
