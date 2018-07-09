@@ -322,6 +322,15 @@
     line-height: 44px;
     position: relative;
 }
+
+.main-menu__item.profile {
+    display: none;
+}
+
+.main-menu__item.profile.active {
+    display: block;
+}
+
 .authorization__form{
     position: absolute;
     bottom: -380px;
@@ -482,7 +491,7 @@
 /* CHANGES */
 
 .profile__menu{
-    display: flex;
+    display: none;
     flex-direction: column;
     position: absolute;
     top: 85px;
@@ -493,6 +502,11 @@
     border-radius: 7px;
     box-shadow: 0 11px 35px rgba(21,20,55, 0.13);
 }
+
+.profile__menu.active {
+    display: flex;
+}
+
 .profile__link{
     text-decoration: none;
     font-size: 16px;

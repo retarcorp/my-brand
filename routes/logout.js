@@ -6,6 +6,8 @@ var Users = require('../modules/Users');
 router.get('/logout', (req, res, next) => {
     Users.closeSession(req, res, (err) => {
         if (err) console.log(err);
+
+        res.clearCookie("user");
         res.redirect('/');
     });
 });

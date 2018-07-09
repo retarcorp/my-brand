@@ -13,6 +13,7 @@ var saveProject = require('./routes/save');
 var loadAdmin = require('./routes/adminAuth');
 
 var adminPanel = require('./routes/admin');
+var profile = require('./routes/profile');
 
 var deleteFile = require('./routes/delete');
 
@@ -69,6 +70,8 @@ app.post('/upload', uploadFile);
 app.post('/test_blob', testBlob);
 
 app.get('/admin', adminPanel);
+app.get('/profile', profile);
+
 app.get('/*', serverRouter);
 
 //app.get('/', indexRouter);

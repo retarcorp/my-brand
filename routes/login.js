@@ -24,13 +24,13 @@ router.post('/login', (req, res, next) => {
 			if (data.length) {
 				if (Users.checkCredentials(data[0], user)) {
 					Users.createSession(req, res, next, data[0], (data) => {
-						res.send('Logged');
+						res.send({status: true});
 					});
 				} else {
-					res.send('Error: Check your login or password!');
+					res.send({status: false, message: 'Error: Check your login or password!'});
 				}
 			} else {
-				res.send('User not found');
+				res.send({status: false, message: 'User not found' });
 			}
 
 		});

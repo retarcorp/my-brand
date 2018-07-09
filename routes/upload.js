@@ -34,13 +34,13 @@ router.post('/upload', (req, res, next) => {
                     if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
                         Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${fl.originalFilename}` }, 'fonts', () => {
-                            res.send({ status: true });
+
                         });
                     }
 
                     console.log(fl.headers['content-type']);
 
-                    if (fl.headers['content-type'].indexOf('image/') >= 0) {
+                    if (fl.headers['content-type'].indexOf('image/png') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/img/basis/${fl.originalFilename}`));
 
                         let variant = JSON.parse(fields[iterator]);

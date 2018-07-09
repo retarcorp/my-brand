@@ -12,7 +12,7 @@ Admin = {
             console.log(index, file);
         });
 
-        $.each($('input'), (index, child) => {
+        $.each($('input[name*="font"]'), (index, child) => {
             console.log($(child).attr('name'), $(child).val());
             data.append($(child).attr('name'), $(child).val());
         });

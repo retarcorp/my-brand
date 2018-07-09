@@ -18,8 +18,6 @@ router.post('/save', function(req, res, next) {
 		parse = JSON.parse(parse);
 		parse.user = req.cookies.user.name || req.session.user.name;
 
-		console.log(req.cookies.user, req.session.user);
-
 		Mongo.select( {user: parse.user }, 'uniq', (data) => {
 			if (data.length) {
 				let id = 1;
@@ -29,8 +27,7 @@ router.post('/save', function(req, res, next) {
 						if (proj.id > id) id = proj.id;
 					});
 
-					parse.id = id;
-					console.log(parse.id);
+					parse.id = id+1;
 				}
 
 			} else {
@@ -38,7 +35,7 @@ router.post('/save', function(req, res, next) {
 			}
 
             Mongo.update( { user: parse.user, id: parse.id }, parse, 'uniq', (data) => {
-                res.send(JSON.stringify({ status: 'saved' }));
+                res.send(JSON.stringify({ status: true }));
             });
 		})
 

@@ -57,7 +57,7 @@ User = {
 
     ,session: async function() {
         let data = JSON.parse(await this.Ajax.get('/onsession'));
-        return data.online;
+        return data;
     }
 
     ,Ajax: {

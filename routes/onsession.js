@@ -12,23 +12,23 @@ router.get('/onsession', (req, res, next) => {
 
         if (!req.session.user && req.cookies.user) {
             Users.createSession(req, res, next, req.cookies.user, () => {
-                res.send(JSON.stringify({online: true}));
+                res.send(JSON.stringify({status: true, user: req.session.user.name}));
             });
         } else
 
         if (!req.cookies.user && req.session.user) {
             console.log('session')
             Users.createSession(req, res, next, req.session.user, () => {
-                res.send(JSON.stringify({online: true}));
+                res.send(JSON.stringify({status: true, user: req.session.user.name }));
             });
         } else
 
         if (req.cookies.user && req.session.user) {
-            res.send(JSON.stringify({online: true}));
+            res.send(JSON.stringify({status: true, user: req.session.user.name}));
         }
 
     } else {
-        res.send(JSON.stringify({online: false}));
+        res.send(JSON.stringify({status: false}));
     }
 });
 

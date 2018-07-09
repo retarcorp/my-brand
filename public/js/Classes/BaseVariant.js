@@ -15,12 +15,16 @@ class BaseVariant {
         this.image = new Image();
         this.image.src = this.src;
 
+        this.loaded = false;
+
         this.filterImage = new Image();
 
         this.image.onload = () => {
 
             this.filterImage.onload = () => {
                 this.loaded = true;
+
+                console.log('class loaded')
             }
         }
     }
@@ -50,9 +54,6 @@ class BaseVariant {
      */
 
     static fromJSON(json){
-
-        console.log(json.image);
-
         return new this( 
             json.src || json.image
             ,json.size || new Size(json.width, json.height)
@@ -66,6 +67,9 @@ class BaseVariant {
         } else {
             //ctx.putImageData(this.imageData, 0, 0);
             // if (this.image)
+            //document.body.appendChild(this.filterImage);
+            //debugger;
+            App.UI.Profile.projectLoaded = true;
             ctx.drawImage(this.filterImage, 0, 0, this.size.height, this.size.width)
             //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.colorFilter(ctx, this.image)
         }

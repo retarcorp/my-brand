@@ -115,6 +115,7 @@ section.registration{
     margin: 0 auto;
     text-align: center;
     font-weight: 400;
+    font-size: 1.6rem;
 }
 .form__button-registration{
     width: 283px;

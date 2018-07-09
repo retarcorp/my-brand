@@ -59,9 +59,7 @@ AdminApp = {
 
             AdminApp.fontsPanel.addClass('loading');
 
-            AdminApp.loadFontsPage(page, (data) => {
-                console.log(data);
-
+            AdminApp.loadFontsPage(1, (data) => {
                 AdminApp.fontsPanel.removeClass('loading');
                 AdminApp.resetUpload();
             });
@@ -132,7 +130,7 @@ AdminApp = {
 
             let page = parseInt($('.panel__page-point.selected span').text());
 
-            AdminApp.loadFontsPage(page, () => {
+            AdminApp.loadFontsPage(1, () => {
                 AdminApp.fontsPanel.removeClass('loading');
                 AdminApp.resetUpload();
             });
@@ -150,9 +148,20 @@ AdminApp = {
                 AdminApp.BaseList.loadBases(1, AdminApp.BaseList.loadFinishing);
                 AdminApp.BaseList.panel.addClass('active');
             }
+
+            if ($(e.target).hasClass('fontsUI')){
+                $('.panel__card').removeClass('active');
+                $('.panel__card.fonts__panel').addClass('active');
+
+                AdminApp.loadFontsPage();
+            }
         }
 
         ,menu: $('.menu__list')
+
+    }
+
+    ,FontsPanel: {
 
     }
 
@@ -211,7 +220,6 @@ AdminApp = {
 
             if (AdminApp.BasePanel.variants.children().length && name.length && price.length) {
                 $.each(AdminApp.BasePanel.size.children(), (index, child) => {
-                    console.log($(child).data('size'));
                     data.append('size', $(child).data('size'));
                 });
 
@@ -571,8 +579,6 @@ AdminApp = {
                     $(e.target).addClass('selected');
                 });
             }
-
-            console.log(e);
         }
 
         ,loadFinishing(data) {
@@ -634,7 +640,7 @@ AdminApp = {
             file_string = images.join('|');
 
             User.Ajax.get(`/delete?name=${base.name}&type=base&files=${file_string}`, (data) => {
-                this.loadBases();
+                this.loadBases(1, this.loadFinishing);
 
                 console.log(data);
             });
