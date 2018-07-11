@@ -142,7 +142,7 @@ const TemplateFactory = {
 
     ,getAdminPanelPages(page) {
         return `
-            <li class="panel__page-point ${ (page == 1) ? "selected" : "" }">
+            <li class="panel__page-point">
                 <span class="panel__page-num">${page}</span>
             </li>
         `

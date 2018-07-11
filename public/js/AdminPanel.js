@@ -570,13 +570,13 @@ AdminApp = {
             if ($(e.target).hasClass('panel__page-point')) {
                 let page = $(e.target).data('page');
 
-                console.log(page);
-
                 AdminApp.BaseList.loadBases(page, (data) => {
                     AdminApp.BaseList.loadFinishing(data);
 
                    // $('.panel__page-point.selected').removeClass('selected');
-                    $(e.target).addClass('selected');
+                    AdminApp.BaseList.pages.children().removeClass('selected');
+                    AdminApp.BaseList.pages.children(":nth-child("+page+")").addClass('selected');
+                    AdminApp.BaseList.pages.css('transform', `translateX(-${44 * (page - 1)}px)`);
                 });
             }
         }
@@ -656,16 +656,13 @@ AdminApp = {
         }
 
         ,setBasePagesHtml(pages) {
+            this.pagesCount = pages;
             this.pages.html('');
 
             for (let page = 1; page <= pages; page++) {
                 this.pages.append(TemplateFactory.getAdminPanelPages(page));
                 this.pages.children(":last-child").data('page', page);
             }
-        }
-
-        ,setBasePages(pages) {
-            let pages = null;
         }
 
         ,copyObject(copy, object) {
@@ -691,6 +688,7 @@ AdminApp = {
         ,list: $('.panel__basis-list')
         ,panel: $('.base-list')
         ,pages: $('.panel__page-list.bases')
+        ,pagesCount: 0
     }
 }
 

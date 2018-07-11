@@ -21,6 +21,7 @@ const App = {
         await this.Data.getFonts();
         await this.Data.getPrints();
 
+
         if (this.logged){
             await this.Data.loadProjects();
 
@@ -396,7 +397,7 @@ const App = {
 
                 layer.remove();
 
-            } else if (curr && $(e.target).hasClass('.delete')) {
+            } else if ($(e.target).hasClass('delete__layer')) {
                 let layer = $(e.target).parent().parent(),
                     id = layer.data('id'),
                     widget = App.currentProjectVariant.widgets.find( (w) => w.id == id);
@@ -412,27 +413,14 @@ const App = {
         }
 
         ,onSaveProject(e, callback) {
-            //let data = Object.assign({}, App.Project);
             if (App.logged) {
-                let data = {
-                    variants: App.Project.variants
-                    ,base: App.Project.base
-                    ,settings: App.Project.settings
-                    ,id: App.Project.id
-                }
-
-                App.GraphCore.setCurrentWidget(null);
-
-                App.Ajax.postJSON('/save', JSON.stringify(data), callback);
+                App.Data.saveProjectData(callback);
             } else {
                 $('body,html').animate({
                     scrollTop: 0
                 }, 500);
 
-
                 App.UI.Profile.showLoginForm(e);
-
-                //alert('Необходимо вначале войти!');
             }
         }
 
@@ -1058,6 +1046,8 @@ const App = {
                     index = widget.index,
                     text = widget.text;
 
+                console.log('addLayer');
+
                 lastId++;
                 this.container.data('lastId', lastId);
 
@@ -1357,9 +1347,30 @@ const App = {
             this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
         }
 
-        ,loadProjects: async function() {
-            const projects = (await App.Ajax.getJSON('/load')).projects;
+        ,loadProjects: async function(mod = "") {
+            const projects = (await App.Ajax.getJSON('/load'+mod)).projects;
             this.Projects = projects;
+        }
+
+        ,getProjectData() {
+            let data = {
+                variants: App.Project.variants
+                ,base: App.Project.base
+                ,settings: App.Project.settings
+                ,id: App.Project.id
+            }
+
+            return data;
+        }
+
+        ,saveProjectData(data, callback) {
+
+            if (typeof data == "function") {
+                callback = data;
+                data = null;
+            }
+
+            App.Ajax.postJSON('/save', JSON.stringify(data || this.getProjectData()), callback);
         }
 
     }

@@ -9,6 +9,7 @@ var serverRouter = require('./routes/server');
 
 var loadProject = require('./routes/load');
 var saveProject = require('./routes/save');
+var saveTemplate = require('./routes/admin_templates');
 
 var loadAdmin = require('./routes/adminAuth');
 
@@ -60,6 +61,7 @@ app.get('/delete', deleteFile);
 
 app.get('/load', loadProject);
 app.post('/save', saveProject);
+app.post('/save/template', saveTemplate);
 
 app.get('/logout', userLogout);
 app.get('/onsession', onsession);

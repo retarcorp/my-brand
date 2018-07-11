@@ -18,6 +18,8 @@ router.post('/save', function(req, res, next) {
 		parse = JSON.parse(parse);
 		parse.user = req.cookies.user.name || req.session.user.name;
 
+        let collection = (parse.template) ? 'admin' : 'uniq';
+
 		Mongo.select( {user: parse.user }, 'uniq', (data) => {
 			if (data.length) {
 				let id = 1;
@@ -34,10 +36,10 @@ router.post('/save', function(req, res, next) {
 				parse.id = 1;
 			}
 
-            Mongo.update( { user: parse.user, id: parse.id }, parse, 'uniq', (data) => {
+            Mongo.update( { user: parse.user, id: parse.id }, parse, collection, (data) => {
                 res.send(JSON.stringify({ status: true }));
             });
-		})
+		});
 
 
 		//res.send(JSON.stringify({ status: 'saved' }));
