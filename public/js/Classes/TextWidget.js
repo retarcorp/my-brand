@@ -50,7 +50,7 @@ class TextWidget extends Widget {
     }
 
     moveBy(dx, dy) {
-        let inW = this.isInWorkzone(dx, dy);
+        let inW = this.inWorkzone(dx, dy);
 
         if (inW.x) {
             this.position.x += dx;
@@ -99,15 +99,15 @@ class TextWidget extends Widget {
         let out = false;
 
         out = {
-            resize: !!(this.checkCorner(position))
-            ,direction: this.checkCorner(position)
+            resize: !!(this.checkConor(position))
+            ,direction: this.checkConor(position)
         };
 
         return out;
     }
 
     // TODO Corner !
-    checkCorner(position) {
+    checkConor(position) {
         let _x = this.position.x + App.currentWorkzone.position.x,
             _y = this.position.y + App.currentWorkzone.position.y;
 
@@ -132,7 +132,7 @@ class TextWidget extends Widget {
     }
 
     // TODO rename to isInWorkzone
-    isInWorkzone(dx = 0, dy = 0) {
+    inWorkzone(dx = 0, dy = 0) {
         const workzone = App.currentWorkzone;
 
         let _x = this.position.x + dx,
@@ -194,13 +194,11 @@ class TextWidget extends Widget {
         //console.log(this.remainder.dx, dx, direction)
 
         if (App.currentWorkzone.underMouse(position)) {
-            const width_limit = 60;
-
             switch (direction) {
                 case 'upLeft':
 
                     // TODO replace 60 to named const
-                    if (_w - dx > width_limit || dx + this.remainder.dx < 0) {
+                    if (_w - dx > 60 || dx + this.remainder.dx < 0) {
 
                         o_w = _w;
                         _w -= dx + rm;
@@ -220,7 +218,7 @@ class TextWidget extends Widget {
 
                 case 'upRight':
 
-                    if (_w + dx > width_limit || dx + this.remainder.dx > 0) {
+                    if (_w + dx > 60 || dx + this.remainder.dx > 0) {
 
                         _w += dx + rm;
                         this.position.y += Math.round((_h - Math.round(_w*int))*this.lines.length);
@@ -235,7 +233,7 @@ class TextWidget extends Widget {
 
                 case 'bottomLeft':
 
-                    if (_w - dx > width_limit || dx + this.remainder.dx < 0) {
+                    if (_w - dx > 60 || dx + this.remainder.dx < 0) {
                         o_w = _w;
                         _w -= dx + rm;
                         _h = Math.round(_w*int);
@@ -249,7 +247,7 @@ class TextWidget extends Widget {
 
                 case 'bottomRight':
 
-                    if (_w + dx > width_limit || dx + this.remainder.dx > 0) {
+                    if (_w + dx > 60 || dx + this.remainder.dx > 0) {
 
                         _w += dx + rm;
                         _h = Math.round(_w*int);
@@ -277,7 +275,7 @@ class TextWidget extends Widget {
 
         }
 
-        this.isInWorkzone();
+        this.inWorkzone();
 
         return this.fontSettings.fontSize;
     }
@@ -300,7 +298,7 @@ class TextWidget extends Widget {
     }
 
     // TODO rename method corresponding to its real action
-    formTextLines(ctx) {
+    setLines(ctx) {
         const fontSettings = this.fontSettings;
 
         this.lines = [];
@@ -370,6 +368,8 @@ class TextWidget extends Widget {
             _x = this.position.x + App.currentWorkzone.position.x,
             _y = this.position.y + App.currentWorkzone.position.y;
 
+        //console.log(fontSettings.fontSize, this.size.width);
+
         ctx.font = fontSettings.getFontString();
         this.size.height = fontSettings.fontSize*this.lines.length;
 
@@ -377,10 +377,8 @@ class TextWidget extends Widget {
             this.size.width = ctx.measureText(this.biggest_line).width;
         else this.size.width = ctx.measureText(this.lines[0]).width;
 
-        if (this.edit) {
-            this.formTextLines(ctx);
-            console.log(this.lines);
-        }
+        if (this.edit)
+            this.setLines(ctx);
 
         fontSettings.fontSize = parseInt(fontSettings.fontSize);
 
@@ -400,18 +398,34 @@ class TextWidget extends Widget {
 
         if (this.isSelected && !App.isPreview)
             this.path.render(ctx);
+
+        // TODO remove commented code
+        // let distance = Widget.Path.distance,
+        //     _x = this.position.x - distance + App.currentWorkzone.position.x,
+        //     _y = this.position.y + App.currentWorkzone.position.y + this.size.height - distance;
+        //
+        // ctx.strokeStyle = Widget.Path.color;
+        // ctx.setLineDash(Widget.Path.lineDash);
+        // ctx.strokeRect(_x, _y, this.size.width + distance, -this.size.height + distance);
+        //
+        // ctx.fillStyle = Widget.Path.polColor;
+        //
+        // ctx.fillRect(_x - 5, _y - 5, 10, 10);
+        // ctx.fillRect(_x - 5 + this.size.width + distance, _y - 5 - this.size.height + distance, 10, 10);
+        // ctx.fillRect(_x - 5 + this.size.width + distance, _y - 5, 10, 10);
+        // ctx.fillRect(_x - 5, _y - 5 - this.size.height + distance, 10, 10);
     }
 
     static getDefault(text){
         // TODO create consts inside method
-        const position = new Position(0,0),
-              texts = text || "Text",
+        const position = new Postition(0,0),
+              text = text || "Text",
               color = "#000",
               fontSettings = FontSettings.getDefault();
 
         return new this(
             position
-            ,texts
+            ,text
             ,color
             ,fontSettings
         );

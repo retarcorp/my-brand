@@ -1,22 +1,34 @@
 AdminApp = {
     init() {
+        this.panelPageList = $('.panel__page-list.fonts');
+
         $('.panel__font-form').on('submit', this.uploadFont);
         $('input[type="file"][name="font_file"]').on('change', this.updateFile);
-        $('.panel__page-list.fonts').on('click', this.onFontsPage);
+        this.panelPageList.on('click', this.onFontsPage);
         //$('.panel__font-delete').on('click', this.deleteFile);
 
         this.fontsPanel = $('.panel__font-list');
         this.fontsPanel.on('click', this.onEvent);
 
+        this.font_print = $('input[name="font_print"]');
+        this.font_fancywork = $('input[name="font_fancywork"]');
+
         this.fontPage = 1;
 
         this.style = $('<style></style>');
+
+
+        this.font_print.on('click', this.checkPrint.bind(this));
+        this.font_fancywork.on('click', this.checkPrint.bind(this));
+
 
         this.getFonts(1);
 
         this.UI.init();
         this.BaseList.init();
         this.BasePanel.init();
+        this.TemplatePanel.init();
+        this.TemplatesList.init();
 
         console.log('AdminPanel init');
     }
@@ -28,14 +40,13 @@ AdminApp = {
     }
 
     ,onFontsPage(e) {
-
         if ($(e.target).hasClass('panel__page-point')) {
             let page = parseInt($(e.target).text());
 
             AdminApp.fontPage = page;
             console.log(AdminApp.fontPage);
 
-            $('.panel__page-point.selected').removeClass('selected');
+            AdminApp.panelPageList.children('.selected').removeClass('selected');
             $(e.target).addClass('selected');
 
             AdminApp.fontsPanel.addClass('loading');
@@ -46,6 +57,19 @@ AdminApp = {
                 let top = AdminApp.fontsPanel.offset().top;
                 $('body, html').animate( {scrollTop: top}, 1000 );
             });
+        }
+
+    }
+
+    ,checkPrint(e) {
+        const target = $(e.target);
+
+        console.log(target.attr('name'));
+
+        if (target.attr('name') == "font_fancywork" && !target.prop('checked')) {
+            this.font_print.prop('checked', true);
+        } else if (target.attr('name') == 'font_print' && !target.prop('checked')){
+            this.font_fancywork.prop('checked', true);
         }
 
     }
@@ -96,8 +120,8 @@ AdminApp = {
             inner += TemplateFactory.getAdminPanelPages(i);
         }
 
-        $('.panel__page-list').html(inner);
-        $($('.panel__page-list').children()[AdminApp.fontPage - 1]).addClass('selected');
+        AdminApp.panelPageList.html(inner);
+        AdminApp.panelPageList.children(`:nth-child(${AdminApp.fontPage})`).addClass('selected');
     }
 
     ,setFontsHtml(fonts, callback) {
@@ -155,9 +179,19 @@ AdminApp = {
 
                 AdminApp.loadFontsPage();
             }
+
+            if ($(e.target).hasClass('templateUI')) {
+                $('.panel__card').removeClass('active');
+                AdminApp.TemplatesList.loadTemplates();
+                AdminApp.TemplatesList.panel.addClass('active');
+            }
+
+            AdminApp.UI.menu_point.removeClass('active');
+            $(e.target).addClass('active');
         }
 
         ,menu: $('.menu__list')
+        ,menu_point: $('.menu__point')
 
     }
 
@@ -192,7 +226,7 @@ AdminApp = {
             this.inputs.print.on('change', this.setPrintType);
             this.inputs.fancywork.on('change', this.setPrintType);
 
-            $('.add-size').on('click', this.addSize);
+            $('.base__add .add-size').on('click', this.addSize);
             $('.panel__font-submit').on('click', this.sendData);
 
             this.workzoneInputs.x.on('input', this.updateWorkzone);
@@ -262,7 +296,10 @@ AdminApp = {
                 data.append('print', AdminApp.BasePanel.inputs.print.prop('checked'));
                 data.append('fancywork', AdminApp.BasePanel.inputs.fancywork.prop('checked'));
 
+                AdminApp.BasePanel.panel.addClass('loading');
+
                 User.Ajax.post('/upload', data, (data) => {
+                    AdminApp.BasePanel.panel.removeClass('loading');
                     console.log(data);
                 })
             }
@@ -270,8 +307,12 @@ AdminApp = {
         }
 
         ,loadData() {
+            AdminApp.BasePanel.panel.addClass('loading');
+
             User.Ajax.get('/bases', (data) => {
                 AdminApp.BasePanel.parseData(JSON.parse(data)[0]);
+                AdminApp.BasePanel.panel.removeClass('loading');
+
             });
         }
 
@@ -547,7 +588,7 @@ AdminApp = {
         ,currWorkzone: { x: 0, y: 0, width: 0, height: 0 }
         ,workzoneResizing: false
         ,canvas: document.querySelector('.panel__main-variant canvas')
-        ,size: $('.panel__size-container')
+        ,size: $('.base__add .panel__size-container')
     }
 
     ,BaseList: {
@@ -685,11 +726,194 @@ AdminApp = {
             }
         }
 
-        ,list: $('.panel__basis-list')
+        ,list: $('.base-list .panel__basis-list')
         ,panel: $('.base-list')
         ,pages: $('.panel__page-list.bases')
         ,pagesCount: 0
     }
+
+    ,TemplatePanel: {
+        init() {
+
+            this.inputs = {
+                tag: $('input[name="template_size"]'),
+                name: $('input[name="template_name"]')
+            }
+
+            this.tag.on('click', this.checkTagEvent.bind(this));
+            this.tag_add.on('click', this.addTag.bind(this));
+            this.template_save.on('click', this.formData.bind(this));
+        }
+
+        ,sendData(data) {
+            this.panel.addClass('loading');
+
+            App.Ajax.post('/save/template', JSON.stringify(data), (data) => {
+                this.panel.removeClass('loading');
+                console.log(data);
+            });
+        }
+
+        ,formData() {
+            const data = App.Data.getProjectData(),
+                name = this.inputs.name.val(),
+                tags = [];
+
+            $.each(this.tag.children().children('.size-container__value'), (index, tag) => {
+                tags.push($(tag).text());
+            });
+
+            data.name = name;
+            data.tags = tags;
+
+            this.sendData(data);
+        }
+
+        ,async setTemplate(template, cb) {
+            await App.setProject(template);
+
+            console.log(template);
+
+            this.inputs.name.val(template.name);
+            this.tag.html(
+                template.tags.reduce( (acc, tag) => acc + TemplateFactory.getAdminPanelSizeHtml(tag), ``)
+            );
+
+            App.GraphCore.setCurrentWidget(null);
+            App.UI.Layers.formLayersHtml();
+
+            if (cb) {
+                cb();
+            }
+        }
+
+        ,checkTagEvent(e) {
+            const target = $(e.target);
+
+            if (target.hasClass('size-container__close')) {
+                this.removeTag(target.parent());
+            }
+
+            if (target.hasClass('panel__template-layer-config')) {
+                const id = target.data('id'),
+                    layer = App.currentProjectVariant.layers.find( l => l.id == id);
+
+                console.log(layer);
+            }
+        }
+
+        ,addTag() {
+            const tag = this.inputs.tag.val();
+
+            this.tag.append(TemplateFactory.getAdminPanelSizeHtml(tag));
+        }
+
+        ,removeTag(tag) {
+            tag.remove();
+        }
+
+        ,panel: $('.templates-add')
+        ,tag: $('.templates-add .panel__tag-container')
+        ,tag_add: $('.templates-add .add-tag')
+        ,template_save: $('.save-template')
+        ,layers: $('.panel__container-basis')
+
 }
 
-AdminApp.init();
+    ,TemplatesList: {
+        init() {
+            console.log('Templates panel init');
+
+            this.list.on('click', this.checkEvent.bind(this));
+            this.page_list.on('click', this.checkEvent.bind(this));
+            this.loadTemplates(1);
+
+        }
+
+        ,checkEvent(e) {
+            const target = $(e.target);
+
+            if(target.hasClass('panel__basis-edit')) {
+                const template = target.parent().parent().data('template');
+
+                this.panel.removeClass('active');
+                this.list.addClass('loading');
+                AdminApp.TemplatePanel.setTemplate(template);
+                AdminApp.TemplatePanel.panel.addClass('active');
+            }
+
+            if(target.hasClass('panel__page-point')) {
+                const page = target.data('page');
+                this.loadTemplates(page);
+            }
+
+            if(target.hasClass('panel__basis-remove')) {
+                const id = (target.parent().parent().data('template')).id;
+
+                console.log(id);
+                this.removeTemplate(id);
+            }
+        }
+
+        ,loadTemplates(page = 1) {
+            this.list.addClass('loading');
+
+            App.Ajax.get('/load/templates?page='+page, (response) => {
+                const data = JSON.parse(response);
+
+                this.list.removeClass('loading');
+                this.formTemplatesPage(data.data, data.pages, page);
+            });
+        }
+
+        ,async formTemplatesPage(templates, page_count, page) {
+            this.list.html(
+                templates.reduce( (acc, template) => acc + TemplateFactory.getAdminPanelTemplateListPointHtml(template), ``)
+            );
+
+            this.formPages(page_count, page);
+
+            let index = 0;
+
+            for (let template of templates) {
+                await this.setPreviewImage(template, this.list.children()[index]);
+                index++;
+            }
+        }
+
+        ,formPages(page_count, page = 1) {
+            this.page_list.html('');
+
+            for (let page = 1; page <= page_count; page++) {
+                this.page_list.append(TemplateFactory.getAdminPanelPages(page));
+                this.page_list.children(':last-child').attr('data-page', page);
+            }
+
+            this.page_list.children().removeClass('selected');
+            this.page_list.children(`[data-page="${page}"]`).addClass('selected');
+        }
+
+        ,async setPreviewImage(template, child) {
+            await App.setProject(template);
+
+            App.isPreview = true;
+            App.GraphCore.RenderList.render(App.GraphCore.ctx);
+            App.isPreview = false;
+
+            $(child).find('.panel__basis-img img').attr('src', App.GraphCore.canvas.toDataURL());
+            $(child).data('template', template);
+        }
+
+        ,removeTemplate(id) {
+            App.Ajax.get('/delete/template?id='+id, (data) => {
+                console.log(data);
+            });
+        }
+
+        ,list: $('.templates-list .panel__basis-list')
+        ,page_list: $('.panel__page-list.templates')
+        ,panel: $('.templates-list')
+    }
+}
+
+//AdminApp.init();

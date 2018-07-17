@@ -17,6 +17,7 @@ var adminPanel = require('./routes/admin');
 var profile = require('./routes/profile');
 
 var deleteFile = require('./routes/delete');
+var deleteProject = require('./routes/delete_project');
 
 var uploadFile = require('./routes/upload');
 var loadFonts = require('./routes/fonts');
@@ -58,10 +59,13 @@ app.use(session({ secret: 'keyboard cat', cookie: {} }));
 app.get('/bases', loadBases);
 app.get('/fonts', loadFonts);
 app.get('/delete', deleteFile);
+app.get('/delete/template', deleteFile);
+app.get('/delete_project', deleteProject);
 
 app.get('/load', loadProject);
+app.get('/load/templates', loadProject);
 app.post('/save', saveProject);
-app.post('/save/template', saveTemplate);
+app.post('/save/template', saveProject);
 
 app.get('/logout', userLogout);
 app.get('/onsession', onsession);

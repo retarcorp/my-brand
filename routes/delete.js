@@ -55,4 +55,19 @@ router.get('/delete', (req, res, next) => {
 
 });
 
+router.get('/delete/template', (req, res, next) => {
+
+    const user = req.cookies.user.name || req.session.user.name,
+        query = qrs.parse(URL.parse(req.url).query);
+
+    // res.send({status: true, message: 'Template delete'});
+
+    console.log(query);
+
+    Mongo.delete({ user: user, id: parseInt(query.id)}, 'admin', (data) => {
+        res.send({status: true, message: 'Template delete'});
+    });
+
+});
+
 module.exports = router;

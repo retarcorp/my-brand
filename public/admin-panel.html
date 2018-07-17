@@ -3,414 +3,716 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
+    <link rel="stylesheet" href="css/constructor.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/papaps.css">
+    <link rel="stylesheet" type="text/css" href="css/admin-panel.css">
+    <link rel="stylesheet" type="text/css" href="css/adaptive.css">
 
-    <link rel="stylesheet" href="css/admin-panel.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
 </head>
 <body>
 
-    <div class="wrapper">
-        <div class="header">
-            <div class="container">
+
+
+<div class="wrapper">
+    <div class="header">
+        <div class="container header__container_padding">
+            <div class="header__adaptive-container">
+                <div class="header__adaptive-menu-admin header__adaptive-menu_margin"></div>
                 <a class="header__home" href="/">
                     <h1>Мой Бренд</h1>
                 </a>
-
-                <div class="header__control">
-                    <div class="header__admin">Администратор 2</div>
-                    <div class="header__logout">Выход</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="wrapper__content">
-
-            <div class="container">
-                <div class="menu">
-                    <div class="menu__title">
-                        Навигация
-                    </div>
-
-                    <ul class="menu__list">
-                        <li class="menu__point">
-                            Список заказов
-                        </li>
-                        <li class="menu__point">
-                            Оплаченные заказы
-                        </li>
-                        <li class="menu__point">
-                            Период оплаты
-                        </li>
-                        <li class="menu__point fontsUI">
-                            Управление шрифтами
-                        </li>
-                        <li class="menu__point baseUI">
-                            Управление основами
-                        </li>
-                        <li class="menu__point">
-                            Настройки
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="panel">
-
-                    <div class="panel__card fonts__panel">
-                        <div class="panel__card-title">
-                            Добавить новый шрифт в систему
-                        </div>
-
-                        <div class="panel__content">
-                            <form class="panel__font-form">
-                                <div class="panel__info">
-                                    Название шрифта
-                                </div>
-
-                                <div class="panel__inputs">
-                                    <input type="text" name="font" required placeholder="Введи название шрифта">
-                                    <input type="file" name="font_file" data-after="Выберите файл">
-                                </div>
-
-                                <button class="panel__font-submit simple">Загрузить</button>
-                            </form>
-                        </div>
-
-                    </div>
-
-                    <div class="panel__card fonts__panel">
-                        <div class="panel__card-title">
-                            Загруженные шрифты
-                        </div>
-
-                        <ul class="panel__font-list">
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                            <li class="panel__font-point">
-                                <div class="panel__font-type">
-                                    <p style="font-family: Calibri;">Calibri</p>
-                                    <span>Calibri</span>
-                                </div>
-
-                                <div class="panel__font-delete"></div>
-                            </li>
-                        </ul>
-
-                        <div class="panel__card-page">
-
-                            <ul class="panel__page-list fonts">
-                                <li class="panel__page-point selected">
-                                    <span class="panel__page-num">1</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">2</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">3</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">4</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">5</span>
-                                </li>
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    <div class="panel__card base-list">
-                        <div class="panel__card-title">
-                            Список основ
-                        </div>
-                        <button class="panel__font-submit simple button__add-basis">Добавить основу</button>
-                        <ul class="panel__basis-list">
-                            <li class="panel__basis-item">
-                                <div class="panel__basis-img">
-                                    <img src="img/tshirt.png" alt="">
-                                </div>
-                                <div class="panel__basis-description">
-                                    <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
-                                    <p class="panel__basis-price">1300 P</p>
-                                </div>
-                                <div class="panel__basis-button">
-                                    <button class="panel__basis-edit">Редактировать</button>
-                                    <button class="panel__basis-remove">Удалить</button>
-                                </div>
-                            </li>
-                            <li class="panel__basis-item">
-                                <div class="panel__basis-img">
-                                    <img src="img/tshirt.png" alt="">
-                                </div>
-                                <div class="panel__basis-description">
-                                    <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
-                                    <p class="panel__basis-price">1300 P</p>
-                                </div>
-                                <div class="panel__basis-button">
-                                    <button class="panel__basis-edit">Редактировать</button>
-                                    <button class="panel__basis-remove">Удалить</button>
-                                </div>
-                            </li>
-                            <li class="panel__basis-item">
-                                <div class="panel__basis-img">
-                                    <img src="img/tshirt.png" alt="">
-                                </div>
-                                <div class="panel__basis-description">
-                                    <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
-                                    <p class="panel__basis-price">1300 P</p>
-                                </div>
-                                <div class="panel__basis-button">
-                                    <button class="panel__basis-edit">Редактировать</button>
-                                    <button class="panel__basis-remove">Удалить</button>
-                                </div>
-                            </li>
-                            <li class="panel__basis-item">
-                                <div class="panel__basis-img">
-                                    <img src="img/tshirt.png" alt="">
-                                </div>
-                                <div class="panel__basis-description">
-                                    <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
-                                    <p class="panel__basis-price">1300 P</p>
-                                </div>
-                                <div class="panel__basis-button">
-                                    <button class="panel__basis-edit">Редактировать</button>
-                                    <button class="panel__basis-remove">Удалить</button>
-                                </div>
-                            </li>
-                            <li class="panel__basis-item">
-                                <div class="panel__basis-img">
-                                    <img src="img/tshirt.png" alt="">
-                                </div>
-                                <div class="panel__basis-description">
-                                    <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
-                                    <p class="panel__basis-price">1300 P</p>
-                                </div>
-                                <div class="panel__basis-button">
-                                    <button class="panel__basis-edit">Редактировать</button>
-                                    <button class="panel__basis-remove">Удалить</button>
-                                </div>
-                            </li>
-                            <li class="panel__basis-item">
-                                <div class="panel__basis-img">
-                                    <img src="img/tshirt.png" alt="">
-                                </div>
-                                <div class="panel__basis-description">
-                                    <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
-                                    <p class="panel__basis-price">1300 P</p>
-                                </div>
-                                <div class="panel__basis-button">
-                                    <button class="panel__basis-edit">Редактировать</button>
-                                    <button class="panel__basis-remove">Удалить</button>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="panel__card-page">
-
-                            <ul class="panel__page-list bases">
-                                <li class="panel__page-point selected">
-                                    <span class="panel__page-num">1</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">2</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">3</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">4</span>
-                                </li>
-
-                                <li class="panel__page-point">
-                                    <span class="panel__page-num">5</span>
-                                </li>
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    <div class="panel__card base__add">
-                        <div class="panel__card-title">
-                            Добавить новую основу
-                        </div>
-                        <div class="panel__content flex">
-                            <div class="panel__left-side">
-                                <div class="panel__new-basis">
-                                    <img src="img/admin-panel/camera.png" alt="">
-                                    <label for="new-basis">
-                                        <input class="panel__file-add" type="file" id="new-basis">
-                                        <span class="panel__file">Добавить основу</span>
-                                    </label>
-                                    <p class="panel__info-help">
-                                        Вы можете загрузить одновременно до 4-х фотографий
-                                    </p>
-
-                                    <div class="panel__main-variant">
-                                        <img src="img/1.png">
-                                        <canvas width="370" height="370"></canvas>
-                                    </div>
-                                </div>
-                                <div class="panel__left-settings">
-                                    <div class="panel__setting-item">
-                                        <label class="panel__left-set-label" for="width">Ширина:</label>
-                                        <input type="number" name="workzone_width" id="width">
-                                    </div>
-                                    <div class="panel__setting-item">
-                                        <label class="panel__left-set-label" for="height">Высота:</label>
-                                        <input type="number" name="workzone_height" id="height">
-                                    </div>
-                                    <div class="panel__setting-item">
-                                        <label class="panel__left-set-label" for="positionX">Позиция X:</label>
-                                        <input type="number" name="workzone_x" id="positionX">
-                                    </div>
-                                    <div class="panel__setting-item">
-                                        <label class="panel__left-set-label" for="positionY">Позиция Y:</label>
-                                        <input type="number" name="workzone_y" id="positionY">
-                                    </div>
-                                </div>
-                                <div class="panel__container-picture">
-                                    <div class="panel__uploaded-pic-add inactive">
-                                        <img src="img/admin-panel/camera.png" alt="">
-                                        <label for="new-basis">
-                                            <input class="panel__file-add" type="file" id="new-basis">
-                                            <span class="panel__file help-layout">Добавить</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="panel__right-side">
-                                <div class="panel__column-item">
-                                    <label class="panel__left-set-label" for="name">Имя:</label>
-                                    <input type="text" name="base_name" id="name">
-                                </div>
-                                <div class="panel__column-item">
-                                    <label class="panel__left-set-label" for="type">Тип товара:</label>
-                                    <select name="base_type" id="type">
-                                        <option >Майка</option>
-                                        <option >Майка</option>
-                                        <option >Майка</option>
-                                    </select>
-                                </div>
-                                <div class="panel__column-item">
-                                    <label class="panel__left-set-label" for="size">Задать размер:</label>
-                                    <div class="input-btn">
-                                        <input type="text" name="base_size" id="size">
-                                        <button class="add-size">Добавить</button>
-                                    </div>
-                                </div>
-                                <div class="panel__column-item">
-                                    <label class="panel__left-set-label" for="price">Цена (Руб):</label>
-                                    <input type="text" name="base_price" id="price">
-                                </div>
-                                <div class="panel__size-container">
-                                    <div class="size-container__item">
-                                        <span class="size-container__value">XXXL(@@)</span>
-                                        <button class="size-container__close"></button>
-                                    </div>
-                                </div>
-                                <div class="panel__column-item-radio">
-                                    <p class="panel__column-item-radio-header">Качество: </p>
-                                    <label class="panel__type-picture">
-                                        <input class="style-ratio" type="checkbox" name="base_print">
-                                        Вышивка
-                                    </label>
-                                    <label class="panel__type-picture">
-                                        <input class="style-ratio" type="checkbox" name="base_fancywork">
-                                        Принт
-                                    </label>
-                                </div>
-                                <button class="panel__font-submit simple add-basis-upload">Загрузить</button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
             </div>
 
-
-        </div>
-
-        <div class="footer">
-
+            <div class="header__control">
+                <div class="header__admin">Администратор 2</div>
+                <div class="header__logout">Выход</div>
+            </div>
         </div>
     </div>
 
+    <div class="wrapper__content">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="js/require.js"></script>
+        <div class="container">
+            <div class="menu">
+                <div class="menu__title">
+                    Навигация
+                </div>
 
-    <script src="js/TemplateFactory.js"></script>
-    <script src="js/index.js"></script>
+                <ul class="menu__list">
+                    <li class="menu__point">
+                        Список заказов
+                    </li>
+                    <li class="menu__point">
+                        Оплаченные заказы
+                    </li>
+                    <li class="menu__point">
+                        Период оплаты
+                    </li>
+                    <li class="menu__point fontsUI">
+                        Управление шрифтами
+                    </li>
+                    <li class="menu__point baseUI">
+                        Управление основами
+                    </li>
+                    <li class="menu__point templateUI">
+                        Управление шаблонами
+                    </li>
+                    <li class="menu__point">
+                        Настройки
+                    </li>
+                </ul>
+            </div>
 
-    <script src="js/user_api.js"></script>
-    <script src="js/admin_api.js"></script>
-    <script src="js/AdminPanel.js"></script>
+            <div class="panel">
+
+                <div class="panel__card fonts__panel">
+                    <div class="panel__card-title">
+                        Добавить новый шрифт в систему
+                    </div>
+
+                    <div class="panel__content">
+                        <form class="panel__font-form">
+                            <div class="panel__info">
+                                Название шрифта
+                            </div>
+
+                            <div class="panel__inputs">
+                                <input type="text" name="font" required placeholder="Введи название шрифта">
+                                <input type="file" name="font_file" data-after="Выберите файл">
+                            </div>
+                            <div class="panel__column-item-radio font__radio">
+                                <p class="panel__column-item-radio-header">Тип шрифта: </p>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="font_print">
+                                    Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="font_fancywork">
+                                    Печать
+                                </label>
+                            </div>
+
+                            <button class="panel__font-submit simple">Загрузить</button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div class="panel__card fonts__panel">
+                    <div class="panel__card-title">
+                        Загруженные шрифты
+                    </div>
+
+                    <ul class="panel__font-list">
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                        <li class="panel__font-point">
+                            <div class="panel__font-type">
+                                <p style="font-family: Calibri;">Calibri</p>
+                                <span>Calibri</span>
+                            </div>
+
+                            <div class="panel__font-delete"></div>
+                        </li>
+                    </ul>
+
+                    <div class="panel__card-page">
+
+                        <ul class="panel__page-list fonts">
+                            <li class="panel__page-point selected">
+                                <span class="panel__page-num">1</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">2</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">3</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">4</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">5</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="panel__card base-list">
+                    <div class="panel__card-title">
+                        Список основ
+                    </div>
+                    <button class="panel__font-submit simple button__add-basis">Добавить основу</button>
+                    <ul class="panel__basis-list">
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="panel__card-page">
+
+                        <ul class="panel__page-list bases">
+                            <li class="panel__page-point selected">
+                                <span class="panel__page-num">1</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">2</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">3</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">4</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">5</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="panel__card base__add">
+                    <div class="panel__card-title">
+                        Добавить новую основу
+                    </div>
+                    <div class="panel__content flex">
+                        <div class="panel__left-side">
+                            <div class="panel__new-basis">
+                                <img src="img/admin-panel/camera.png" alt="">
+                                <label for="new-basis">
+                                    <input class="panel__file-add" type="file" id="new-basis">
+                                    <span class="panel__file">Добавить основу</span>
+                                </label>
+                                <p class="panel__info-help">
+                                    Вы можете загрузить одновременно до 4-х фотографий
+                                </p>
+
+                                <div class="panel__main-variant">
+                                    <img src="img/1.png">
+                                    <canvas width="370" height="370"></canvas>
+                                </div>
+                            </div>
+                            <div class="panel__left-settings">
+                                <div class="panel__setting-item">
+                                    <label class="panel__left-set-label" for="width">Ширина:</label>
+                                    <input type="number" name="workzone_width" id="width">
+                                </div>
+                                <div class="panel__setting-item">
+                                    <label class="panel__left-set-label" for="height">Высота:</label>
+                                    <input type="number" name="workzone_height" id="height">
+                                </div>
+                                <div class="panel__setting-item">
+                                    <label class="panel__left-set-label" for="positionX">Позиция X:</label>
+                                    <input type="number" name="workzone_x" id="positionX">
+                                </div>
+                                <div class="panel__setting-item">
+                                    <label class="panel__left-set-label" for="positionY">Позиция Y:</label>
+                                    <input type="number" name="workzone_y" id="positionY">
+                                </div>
+                            </div>
+                            <div class="panel__container-picture">
+                                <div class="panel__uploaded-pic-add inactive">
+                                    <img src="img/admin-panel/camera.png" alt="">
+                                    <label for="new-basis">
+                                        <input class="panel__file-add" type="file" id="new-basis">
+                                        <span class="panel__file help-layout">Добавить</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel__right-side">
+                            <div class="panel__column-item">
+                                <label class="panel__left-set-label" for="name">Имя:</label>
+                                <input type="text" name="base_name" id="name">
+                            </div>
+                            <div class="panel__column-item">
+                                <label class="panel__left-set-label" for="type">Тип товара:</label>
+                                <select name="base_type" id="type">
+                                    <option >Майка</option>
+                                    <option >Майка</option>
+                                    <option >Майка</option>
+                                </select>
+                            </div>
+                            <div class="panel__column-item">
+                                <label class="panel__left-set-label" for="size">Задать размер:</label>
+                                <div class="input-btn">
+                                    <input type="text" name="base_size" id="size">
+                                    <button class="add-size">Добавить</button>
+                                </div>
+                            </div>
+                            <div class="panel__column-item">
+                                <label class="panel__left-set-label" for="price">Цена (Руб):</label>
+                                <input type="text" name="base_price" id="price">
+                            </div>
+                            <div class="panel__size-container">
+                                <div class="size-container__item">
+                                    <span class="size-container__value">XXXL(@@)</span>
+                                    <button class="size-container__close"></button>
+                                </div>
+                            </div>
+                            <div class="panel__column-item-radio">
+                                <p class="panel__column-item-radio-header">Качество: </p>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="base_print">
+                                    Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="base_fancywork">
+                                    Принт
+                                </label>
+                            </div>
+                            <button class="panel__font-submit simple add-basis-upload">Загрузить</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel__card templates-list">
+                    <div class="panel__card-title">
+                        Список шаблонов
+                    </div>
+                    <!--<button class="panel__font-submit simple button__add-basis">Добавить основу</button>-->
+                    <ul class="panel__basis-list">
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <!--<p class="panel__basis-type">Майка - Вышивка, принт</p>-->
+                                <!--<p class="panel__basis-price">1300 P</p>-->
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                        <li class="panel__basis-item">
+                            <div class="panel__basis-img">
+                                <img src="img/tshirt.png" alt="">
+                            </div>
+                            <div class="panel__basis-description">
+                                <p class="panel__basis-name">Connor Detroit: Become Human</p>
+                                <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                <p class="panel__basis-price">1300 P</p>
+                            </div>
+                            <div class="panel__basis-button">
+                                <button class="panel__basis-edit">Редактировать</button>
+                                <button class="panel__basis-remove">Удалить</button>
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="panel__card-page">
+
+                        <ul class="panel__page-list templates">
+                            <li class="panel__page-point selected">
+                                <span class="panel__page-num">1</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">2</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">3</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">4</span>
+                            </li>
+
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">5</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="panel__card templates-add">
+                    <div class="panel__card-title">
+                        Редактирование шаблона
+                    </div>
+                    <div class="panel__content flex">
+
+                        <div class="panel__left-side-crate product__preview preview">
+
+                        </div>
+                        <div class="panel__right-side-create">
+                            <div class="panel__column-item panel__column-item_width">
+                                <label class="panel__left-set-label" for="name">Имя:</label>
+                                <input type="text" name="template_name" id="name">
+                            </div>
+                            <div class="create__btns  create__btns_margin">
+                                <button class="btns__add-text button button_gradient_blue">
+                                    <span class="button_text button_text_color">Добавить текст</span>
+                                </button>
+                                <button class="btns__add-print button button_gradient_blue">
+                                    <span class="button_text button_text_color">Добавить изображение</span>
+                                </button>
+                            </div>
+                            <div class="product__editor editor editor_margin editor-padding">
+                                <div class="editor__left">
+                                    <div class="editor__text">
+                                        <input class="editor__text-input" type="text">
+                                    </div>
+                                    <div class="editor__fonts editor__item_margin">
+                                        <label for="fonts" class="button fonts-list__button">
+
+                                            <select id="selectbox1" class="editor__fonts-list" name="fonts" id="fonts">
+                                                <option value="">Lato</option>
+                                                <option value="">Lato</option>
+                                                <option value="">Lato</option>
+                                                <option value="">Lato</option>
+                                                <option value="">Lato</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div class="editor__size editor__item_margin">
+                                        <input class="size__input" type="number" value="11">
+                                    </div>
+                                </div>
+                                <div class="editor__right">
+                                    <input type="hidden" value="" id="_color__text">
+                                    <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
+                                    <!--<button class="decoration__button button button__invisible"></button>-->
+                                    <button class="decoration__button button button__trush"></button>
+                                    <div class="editor__btn-position">
+                                        <button class="decoration__button button editor__btn-top"></button>
+                                        <button class="decoration__button button editor__btn-bottom"></button>
+                                    </div>
+                                    <!-- <button class="decoration__button button button__"></button> -->
+
+                                </div>
+
+                                <!-- <div class="editor__decoration editor__item_margin">
+                                    <button class="decoration__button button button__bold"></button>
+                                    <button class="decoration__button button button__italic"></button>
+                                    <button class="decoration__button button button__underline"></button>
+                                </div> -->
+
+                            </div>
+
+                            <label class="panel__left-set-label template" for="name">Теги:</label>
+
+                            <div class="input-btn">
+                                <input type="text" name="template_size">
+                                <button class="add-tag">Добавить</button>
+                            </div>
+
+                            <div class="panel__tag-container">
+
+                            </div>
+
+                            <div class="panel__container-basis">
+                                <div class="panel__basis">
+                                    Sample text
+
+                                    <div class="panel__basis-btns">
+                                        <button class="basis-btn button button-remove"></button>
+                                        <button class="basis-btn button"></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="panel__font-submit simple save-template">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="footer">
+
+    </div>
+
+    <section class="add-photo">
+        <div class="file-upload">
+            <h1 class="file-upload__header file-upload__header_margin">Добавление фотографий</h1>
+            <div class="button button__close"></div>
+            <div class="file__menu">
+                <ul class="file__menu-list">
+                    <li class="file__menu-item file-menu__addBtnTab active">Изображение</li>
+                    <li class="file__menu-item file-menu__uploadBtnTab">Загруженные изображения</li>
+                </ul>
+            </div>
+            <div class="file__picture-list file__picture-list_padding active">
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/prints/fish.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+
+                    </div>
+                </div>
+
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/prints/elf.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+
+                    </div>
+                </div>
+
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/prints/kitty.jpg" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+
+                    </div>
+                </div>
+
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/prints/doggy.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+
+                    </div>
+                </div>
+
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/prints/stich.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+
+                    </div>
+                </div>
+
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/prints/owl.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+
+                    </div>
+                </div>
+            </div>
+            <div class="file-upload__picture-list file-upload__picture-list_padding"></div>
+            <div class="file-upload__button file-upload__button_margin">
+                <button class="button print__send button__add-photo button_gradient_blue button__add-photo_margin">
+                    <span class="button__add-photo_text button_text_color">Выбрать файлы</span>
+                </button>
+                <input type="file" name="upload_print">
+            </div>
+
+        </div>
+    </section>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/require.js"></script>
+<script src="js/jscolor.js"></script>
+
+<script src="js/TemplateFactory.js"></script>
+<script src="js/index.js"></script>
+
+<script src="js/user_api.js"></script>
+<script src="js/admin_api.js"></script>
+<script src="js/AdminPanel.js"></script>
 
 </body>
 </html>

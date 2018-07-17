@@ -13,24 +13,68 @@ router.get('/load', function(req, res, next) {
 	if (req.cookies.user) {
         let user = req.cookies.user.name || req.session.user.name,
             key = { user: user },
-            data = qrs.parse(URL.parse(req.url).query);
+            query = qrs.parse(URL.parse(req.url).query);
 
         Mongo.select(key, 'uniq', (data) => {
-            let id = 0;
+            let id = 0,
+                page = query.page,
+                bases = [];
 
-            data.map( (proj, index) => {
-                if (proj.id > id) id = proj.id;
-            });
+            console.log(query);
 
-            data.reverse();
+            if (page == 'all') {
+                bases = data.map( (proj, index) => {
+                    if (proj.id > id) id = proj.id;
+                    return proj;
+                });
+            } else {
+                page = parseInt(page);
 
-            res.send( { projects: data, last_id: id });
+                bases = data.filter( (proj, index) => {
+                    if (proj.id > id) id = proj.id;
+
+                    if (index >= (page - 1) * 20 && index < page * 20) {
+                        return proj;
+                    }
+                });
+            }
+
+            bases.reverse();
+
+            const pages = Math.ceil(data.length / 20);
+            res.send( { projects: bases, last_id: id, pages: pages });
         });
 
     } else res.send([]);
 
+});
 
+router.get('/load/templates', (req, res, next) => {
+    Mongo.select( {}, 'admin', (data) => {
+        const query = qrs.parse(URL.parse(req.url).query);
+        let templates = [],
+            pages = 0,
+            response = {};
 
+        console.log(query)
+
+        if(query.page != 'all') {
+            templates = data.filter( (project, index) => {
+                if ((parseInt(query.page) - 1) * 20 <= index && parseInt(query.page) * 20 > index) {
+                    return project;
+                }
+            });
+        } else {
+            templates = data;
+        }
+
+        response.status = true;
+        response.pages = Math.ceil(data.length/20);
+        response.messasge = 'Templates loaded';
+        response.data = templates;
+
+        res.send(response);
+    });
 });
 
 module.exports = router;

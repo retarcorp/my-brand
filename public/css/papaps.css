@@ -5,6 +5,9 @@
     background: rgba(0,0,0,0.6);
     overflow: hidden;
     position: fixed;
+    top:0;
+    left:0;
+    z-index: 100;
     /* display: flex; */
 }
 .add-photo.active{
@@ -39,10 +42,10 @@
 .file-upload .button__add-photo{
     /* position: absolute; */
     display: block;
-    width: 280px;    
-	height: 75px;
+    width: 280px;
+    height: 75px;
     border-radius: 37px;
-	color: #fff;
+    color: #fff;
     cursor: pointer;
     left: 0;
     top: 0;
@@ -116,7 +119,7 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     bottom: 0;
     left: 0;
@@ -149,18 +152,20 @@
     height: 40px;
     display: none;
     align-items: center;
-    border-radius: 5px;
-    background-color: #ececec;
+    /*border-radius: 5px;*/
+    /*background-color: #ececec;*/
 }
 .editor.active{
     display: flex;
+    align-items: stretch;
+    justify-content: space-between;
 }
 .editor__item_margin{
-    margin-left: 20px;
+    /*margin-left: 20px;*/
 }
 
 .editor-padding{
-    padding: 0 20px;
+    /*padding: 0 20px;*/
 }
 
 .editor_margin{
@@ -169,7 +174,7 @@
 
 .editor__text-input{
     /* height: 20px; */
-    width: 150px;
+    width: 140px;
     font-size: 16px;
     font-weight: 500;
     padding: 2px 0;
@@ -180,7 +185,7 @@
 }
 
 .editor__fonts{
-    width: 100px;
+    width: 90px;
     height: 20px;
     position: relative;
 }
@@ -191,21 +196,42 @@
     border: 0;
     appearance: none;            /* remove arrow        */
     -webkit-appearance: none;    /* remove arrow Chrome */
-    -moz-appearance: none; 
+    -moz-appearance: none;
     outline: none;
     font-size: 17px;
     font-weight: 700;
+    padding-right: 15px;
+}
+.editor__left,
+.editor__right{
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    background-color: #ececec;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+.editor__left{
+    width: 325px;
+}
+.editor__right{
+    width: 140px;
 }
 .fonts-list__button{
-    position: absolute;
-    top: 4px;
-    right: 0;
-    width: 12px;
-    height: 12px;
+    /*width: 12px;*/
+    /*height: 12px;*/
     background-image: url(../img/icon/arrow-drop-down.png);
-    background-position: center;
-    background-size: 100%;
+    background-position: center right;
+    background-size: 12px;
     background-repeat: no-repeat;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+
+    opacity: 1;
+    background-color: #ececec;
+
 }
 
 .size__input{
@@ -225,34 +251,62 @@
 }
 
 .decoration__button{
-    width: 11px;
-    height: 17px;
-    opacity: 0.65;
+    width: 18px;
+    height: 18px;
+    opacity: 1;
     border-radius: 0;
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 11px 13px;
+    /*    background-size: 100%;*/
 }
 
 .decoration__button.active{
     opacity: 1;
 }
 
-.button__bold{
+/*.button__bold{
     background-image: url(../img/icon/bold.png);
 }
 .button__italic{
-    /* width: 13px; */
     background-image: url(../img/icon/Italic.png);
     margin-left: 15px;
 }
 .button__underline{
-    /* width: 15px; */
     background-image: url(../img/icon/underline.png);
     margin-left: 15px;
+}*/
+.editor__btn-position{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.editor__btn-top,
+.editor__btn-bottom{
+    width: 10px;
+    height: 7px;
+}
+.editor__btn-top{
+    background-image: url(../img/icon/arrow-editor.png);
+    background-size: 100%;
+    margin-bottom: 4px;
 }
 
+.editor__btn-bottom{
+    background-image: url(../img/icon/arrow-editor.png);
+    background-size: 100%;
+    transform: rotate(180deg);
+}
+
+.button__invisible{
+    background-image: url(../img/icon/nonvisible-editor.png);
+    background-size: 16px 12px;
+}
+.button__trush{
+    /* width: 13px; */
+    background-image: url(../img/icon/trash-editor.png);
+    background-size: 15px 17px;
+}
 .editor__color{
     border-radius: 5px;
     width: 20px;
@@ -290,7 +344,7 @@
 }
 .file__menu-list{
     display: flex;
-    width: 44%;
+    width: 350px;
     margin: 40px auto 0;
     list-style: none;
     justify-content: space-between;
@@ -333,8 +387,8 @@
 
 .authorization__form{
     position: absolute;
-    bottom: -380px;
-    left: -295px;
+    top: 73px;
+    right: 0;
     z-index: 100;
     width: 295px;
     /* height: 320px; */
@@ -344,7 +398,7 @@
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    box-shadow: 0 11px 35px rgba(21,20,55, 0.19);
+    box-shadow: 0 11px 35px rgba(21,20,55, 0.13);
 }
 .form__data{
     width: 100%;
@@ -363,7 +417,7 @@
 .input_border{
     border: none;
     border-bottom: 1px solid #7f819c;
-    opacity: 0.6; 
+    opacity: 0.6;
 }
 .input_margin{
     margin-bottom: 20px;
@@ -390,18 +444,21 @@
 .form__button{
     width: 115px;
     height: 40px;
-    border-radius: 19.5px;
+    border-radius: 28px;
     font-size: 17px;
     font-weight: 700;
+}
+.profile{
+    padding-right: 19px;
 }
 .form__link{
     font-size: 15px;
     color: #393939;
 }
 .authorization__form::after {
-    content: ''; 
+    content: '';
     position: absolute; /* Абсолютное позиционирование */
-    right: 20px; 
+    right: 20px;
     top: -20px; /* Положение треугольника */
     border: 10px solid transparent; /* Прозрачные границы */
     border-bottom: 10px solid #fff; /* Добавляем треугольник */
@@ -494,8 +551,8 @@
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 85px;
-    right: 100px;
+    top: 73px;
+    right: 0;
     width: 220px;
     padding: 25px 20px 25px 45px;
     background: #fff;
@@ -512,15 +569,16 @@
     font-size: 16px;
     color: #4c4c4c;
     position: relative;
+    line-height: 1;
 }
 .profile__link:not(:last-child){
     margin-bottom: 15px;
 }
 
 .profile__menu::after {
-    content: ''; 
+    content: '';
     position: absolute; /* Абсолютное позиционирование */
-    right: 20px; 
+    right: 20px;
     top: -20px; /* Положение треугольника */
     border: 10px solid transparent; /* Прозрачные границы */
     border-bottom: 10px solid #fff; /* Добавляем треугольник */

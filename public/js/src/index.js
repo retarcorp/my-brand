@@ -23,11 +23,6 @@ class Profile {
         this.save_project_item = $('.details__link.save');
         this.save_project = $('.details__after');
 
-        this.favorites_item = $('.favorites__item');
-        this.favorites = $('.favorites__container');
-
-        this.page_list = $('.panel__page-list.favorites');
-
 
         this.profile_item.on('click', this.showProfileMenu);
 
@@ -46,10 +41,6 @@ class Profile {
         this.logout_item.on('click', this.logout);
 
         this.save_project_item.on('click', this.saveProject);
-
-        this.favorites.on('click', this.checkFavoritesEvent);
-
-        this.page_list.on('click', this.checkFavoritesEvent);
 
         $('body').on('click', this.showLoginForm);
 
@@ -73,36 +64,6 @@ class Profile {
         }
     }
 
-    checkFavoritesEvent(e) {
-        const target = $(e.target);
-
-        if (target.hasClass('favorites__edit')) {
-            const card = target.parent().parent();
-            const id = card.data('project_id');
-
-            App.UI.Profile.openProjectInConstructor(id);
-        }
-
-        if (target.hasClass('favorites__remove')) {
-            const card = target.parent().parent().parent();
-            const id = card.data('project_id');
-
-            App.UI.Profile.removeProject(id, card);
-        }
-
-        if (target.hasClass('panel__page-point')) {
-            const page = target.data('page');
-            App.UI.Profile.page_list.addClass('loading');
-
-            App.UI.Profile.formProjectsList(e, page);
-        }
-    }
-
-    openProjectInConstructor(project_id){
-        localStorage.setItem('project_id', project_id);
-        location.href = "/";
-    }
-
     logout(e) {
         e.preventDefault();
 
@@ -118,7 +79,7 @@ class Profile {
     }
 
     showLoginForm(e) {
-        if (!App.UI.Profile.logins_item.has($(e.target)).length || $(e.target).hasClass('login')) {
+        if (!App.UI.Profile.logins_item.has($(e.target)).length) {
             App.UI.Profile.logins_item.removeClass('active');
         } else {
             App.UI.Profile.logins_item.addClass('active');
@@ -194,83 +155,43 @@ class Profile {
         });
     }
 
-    async formProjectsList(e, page) {
-        await this.UI.App.Data.loadProjects(page);
-        await this.setProjectsList();
+    setProjectsList() {
+        if (this.container.length) {
+            let projects = this.UI.App.Data.Projects;
 
-        const collection = $('.panel__page-point.active'),
-            target = $(`.panel__page-point[data-page=${page}]`);
+            if (!projects || !projects.length) {
+                this.container.html('There is no favorites yet.');
 
-        collection.removeClass('selected');
-        target.addClass('selected');
+            } else {
+                this.container.html(
+                    projects.reduce((acc, project) => acc + TemplateFactory.getProjectsListHtml(project), ``)
+                );
 
-        this.page_list.css('transform', `translateX(-${ (page - 1) * 100}%)`);
-        this.page_list.removeClass('loading');
-    }
+                this.UI.LightBox.setPreviewImage();
 
-    formPageList(pages) {
-        this.page_list.html('');
+                this.setPreviewImage(projects, 0)
 
-        for (let page = 1; page <= pages; page++) {
-            this.page_list.append(TemplateFactory.getAdminPanelPages(page));
-            this.page_list.children(":last-child").attr('data-page', page);
+            }
+
         }
-
     }
 
-    removeProject(id, card) {
-        this.favorites.addClass('loading');
+    setPreviewImage(projects, index) {
+        this.UI.App.setProject(projects[index]);
 
-        this.UI.App.Ajax.get('/delete_project?id='+id, (data) => {
-            this.favorites.removeClass('loading');
-            let status = JSON.parse(data).status;
+        this.UI.App.currentProjectVariant.variant.filterImage.addEventListener('load', () => {
+            let proj = projects[index];
 
-            if (status) {
-                card.remove();
+            this.UI.App.isPreview = true;
+            this.UI.App.GraphCore.RenderList.render(this.UI.App.GraphCore.ctx);
+            this.UI.App.isPreview = false;
+
+            $('.favorites__img')[index].src = this.UI.App.GraphCore.canvas.toDataURL('image/png');
+
+            if (projects[index+1] && this.UI.App.currentProjectVariant.variant.loaded) {
+                this.setPreviewImage(projects, index+1);
             }
         });
-    }
-
-    async setProjectsList() {
-        if (!this.container.length) {
-            return;
-        }
-
-        let projects = this.UI.App.Data.Projects,
-            pages = Math.ceil(projects.length/20);
-
-        if (!projects || !projects.length) {
-            this.container.html('There is no favorites yet.');
-        } else {
-            this.container.html(
-                projects.reduce((acc, project) => acc + TemplateFactory.getProjectsListHtml(project), ``)
-            );
-
-            this.formPageList(pages);
-
-            let index = 0;
-
-            for (let project of projects) {
-                await this.loadPreviewImage(project, $('.favorites__img')[index], this.favorites.children()[index]);
-                console.log(project);
-                index++;
-            }
-
-        }
-    }
-
-    async loadPreviewImage(project, img, card) {
-        const app = this.UI.App;
-        await app.setProject(project);
-
-        app.isPreview = true;
-        app.GraphCore.RenderList.render(app.GraphCore.ctx);
-        app.isPreview = false;
-
-        $(card).data('project_id', app.Project.id);
-        const dataURL = app.GraphCore.canvas.toDataURL('image/png');
-
-        img.src = dataURL;
     }
 }
 class Menu {
@@ -301,12 +222,6 @@ class Tabs {
             print: $('.add-photo'),
             layer: $('.addition-layer')
         };
-
-        this.delete = $('.button__trush');
-        this.widgets_control = $('.editor__btn-position');
-
-        this.widgets_control.on('click', this.UI.onWidgetPositionChange);
-        this.delete.on('click', this.UI.onDelete)
 
         this.customization.print.on('click', (e) => {
             if ($(e.target).hasClass('add-photo') || $(e.target).hasClass('button__close')) {
@@ -372,12 +287,11 @@ class BaseList {
         App.GraphCore.resetScale();
 
         if ($(e.target).hasClass('rotate__btn-right')) {
-            App.currentProjectVariant = App.Project.getNextVariant();
+            App.currentProjectVariant = App.Project.setNextVariant();
         } else if ($(e.target).hasClass('rotate__btn-left')) {
-            App.currentProjectVariant = App.Project.getPrevVariant();
+            App.currentProjectVariant = App.Project.setPrevVariant();
         }
 
-        App.currentProjectVariant.loadLazy();
         App.UI.BaseList.resetVariant();
     }
 
@@ -398,6 +312,8 @@ class BaseList {
 class BaseSettings {
     constructor(ui) {
         this.UI = ui;
+
+        this.init();
     }
 
     init() {
@@ -413,14 +329,12 @@ class FontsList {
 
     init() {
         this.container = $('.editor__fonts-list');
-        this.fonts = $('.options');
 
 
-        this.fonts.on('click', this.getFont);
         this.container.on('click', this.getFont);
 
 
-        //this.injectFont();
+        this.injectFont();
         this.formFontsList();
         this.setFontsData();
     }
@@ -435,96 +349,14 @@ class FontsList {
         this.container.html(
             this.UI.App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
         );
-
-        $('select#selectbox1').each(function () {
-
-            // Cache the number of options
-            var $this = $(this),
-                numberOfOptions = $(this).children('option').length;
-
-            // Hides the select element
-            $this.addClass('s-hidden');
-
-            // Wrap the select element in a div
-            $this.wrap('<div class="select"></div>');
-
-            // Insert a styled div to sit over the top of the hidden select element
-            $this.after('<div class="styledSelect"></div>');
-
-            // Cache the styled div
-            var $styledSelect = $this.next('div.styledSelect');
-
-            // Show the first select option in the styled div
-            $styledSelect.text($this.children('option').eq(0).text());
-
-            // Insert an unordered list after the styled div and also cache the list
-            var $list = $('<ul />', {
-                'class': 'options'
-            }).insertAfter($styledSelect);
-
-            // Insert a list item into the unordered list for each select option
-            for (var i = 0; i < numberOfOptions; i++) {
-                var li = $('<li />', {
-                    text: $this.children('option').eq(i).text(),
-                    rel: $this.children('option').eq(i).val()
-                }).appendTo($list);
-
-
-                li.data('font', App.Data.Fonts[i]);
-                console.log(li.data('font'));
-            }
-
-            // Cache the list items
-            var $listItems = $list.children('li');
-
-            // Show the unordered list when the styled div is clicked (also hides it if the div is clicked again)
-            $styledSelect.click(function (e) {
-                e.stopPropagation();
-                $('div.styledSelect.active').each(function () {
-                    $(this).removeClass('active').next('ul.options').hide();
-                });
-                $(this).toggleClass('active').next('ul.options').toggle();
-            });
-
-            // Hides the unordered list when a list item is clicked and updates the styled div to show the selected list item
-            // Updates the select element to have the value of the equivalent option
-            $listItems.click(function (e) {
-                e.stopPropagation();
-                $styledSelect.text($(this).text()).removeClass('active');
-                $this.val($(this).attr('rel'));
-                $list.hide();
-
-                App.UI.FontsList.setFont($(this).data('font'));
-                /* alert($this.val()); Uncomment this for demonstration! */
-            });
-
-            // Hides the unordered list when clicking outside of it
-            $(document).click(function () {
-                $styledSelect.removeClass('active');
-                $list.hide();
-            });
-
-        });
     }
 
     injectFont() {
         $('head').append(TemplateFactory.getStyleTag());
     }
 
-    setFont(font) {
-        const curr = App.GraphCore.currentWidget;
-
-        console.log('data');
-
-        if (curr instanceof TextWidget) {
-            curr.fontSettings.fontFamily = font.name;
-        }
-    }
-
     getFont(e) {
         const curr = App.GraphCore.currentWidget;
-
-        console.log('data');
 
         if (curr instanceof TextWidget) {
             curr.fontSettings.fontFamily = $(e.target.options[e.target.selectedIndex]).data('font').name;
@@ -600,17 +432,14 @@ class Create {
     }
 
     createImageWidget(e){
-        let print = $(e.target).parent().parent().children('img'),
+        let print = $('.picture-list__picture.selected img'),
             data = { src: print.attr('src'), text: 'collage' };
 
-        if (data.src) {
+        if (data) {
             let widget = ImageWidget.getDefault(data.src);
 
             widget.text = data.text;
             widget.id = App.UI.Layers.addLayer(widget, 'space');
-
-            console.log(widget, data);
-            widget.loadLazy();
 
             App.currentProjectVariant.addWidget(widget);
             App.GraphCore.setCurrentWidget(widget);
@@ -662,11 +491,11 @@ class PrintsList {
         this.classList.add('active');
 
         if ($(this).hasClass('file-menu__addBtnTab')) {
-            App.UI.PrintsList.userPrints.removeClass('active');
-            App.UI.PrintsList.gallery.addClass('active');
+            App.UI.Print.userPrints.removeClass('active');
+            App.UI.Print.gallery.addClass('active');
         } else {
-            App.UI.PrintsList.userPrints.addClass('active');
-            App.UI.PrintsList.gallery.removeClass('active');
+            App.UI.Print.userPrints.addClass('active');
+            App.UI.Print.gallery.removeClass('active');
         }
     }
 }
@@ -676,22 +505,20 @@ class Layers {
     }
 
     init() {
-        this.container = $('.panel__container-basis');
+        this.container = $('.layers__list');
 
         this.currentLayer = null;
 
 
         this.container.data('lastId', 0);
+        this.container.html(``);
 
 
         this.container.on('click', this.layerEvent);
-
-
-        this.formLayersHtml();
     }
 
     layerEvent(e) {
-        if ($(e.target).hasClass('button-remove'))
+        if ($(e.target).hasClass('delete__layer'))
             App.UI.onDelete(e);
 
         else if ($(e.target).hasClass('to-top__layer')){
@@ -699,12 +526,6 @@ class Layers {
 
         } else if ($(e.target).hasClass('to-bottom__layer')) {
             App.UI.Layers.layerDown(e);
-
-        } else if($(e.target).hasClass('panel__template-layer-config')) {
-            const id = $(e.target).parent().data('id'),
-                layer = App.currentProjectVariant.layers.find( (l) => l.id == id);
-
-            layer.config = e.target.checked;
 
         } else {
             let id = $(e.target).data('id');
@@ -714,26 +535,10 @@ class Layers {
         }
     }
 
-    formLayersHtml() {
-        const layers = this.UI.App.currentProjectVariant.layers;
-
-        this.container.html(
-            layers.reduce( (acc, layer) => acc + TemplateFactory.getLayerHtml(layer), ``)
-        );
-
-        this.container.children()
-    }
-
     addLayer(widget, type) {
-        let lastId = 0,
+        let lastId = this.container.data('lastId'),
             index = widget.index,
             text = widget.text;
-
-        $.each(this.container.children(), (index, child) => {
-            if (lastId < $(child).attr('data-id')) {
-                lastId = $(child).attr('data-id');
-            }
-        });
 
         lastId++;
         this.container.data('lastId', lastId);
@@ -754,12 +559,6 @@ class Layers {
         this.UI.App.currentProjectVariant.layers.push(layer);
 
         return lastId;
-    }
-
-    createLayer(widget) {
-        const layer = widget.layer;
-
-
     }
 
     loadLayers() {
@@ -939,61 +738,6 @@ class Logos {
         this.logo.removeClass('active');
     }
 }
-class Slider {
-    constructor(ui) {
-        this.UI = ui;
-    }
-
-    init() {
-        var bases = this.UI.App.Data.Bases;
-        var container = $(".slider__container");
-        console.log(bases);
-        container.html(bases.reduce((acc, base) => acc + TemplateFactory.getSliderSlideHtml(base),""));
-        $.each(container.children(), (index, child) => {
-            $(child).data("base_id", bases[index].id);
-        });
-
-        if(container.length) {
-            $('.slider__container').slick({
-                dots: false,
-                infinite: false,
-                speed: 300,
-                // variableWidth: true,
-                slidesToShow: 4,
-                prevArrow: '<button type="button" class="slick-prev slider__button button button__left"></button>',
-                nextArrow: '<button type="button" class="slick-next slider__button button button__right"></button>',
-                slidesToScroll: 2,
-                responsive: [
-                    {
-                        breakpoint: 1024,
-                        settings: {
-                            slidesToShow: 3,
-                            slidesToScroll: 3,
-                            infinite: true,
-                            dots: false
-                        }
-                    },
-                    {
-                        breakpoint: 768,
-                        settings: {
-                            slidesToShow: 2,
-                            slidesToScroll: 1
-                        }
-                    },
-                    {
-                        breakpoint: 480,
-                        settings: {
-                            slidesToShow: 1,
-                            slidesToScroll: 2
-                        }
-                    }
-                ]
-            });
-        }
-
-
-    }
-}
 
 class UI {
     constructor(app) {
@@ -1012,7 +756,6 @@ class UI {
         this.Profile = new Profile(this);
         this.Tabs = new Tabs(this);
         this.TextSettings = new TextSettings(this);
-        this.Slider = new Slider(this);
 
         this.leftMenu = $('.left-menu');
 
@@ -1038,17 +781,8 @@ class UI {
         this.PrintsList.init();
         this.Create.init();
 
-        this.Slider.init();
-
         //this.Profile.init();
         //this.Menu.init();
-    }
-
-    closeTabs() {
-        this.Tabs.customization.print.removeClass('active');
-        this.Tabs.customization.text.removeClass('active');
-        this.Tabs.customization.base.removeClass('active');
-        this.Tabs.customization.layer.removeClass('active');
     }
 
     onBase(){
@@ -1102,14 +836,9 @@ class UI {
         let data = $(this).val();
         const curr = App.GraphCore.currentWidget;
 
-        data = (!data.length) ? " " : data;
-
         if (data.length) {
-            const layer = $(`.panel__basis[data-id="${curr.id}"]`);
-
             if (curr instanceof TextWidget) {
                 curr.setText(data);
-                layer.find('.panel__basis-text').text(data);
             }
 
             if (!App.currentProjectVariant.widgets.find((w) => w instanceof TextWidget)) {
@@ -1129,7 +858,7 @@ class UI {
         if (curr instanceof TextWidget) {
             let int = curr.fontSettings.fontSize/curr.size.width;
 
-            if ( (data / int < App.currentWorkzone.size.width - 10 && curr.isInWorkzone()) || (data < curr.fontSettings.fontSize && parseInt(data) > 14)){
+            if ( (data / int < App.currentWorkzone.size.width - 10 && curr.inWorkzone()) || (data < curr.fontSettings.fontSize && parseInt(data) > 14)){
                 curr.setFontSize(data);
                 // console.log(data);
             } else {
@@ -1153,16 +882,10 @@ class UI {
             let data = $(e.target).css('background-color'),
                 image = App.currentProjectVariant.variant.image;
 
-            const target = $(e.target),
-                collection = App.UI.BaseSettings.color;
-
-            collection.removeClass('active');
-            target.addClass('active');
-
             data = (data.replace(/[^-0-9,]/gim,'')).split(',').map( (elem) => parseInt(elem));
 
             if (data) {
-                App.GraphCore.Filter.setColorFilterImage(image, data);
+                App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, image, data);
                 App.Project.settings.color = data;
             }
         }
@@ -1207,7 +930,7 @@ class UI {
     }
 
     onLoadImage() {
-        let file = (App.UI.PrintsList.file)[0].files[0];
+        let file = (App.UI.Print.file)[0].files[0];
 
         if (file && file.type.indexOf('image/') >= 0) {
 
@@ -1252,20 +975,15 @@ class UI {
     onDelete(e) {
         const curr = App.GraphCore.currentWidget;
 
-        if (curr instanceof TextWidget) {
-            App.UI.closeTabs.call(App.UI);
-            console.log();
-        }
-
-        if (curr && (e.keyCode == 46 || $(e.target).hasClass('button__trush'))) {
-            let layer = $(`.panel__basis[data-id="${curr.id}"]`);
+        if (curr && e.keyCode == 46) {
+            let layer = $(`.layer[data-id="${curr.id}"]`);
 
             App.currentProjectVariant.deleteWidget(curr.index);
             App.GraphCore.setCurrentWidget(null);
 
             layer.remove();
 
-        } else if ($(e.target).hasClass('button-remove')) {
+        } else if ($(e.target).hasClass('delete__layer')) {
             let layer = $(e.target).parent().parent(),
                 id = layer.data('id'),
                 widget = App.currentProjectVariant.widgets.find( (w) => w.id == id);
@@ -1277,24 +995,6 @@ class UI {
                 layer.remove();
             }
         }
-    }
-
-    onWidgetPositionChange(e) {
-        console.log('Change position');
-
-        const target = $(e.target),
-            curr = App.GraphCore.currentWidget;
-
-        if (curr) {
-            if (target.hasClass('editor__btn-top')) {
-                App.currentProjectVariant.upWidget(curr.index);
-            }
-
-            if (target.hasClass('editor__btn-bottom')) {
-                App.currentProjectVariant.downWidget(curr.index);
-            }
-        }
-
     }
 
     onSaveProject(e, callback) {
@@ -1321,11 +1021,6 @@ class Canvas {
         this.GraphCore.canvas.addEventListener('mousemove', this.GraphCore.mouseMove.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mousewheel', this.GraphCore.mouseWheel.bind(this.GraphCore));
     }
-
-    clear(ctx) {
-        ctx = ctx || this.GraphCore.ctx;
-        ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
-    }
 }
 class Toolkit {
     constructor(GraphCore) {
@@ -1350,30 +1045,28 @@ class Toolkit {
 
         this.GraphCore.App.UI.TextSettings.setSettings();
 
-        this.GraphCore.App.UI.onText();
+        if (fontSettings.isItalic) {
+            $(".button__italic").addClass('active');
+        } else{
+            $(".button__italic").removeClass('active');
+        }
 
-        // if (fontSettings.isItalic) {
-        //     $(".button__italic").addClass('active');
-        // } else{
-        //     $(".button__italic").removeClass('active');
-        // }
-        //
-        // if (fontSettings.isBold){
-        //     $(".button__bold").addClass('active');
-        // } else {
-        //     $(".button__bold").removeClass('active');
-        // }
-        //
-        // if (fontSettings.isUnderline) {
-        //     $(".button__underline").addClass('active');
-        // } else {
-        //     $(".button__underline").removeClass('active');
-        // }
+        if (fontSettings.isBold){
+            $(".button__bold").addClass('active');
+        } else {
+            $(".button__bold").removeClass('active');
+        }
+
+        if (fontSettings.isUnderline) {
+            $(".button__underline").addClass('active');
+        } else {
+            $(".button__underline").removeClass('active');
+        }
     }
 
-    resetImageToolkit(){
-        const curr = App.GraphCore.currentWidget,
-            target = $(`[name="${curr.text}"]`),
+    resetImageToolkit() {
+        const curr = App.GraphCore.currentWidget;
+        let target = $(`[name="${curr.text}"]`),
             collection = $('.print-img.selected');
 
         collection.removeClass('selected');
@@ -1385,83 +1078,76 @@ class Filter {
         this.GraphCore = GraphCore;
     }
 
-    // TODO rename to verb-based name
-    setColorFilterImage(image, color) {
-        if (!this.GraphCore.App.Project.settings.startColor) {
-            this.getAverageImageColor(image);
-        }
+    colorFilter(ctx, image, color) {
+        if (this.GraphCore.App.Project.settings.startColor) {
+            this.GraphCore.RenderList.clear();
+            ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
 
-        const ctx = document.createElement('canvas').getContext('2d');
-        ctx.canvas.width = image.width;
-        ctx.canvas.height = image.height;
+            var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
+                currentColor = this.GraphCore.App.Project.settings.startColor;
 
-        this.GraphCore.Canvas.clear(ctx);
-        ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
+            var before = this.hexToRgb(currentColor),
+                after = (color instanceof Array) ? {
+                    r: color[0]
+                    ,g: color[1]
+                    ,b: color[2]
+                } : this.hexToRgb(color || currentColor);
 
-        const data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
-            currentColor = this.GraphCore.App.Project.settings.startColor;
-
-        const before = this.hexToRgb(currentColor),
-            after = (color instanceof Array) ? {
-                r: color[0]
-                ,g: color[1]
-                ,b: color[2]
-            } : this.hexToRgb(color || currentColor);
-
-        // TODO check for not has broken
-        let currentData = data.data;
-        const len = currentData.length;
-
-        for (let i = 0; i<len; i+=4) {
-            if (currentData[i+3] != 0) {
-                currentData[i] = after.r + currentData[i] - before.r;
-                currentData[i+1] = after.g + currentData[i+1] - before.g;
-                currentData[i+2] = after.b + currentData[i+2] - before.b;
+            for (let i = 0; i<data.data.length; i+=4) {
+                if (data.data[i+3] != 0) {
+                    data.data[i] = after.r + data.data[i] - before.r;
+                    data.data[i+1] = after.g + data.data[i+1] - before.g;
+                    data.data[i+2] = after.b + data.data[i+2] - before.b;
+                }
             }
+
+            ctx.putImageData(data, 0, 0);
+            this.GraphCore.App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
+
+            this.GraphCore.RenderList.clear();
+            return data;
+        } else {
+            this.getImageColor(image.src);
         }
-
-        ctx.putImageData(data, 0, 0);
-        this.GraphCore.App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
-
-        return data;
     }
 
-    // TODO rename to getAverageImageColor
-    getAverageImageColor(image) {
-        let ctx = document.createElement('canvas').getContext('2d');
+    getImageColor(src) {
+        let ctx = document.createElement('canvas').getContext('2d'),
+            image = new Image();
 
-        ctx.canvas.width = image.height;
-        ctx.canvas.height = image.width;
+        ctx.canvas.width = 400;
+        ctx.canvas.height = 400;
 
-        ctx.canvas.height = ctx.canvas.width * (image.height/image.width);
-        ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+        image.src = src;
+        image.onload = () => {
+            ctx.canvas.height = ctx.canvas.width * (image.height/image.width);
+            ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
 
-        let data = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height),
-            color = [0,0,0],
-            hex = "",
-            contrast = 0;
+            let data = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height),
+                color = [0,0,0],
+                hex = "",
+                contrast = 0;
 
-        for (let i = 0; i <= data.data.length - 1; i+=4) {
-            if (data.data[i+3] != 1) {
-                color[0] += data.data[i];
-                color[1] += data.data[i+1];
-                color[2] += data.data[i+2];
+            for (let i = 0; i <= data.data.length - 1; i+=4) {
+                if (data.data[i+3] != 1) {
+                    color[0] += data.data[i];
+                    color[1] += data.data[i+1];
+                    color[2] += data.data[i+2];
+                }
             }
-        }
 
-        color[0] = Math.round(color[0] / ((data.data.length - 1)/4)) * 2;
-        color[1] = Math.round(color[1] / ((data.data.length - 1)/4)) * 2;
-        color[2] = Math.round(color[2] / ((data.data.length - 1)/4)) * 2;
+            color[0] = Math.round(color[0] / ((data.data.length - 1)/4)) * 2;
+            color[1] = Math.round(color[1] / ((data.data.length - 1)/4)) * 2;
+            color[2] = Math.round(color[2] / ((data.data.length - 1)/4)) * 2;
 
-        let coloring = color.map((colors) => {
-            if (colors > 255) return 255;
-            return colors;
-        });
+            let coloring = color.map((colors) => {
+                if (colors > 255) return 255;
+                return colors;
+            });
 
-        hex = this.rgbToHex(coloring[0],coloring[1],coloring[2]);
-        this.GraphCore.App.Project.settings.startColor = hex;
-
-        return hex;
+            hex = this.rgbToHex(coloring[0],coloring[1],coloring[2]);
+            this.GraphCore.App.Project.settings.startColor = hex;
+        };
     }
 
     getImageFilterData(ctx, image) {
@@ -1470,7 +1156,7 @@ class Filter {
 
         this.GraphCore.App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
 
-        this.GraphCore.Canvas.clear();
+        this.GraphCore.RenderList.clear();
         return data;
     }
 
@@ -1499,8 +1185,8 @@ class Filter {
     }
 }
 class RenderList {
-    constructor(graphCore) {
-        this.GraphCore = graphCore;
+    constructor(GraphCore) {
+        this.GraphCore = GraphCore;
     }
 
     renderPreview(ctx) {
@@ -1509,8 +1195,13 @@ class RenderList {
     }
 
     render(ctx) {
-        this.GraphCore.Canvas.clear(ctx);
+        this.clear(ctx);
+
         this.GraphCore.App.currentProjectVariant.render(ctx);
+    }
+
+    clear() {
+        this.GraphCore.ctx.clearRect(0,0,App.GraphCore.canvas.width, this.GraphCore.canvas.height);
     }
 }
 
@@ -1572,16 +1263,16 @@ class GraphCore {
 
         App.currentProjectVariant.widgets.forEach( (sprites) => {
             if (sprites.length) {
-                // TODO replace foreach to filter
-                data = sprites.find( (elem) => {
+                sprites.forEach( (elem) => {
                     if (elem.pointIn(position)) {
-                        return elem;
+                        data = elem;
+                        return true;
                     }
                 });
 
             } else if (sprites.pointIn(position)) {
                 data = sprites;
-                return data;
+                return true;
             }
         });
 
@@ -1593,19 +1284,18 @@ class GraphCore {
         this.canvas.height = height;
     }
 
-    setCurrentWidget(w = null){
+    setCurrentWidget(w){
         if (!w) {
             if (this.currentWidget) {
                 this.currentWidget.isSelected = false;
                 this.currentWidget = null;
             }
         } else {
-            if (this.currentWidget) {
+            if (this.currentWidget)
                 this.currentWidget.isSelected = false;
-            }
 
             this.currentWidget = w;
-            // this.App.currentProjectVariant.upWidget(w.index);
+            this.App.currentProjectVariant.upWidget(w.index);
             this.currentWidget.isSelected = true;
         }
 
@@ -1658,7 +1348,7 @@ class GraphCore {
             }
 
             if(this.dragged) {
-                this.onMove(e);
+                this.move(e);
             }
 
         } else {
@@ -1674,7 +1364,6 @@ class GraphCore {
     }
 
     scales(e) {
-        // TODO make scale named constants
         if (this.scale >= 0.25 && this.scale <= 2) {
             let width = (1 + this.scale)*this.canvas.width,
                 height = (1 + this.scale)*this.canvas.height,
@@ -1741,8 +1430,7 @@ class GraphCore {
         }
     }
 
-    // TODO rename to onMove
-    onMove(e) {
+    move(e) {
         const curr = this.currentWidget;
 
         if (curr) {
@@ -1758,6 +1446,7 @@ class GraphCore {
             if (!App.currentWorkzone.horizontalLine.checkPosition(curr)) {
                 this.lastY = e.offsetY;
             }
+
         }
     }
 }
@@ -1793,49 +1482,6 @@ class Ajax {
             xhr.send(data);
         });
     }
-
-
-    get(path, callback) {
-        return new Promise( (resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-
-            xhr.onload = () => {
-                if (xhr.status == 200) {
-                    if (callback) callback(xhr.responseText);
-                    resolve(xhr.responseText);
-                } else {
-                    reject(xhr.responseText);
-                }
-            }
-
-            xhr.open('GET', path);
-            xhr.send();
-        });
-    }
-
-    post(path, data = null, callback) {
-        if (typeof data == "function") {
-            callback = data;
-            data = null;
-        }
-
-        return new Promise( (resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-
-            xhr.onload = () => {
-                if (xhr.status == 200) {
-                    if (callback) callback(xhr.responseText);
-                    resolve(xhr.responseText);
-                } else {
-                    reject(xhr.responseText);
-                }
-            }
-
-            xhr.open('POST', path);
-            xhr.send(data);
-
-        });
-    }
 }
 class Data {
     constructor(app) {
@@ -1862,17 +1508,10 @@ class Data {
 
         const data = await this.App.Ajax.getJSON(`/fonts?page=${page}`);
         this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
-
-        this.App.UI.FontsList.injectFont();
-        const promises = this.Fonts.map( (font) => {
-            document.fonts.load('12px ' + font.name);
-        });
-
-        Promise.all(promises);
     }
 
-    async loadProjects(page = 1) {
-        const projects = (await this.App.Ajax.getJSON('/load?page='+page)).projects;
+    async loadProjects() {
+        const projects = (await this.App.Ajax.getJSON('/load')).projects;
         this.Projects = projects;
     }
 
@@ -1898,7 +1537,6 @@ class Data {
 
 }
 
-
 class Application {
     constructor() {
         this.UI = new UI(this);
@@ -1918,68 +1556,51 @@ class Application {
         this.UI.Profile.init();
         this.UI.Menu.init();
 
-        // TODO use await Promise.all([])
-
-        await Promise.all([this.Data.getBases(), this.Data.getFonts(), this.Data.getPrints()]);
+        await this.Data.getBases();
+        await this.Data.getFonts();
+        await this.Data.getPrints();
 
         if (this.logged){
             await this.Data.loadProjects();
 
-            const id = localStorage.getItem('project_id') || 0;
-            const project = this.Data.Projects.find( p => p.id == id ) || this.Data.Projects[0];
-
-            // TODO rename method setProject to more evident one
-            (this.Data.Projects.length) ? await this.setProject(project) : await this.getNewProject();
+            (this.Data.Projects.length) ? this.setProject(this.Data.Projects[0]) : this.Project = Project.newProject(this.Data.Bases[0]);
         } else  {
-            await this.getNewProject();
+            this.Project = Project.newProject(this.Data.Bases[0]);
         }
 
+
+        this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
         this.UI.init();
         this.GraphCore.init();
 
-        await this.UI.Profile.setProjectsList();
+        this.UI.Profile.setProjectsList();
 
         //Using for tests
 
-        try {
-            if (AdminApp) AdminApp.init();
-        }
-
-        catch(error) {
-            console.error(error)
-        }
-
-
-        this.startRender();
+        this.mechanic();
     }
 
-    getProject(data) {
+    getProject(proj) {
+        let data = proj,
+            project = null;
+
         if (data) {
-            const project = new Project(Base.fromJSON(data.base));
-            let ID = 0;
+            project = new Project(Base.fromJSON(data.base));
             this.currentProjectVariant = project.variants[0];
 
             project.settings.color = data.settings.color;
             project.id = data.id;
-            // project.name = data.name;
-            // project.price = project.base.price;
-            // TODO replace foreach to .map
 
-            project.variants = data.variants.map( (variant, index) => {
-                const v = project.variants[index];
+            data.variants.forEach( (variant, index) => {
+                project.variants[index].loaded = false;
 
-                v.layers = variant.layers;
-                v.widgets = variant.widgets.map( (widget, index) =>  {
-                    const w = Widget.fromJSON(widget);
+                project.variants[index].layers = variant.layers;
+                project.variants[index].widgets = variant.widgets.map( (widget, index) =>  {
+                    let w = Widget.fromJSON(widget);
                     w.index = index;
                     w.layer = widget.layer;
-
-                    v.layers[index].id = ID;
-                    w.layer.id = ID;
-                    w.id = ID;
-                    ID++;
 
                     if (w instanceof TextWidget) {
                         w.lines = widget.lines;
@@ -1987,50 +1608,25 @@ class Application {
 
                     return w;
                 });
-
-                return v;
             });
 
             project.settings.size = data.settings.size;
-            return project;
         }
 
-        return null;
-
+        return project;
     }
 
-    async getNewProject() {
-        this.Project = Project.newProject(this.Data.Bases[0]);
-        this.currentProjectVariant = this.Project.variants[0];
-        this.currentWorkzone = this.currentProjectVariant.variant.workzone;
-        await this.loadProjectAssets();
-    }
-
-    async setProject(project) {
+    setProject(project) {
         this.Project = this.getProject(project);
-        this.currentWorkzone = this.currentProjectVariant.variant.workzone;
-
-        console.log($('.details__name').text(), $('.price__value').text(), this.Project.name, this.Project.price)
-
-        $('.details__name').text(this.Project.base.name);
-        $('.price__value').text(this.Project.base.price);
-
-        await this.loadProjectAssets();
     }
 
-    async loadProjectAssets() {
-        const variant = this.currentProjectVariant;
-        await variant.loadLazy();
-    }
-
-    // TODO rename to verb-based name
-    startRender() {
+    mechanic() {
         if (!App.isPreview)
             App.GraphCore.RenderList.render(App.GraphCore.ctx);
         else
             App.GraphCore.RenderList.renderPreview(App.GraphCore.ctx);
 
-        requestAnimationFrame(this.startRender.bind(this));
+        requestAnimationFrame(this.mechanic.bind(this));
     }
 }
 

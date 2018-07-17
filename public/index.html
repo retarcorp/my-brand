@@ -11,41 +11,39 @@
 
     <link rel="stylesheet" type="text/css" href="css/slick.css"/>
     <link rel="stylesheet" href="css/papaps.css">
-    <link rel="stylesheet" href="css/adaptive.css">
     <link rel="stylesheet" type="text/css" href="css/auth-admin.css">
+    <link rel="stylesheet" href="css/adaptive.css">
 
     <title>My Brand</title>
 </head>
 <body>
 
-	<section class="registration">
-        <form class="registration__form active form form_shadow form_radius form_padding">
-            <header class="form__header form__header-registration">РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ</header>
-            <div class="button button__close"></div>
-            <p class="form__text-registration text-registration_margin">Укажите ваш адрес электронного ящика, мы вышлем на него логин и пароль.</p>
-            <div class="form__data form__data_margin">
-                <input id="email" class="input_margin form__input form__input-registration input_padding input_border input_text" type="email" placeholder="Ваш email">
-            </div>
-            <p class="invalid__email">Такой email уже занят другим пользователем</p>
-            <div class="form__btns form__btns_margin">
-                <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color" value="РЕГИСТРАЦИЯ">
-            </div>
-        </form>
-        <section class="congratulations form_radius">
-            <header class="form__header form__header-registration header-congratulations">ПОЗДРАВЛЯЕМ!</header>
-            <p class="form__text-registration text-congratulation_margin">Регистрация успешно завершена! Мы отправили на указанный Вами электронный адрес пароль для входа.</p>
-            <div class="form__btns form__btns_margin">
-                <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color post-reg__button" value="ВОЙТИ">
-            </div>
-        </section>
+<section class="registration">
+    <form class="registration__form active form form_shadow form_radius form_padding">
+        <header class="form__header form__header-registration">РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ</header>
+        <div class="button button__close"></div>
+        <p class="form__text-registration text-registration_margin">Укажите ваш адрес электронного ящика, мы вышлем на него логин и пароль.</p>
+        <div class="form__data form__data_margin">
+            <input id="email" class="input_margin form__input form__input-registration input_padding input_border input_text" type="email" placeholder="Ваш email">
+        </div>
+        <p class="invalid__email">Такой email уже занят другим пользователем</p>
+        <div class="form__btns form__btns_margin">
+            <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color" value="РЕГИСТРАЦИЯ">
+        </div>
+    </form>
+    <section class="congratulations form_radius">
+        <header class="form__header form__header-registration header-congratulations">ПОЗДРАВЛЯЕМ!</header>
+        <p class="form__text-registration text-congratulation_margin">Регистрация успешно завершена! Мы отправили на указанный Вами электронный адрес пароль для входа.</p>
+        <div class="form__btns form__btns_margin">
+            <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color post-reg__button" value="ВОЙТИ">
+        </div>
     </section>
-    <section class="profile__menu">
-        <a href="/profile" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
-        <a href="#" class="profile__link link__logout">Выход</a>
-    </section>
+</section>
 
-    <div id="wrapper">
-        <header class="header header_padding header_background">
+<div id="wrapper">
+    <header class="header header_padding header_background">
+
+        <div class="size-header">
             <div class="header__adaptive-menu header__adaptive-menu_margin"></div>
             <div class="header__logo logo">
                 <a href="#" class="logo__text">Мой бренд</a>
@@ -90,378 +88,408 @@
                     </li>
                     <li class="main-menu__item main-menu__item_margin profile">
                         <a href="#" class="profile__name">UserName</a>
+                        <section class="profile__menu">
+                            <a href="/profile" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
+                            <a href="#" class="profile__link link__logout">Выход</a>
+                        </section>
                     </li>
                 </ul>
             </nav>
-        </header>
-        <main class="main main_margin main_background main_shadow">
+        </div>
+    </header>
+    <main class="main main_margin main_background main_shadow">
 
-            <section class="main__navigation main__navigation_shadow">
-                <ul class="navigation__list navigation__list_padding">
-                    <li class="navigation__item">
-                        <a href="#" class="navigation__link">Главная</a>
-                    </li>
-                    <li class="navigation__item navigation__item_margin">
-                        <a href="#" class="navigation__link">Майки</a>
-                    </li>
+        <section class="main__navigation main__navigation_shadow">
+            <ul class="navigation__list navigation__list_padding">
+                <li class="navigation__item">
+                    <a href="#" class="navigation__link">Главная</a>
+                </li>
+                <li class="navigation__item navigation__item_margin">
+                    <a href="#" class="navigation__link">Майки</a>
+                </li>
 
-                    <li class="navigation__item navigation__item_margin current">Мужская толстовка</li>
-                </ul>
-            </section>
-            <section class="main__product-details product-details product-details_padding">
-                <div class="product-details__product product">
-                    <div class="product__rotate rotate_margin">
-                        <button class="rotate__btn-left"></button>
-                        <p class="rotate__text">Просмотр <span class="rotate__value">360</span></p>
-                        <button class="rotate__btn-right"></button>
+                <li class="navigation__item navigation__item_margin current">Мужская толстовка</li>
+            </ul>
+        </section>
+        <section class="main__product-details product-details product-details_padding">
+            <div class="product-details__product product">
+                <div class="product__rotate rotate_margin">
+                    <button class="rotate__btn-left"></button>
+                    <p class="rotate__text">Просмотр <span class="rotate__value">360</span></p>
+                    <button class="rotate__btn-right"></button>
+                </div>
+                <div class="product__preview preview preview_margin">
+                    <div class="loader-container">
+                        <div class="loader"></div>
                     </div>
-                    <div class="product__preview preview preview_margin">
-                        <img class="product__img" src="img/basis/1.jpg" alt="basis">
-                    </div>
+                </div>
 
-                    <div class="product__editor editor editor_margin editor-padding">
+                <div class="product__editor editor editor_margin editor-padding">
+                    <div class="editor__left">
                         <div class="editor__text">
                             <input class="editor__text-input" type="text">
                         </div>
                         <div class="editor__fonts editor__item_margin">
-                            <label for="fonts" class="button fonts-list__button">
-                            </label>
-                            <select class="editor__fonts-list" name="fonts" id="fonts">
-                                <option value="">Lato</option>
-                                <option value="">Lato</option>
-                                <option value="">Lato</option>
-                                <option value="">Lato</option>
-                                <option value="">Lato</option>
+
+                            <select id="selectbox1" class="editor__fonts-list editor__item_margin">
+                                <option value="">Select an option&hellip;</option>
+                                <option value="aye">Aye</option>
+                                <option value="eh">Eh</option>
+                                <option value="ooh">Ooh</option>
+                                <option value="whoop">Whoop</option>
                             </select>
+
+                            <!--<label for="fonts" class="button fonts-list__button">-->
+
+                                <!--<select class="editor__fonts-list" name="fonts" id="fonts">-->
+                                    <!--<option value="">Lato</option>-->
+                                    <!--<option value="">Lato</option>-->
+                                    <!--<option value="">Lato</option>-->
+                                    <!--<option value="">Lato</option>-->
+                                    <!--<option value="">Lato</option>-->
+                                <!--</select>-->
+                            <!--</label>-->
                         </div>
                         <div class="editor__size editor__item_margin">
                             <input class="size__input" type="number" value="11">
                         </div>
-                        <div class="editor__decoration editor__item_margin">
-                            <button class="decoration__button button button__bold"></button>
-                            <button class="decoration__button button button__italic"></button>
-                            <button class="decoration__button button button__underline"></button>
-                        </div>
+                    </div>
+                    <div class="editor__right">
                         <input type="hidden" value="" id="_color__text">
                         <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
-                    </div>
-
-
-
-                    <div class="product__create">
-                        <button class="create__button-create button button_gradient_yellow">
-                            <span class="button_text button_text_color">Создать бренд!</span>
-                        </button>
-                        <div class="create__btns  create__btns_margin">
-                            <button class="btns__add-text button button_gradient_blue">
-                                <span class="button_text button_text_color">Добавить текст</span>
-                            </button>
-                            <button class="btns__add-print button button_gradient_blue">
-                                <span class="button_text button_text_color">Добавить изображение</span>
-                            </button>
+                        <!--<button class="decoration__button button button__invisible"></button>-->
+                        <button class="decoration__button button button__trush"></button>
+                        <div class="editor__btn-position">
+                            <button class="decoration__button button editor__btn-top"></button>
+                            <button class="decoration__button button editor__btn-bottom"></button>
                         </div>
-                    </div>
-                </div>
-                <div class="product-details__details details">
-
-                    <h1 class="details__name details__name_margin">Мужской свитшот "STAR"</h1>
-                    <div class="details__size details__block_margin">
-                        <h4 class="details__header">Выберите размер</h4>
-
-                        <div class="size__container size__container_margin">
-                            <label class="size__block size__block_margin">
-                                <input class="size__radio" type="radio" name="size">
-                                <span class="size__radio-custom">S (48)</span>
-                            </label>
-                            <label class="size__block size__block_margin">
-                                <input class="size__radio" type="radio" name="size">
-                                <span class="size__radio-custom">M (50)</span>
-                            </label>
-                            <label class="size__block size__block_margin">
-                                <input class="size__radio" type="radio" name="size">
-                                <span class="size__radio-custom">L (52)</span>
-                            </label>
-                            <label class="size__block size__block_margin">
-                                <input class="size__radio" type="radio" name="size">
-                                <span class="size__radio-custom">XL (54)</span>
-                            </label>
-                            <label class="size__block size__block_margin">
-                                <input class="size__radio" type="radio" name="size">
-                                <span class="size__radio-custom">XXL (56)</span>
-                            </label>
-                            <label class="size__block size__block_margin">
-                                <input class="size__radio" type="radio" name="size">
-                                <span class="size__radio-custom">XXXL (60)</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="details__colors details__block_margin">
-                        <h4 class="details__header details__block_margin">Подходящий цвет</h4>
-                        <div class="color-btns">
-                            <input class="details__color" style="background-color: #A550A5;" readonly="" data-color="#f2e656">
-                            <input class="details__color details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
-                            <input class="details__color details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
-                            <input class="details__color details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
-
-                            <a href="#" class="jscolor details__link details__select-color details__color_margin">Выбрать свой</a>
-                        </div>
-                    </div>
-                    <div class="details__price details__block_margin">
-                        <p class="price">Стоимость: <span class="price__value">1340</span> P</p>
-                    </div>
-                    <div class="details__btns">
-                        <button class="details__add-basket button button_gradient_blue">
-                            <span class="button_text button_text_color text_bold">Добавить в корзину</span>
-                        </button>
-
-                        <div class="details__save">
-                            <a href="#" class="details__link link__change details__link_margin save">Сохранить в Мои работы</a>
-                            <div class="details__after pending">
-                                <span>Успешно сохранено</span> <br>
-                                <a href="/profile">Перейти к моим работам</a>
-                            </div>
-                        </div>
+                        <!-- <button class="decoration__button button button__"></button> -->
 
                     </div>
-                </div>
-            </section>
-            <section class="main__products-similar products-similar products-similar_padding">
-                <h1 class="products-similar__header products-similar__header_margin">С этим товаром покупают</h1>
-                <div class="products-similar__slider products-similar__slider_padding">
-                    <!-- <div class="slider__btns">
-                        <button class="slider__button button button__left"></button>
-                        <button class="slider__button button button__right"></button>
+
+                    <!-- <div class="editor__decoration editor__item_margin">
+                        <button class="decoration__button button button__bold"></button>
+                        <button class="decoration__button button button__italic"></button>
+                        <button class="decoration__button button button__underline"></button>
                     </div> -->
-                    <a href="#" class="slider__link">
-                        <div class="products-similar__slide slide  slide_margin">
-                            <div class="slide__picture slide__picture_margin">
-                                <img src="img/basis/8.jpg" alt="" class="slide__img">
-                            </div>
-                            <p class="slide__category slide__category_font">Мужская футболка</p>
-                            <div class="slide__setting slide__setting_margin">
-                                <a href="" class="slide__name slide__name_font text_color_main">Монетка в сердце</a>
-                                <div class="slide__price slide__price_margin">
-                                    <span class="slide__value slide__value_font">999 P</span>
-                                    <button class="slide__edit button button_gradient_yellow"></button>
-                                </div>
-                            </div>
-                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                                <span class="button_text button_text_color">В корзину</span>
-                            </button>
-                        </div>
-                    </a>
-                    <a href="#" class="slider__link">
-                        <div class="products-similar__slide slide slide_margin">
-                            <div class="slide__picture slide__picture_margin">
-                                <img src="img/basis/3.jpg" alt="" class="slide__img">
-                            </div>
-                            <p class="slide__category slide__category_font">Мужской свитшот</p>
-                            <div class="slide__setting slide__setting_margin">
-                                <a href="" class="slide__name slide__name_font text_color_main">Supreme Ripndip</a>
-                                <div class="slide__price slide__price_margin">
-                                    <span class="slide__value slide__value_font">2100 P</span>
-                                    <button class="slide__edit button button_gradient_yellow"></button>
-                                </div>
-                            </div>
-                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                                <span class="button_text button_text_color">В корзину</span>
-                            </button>
-                        </div>
-                    </a>
-                    <a href="#" class="slider__link">
-                        <div class="products-similar__slide slide slide_margin">
-                            <div class="slide__picture slide__picture_margin">
-                                <img src="img/basis/2.jpg" alt="" class="slide__img">
-                            </div>
-                            <p class="slide__category slide__category_font">Мужской свитшот</p>
-                            <div class="slide__setting slide__setting_margin">
-                                <a href="" class="slide__name slide__name_font text_color_main">Rick and Morti</a>
-                                <div class="slide__price slide__price_margin">
-                                    <span class="slide__value slide__value_font">1990 P</span>
-                                    <button class="slide__edit button button_gradient_yellow"></button>
-                                </div>
-                            </div>
-                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                                <span class="button_text button_text_color">В корзину</span>
-                            </button>
-                        </div>
-                    </a>
-                    <a href="#" class="slider__link">
-                        <div class="products-similar__slide slide slide_margin">
-                            <div class="slide__picture slide__picture_margin">
-                                <img src="img/basis/5.jpg" alt="" class="slide__img">
-                            </div>
-                            <p class="slide__category slide__category_font">Женская футболка 3D</p>
-                            <div class="slide__setting slide__setting_margin">
-                                <a href="" class="slide__name slide__name_font text_color_main">Fashion flowers</a>
-                                <div class="slide__price slide__price_margin">
-                                    <span class="slide__value slide__value_font">1200 P</span>
-                                    <button class="slide__edit button button_gradient_yellow"></button>
-                                </div>
-                            </div>
-                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                                <span class="button_text button_text_color">В корзину</span>
-                            </button>
-                        </div>
-                    </a>
-                    <a href="#" class="slider__link">
-                        <div class="products-similar__slide slide slide_margin">
-                            <div class="slide__picture slide__picture_margin">
-                                <img src="img/basis/4.jpg" alt="" class="slide__img">
-                            </div>
-                            <p class="slide__category slide__category_font">Мужская футболка</p>
-                            <div class="slide__setting slide__setting_margin">
-                                <a href="" class="slide__name slide__name_font text_color_main">Разочарование</a>
-                                <div class="slide__price slide__price_margin">
-                                    <span class="slide__value slide__value_font">990 P</span>
-                                    <button class="slide__edit button button_gradient_yellow"></button>
-                                </div>
-                            </div>
-                            <button class="slide__basket button button_gradient_blue slide__basket_margin">
-                                <span class="button_text button_text_color">В корзину</span>
-                            </button>
-                        </div>
-                    </a>
+
                 </div>
-            </section>
-        </main>
-        <footer class="footer footer_margin footer_background footer_padding main_shadow">
-            <div class="header__logo logo">
-                <a href="#" class="logo__text">Мой бренд</a>
-            </div>
-            <nav class="header__main-menu main-menu">
-                <ul class="main-menu__list">
-                    <li class="main-menu__item">
-                        <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
-                    </li>
-                    <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
-                    </li>
-                    <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
-                    </li>
-                    <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
-                    </li>
-                    <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">Войти</a>
-                    </li>
-                </ul>
-            </nav>
-        </footer>
-        <section class="add-photo">
-            <div class="file-upload">
-                <h1 class="file-upload__header file-upload__header_margin">Добавление фотографий</h1>
-                <div class="button button__close"></div>
-                <div class="file__menu">
-                    <ul class="file__menu-list">
-                        <li class="file__menu-item file-menu__addBtnTab active">Изображение</li>
-                        <li class="file__menu-item file-menu__uploadBtnTab">Загруженные изображения</li>
-                    </ul>
-                </div>
-                <div class="file__picture-list file__picture-list_padding active">
-                    <div class="picture-list__picture">
-                        <img src="img/1.png" alt="" class="picture__img">
-                        <div class="picture-btns picture__button-file">
-                            <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                        </div>
-                    </div>
-                    <div class="picture-list__picture picture-list__picture_margin">
-                        <img src="img/1.png" alt="" class="picture__img">
-                        <div class="picture-btns picture__button-file">
-                            <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                        </div>
-                    </div>
-                    <div class="picture-list__picture picture-list__picture_margin">
-                        <img src="img/1.png" alt="" class="picture__img">
-                        <div class="picture-btns picture__button-file">
-                            <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="file-upload__picture-list file-upload__picture-list_padding">
-                    <div class="picture-list__picture">
-                        <img src="img/1.png" alt="" class="picture__img">
-                        <div class="picture-btns">
-                            <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
-                            <button class="button picture__button picture__remove">Удалить</button>
-                        </div>
-                    </div>
-                    <div class="picture-list__picture picture-list__picture_margin">
-                        <img src="img/1.png" alt="" class="picture__img">
-                        <div class="picture-btns">
-                            <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
-                            <button class="button picture__button picture__remove">Удалить</button>
-                        </div>
-                    </div>
-                    <div class="picture-list__picture picture-list__picture_margin">
-                        <img src="img/1.png" alt="" class="picture__img">
-                        <div class="picture-btns">
-                            <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
-                            <button class="button picture__button picture__remove">Удалить</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="file-upload__button file-upload__button_margin">
-                    <button class="button print__send button__add-photo button_gradient_blue button__add-photo_margin">
-                        <span class="button__add-photo_text button_text_color">Выбрать файлы</span>
+
+
+
+                <div class="product__create">
+                    <button class="create__button-create button button_gradient_yellow">
+                        <span class="button_text button_text_color">Создать бренд!</span>
                     </button>
-                    <input type="file" name="upload_print">
-                </div>  
-                 
+                    <div class="create__btns  create__btns_margin">
+                        <button class="btns__add-text button button_gradient_blue">
+                            <span class="button_text button_text_color">Добавить текст</span>
+                            <img src="img/icon/edit.png" alt="">
+                        </button>
+                        <button class="btns__add-print button button_gradient_blue">
+                            <span class="button_text button_text_color">Добавить изображение</span>
+                            <img src="img/icon/photo-camera.png" alt="">
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-details__details details">
+
+                <h1 class="details__name details__name_margin">Мужской свитшот "STAR"</h1>
+                <div class="details__size details__block_margin">
+                    <h4 class="details__header">Выберите размер</h4>
+
+                    <div class="size__container size__container_margin">
+                        <label class="size__block size__block_margin">
+                            <input class="size__radio" type="radio" name="size">
+                            <span class="size__radio-custom">S (48)</span>
+                        </label>
+                        <label class="size__block size__block_margin">
+                            <input class="size__radio" type="radio" name="size">
+                            <span class="size__radio-custom">M (50)</span>
+                        </label>
+                        <label class="size__block size__block_margin">
+                            <input class="size__radio" type="radio" name="size">
+                            <span class="size__radio-custom">L (52)</span>
+                        </label>
+                        <label class="size__block size__block_margin">
+                            <input class="size__radio" type="radio" name="size">
+                            <span class="size__radio-custom">XL (54)</span>
+                        </label>
+                        <label class="size__block size__block_margin">
+                            <input class="size__radio" type="radio" name="size">
+                            <span class="size__radio-custom">XXL (56)</span>
+                        </label>
+                        <label class="size__block size__block_margin">
+                            <input class="size__radio" type="radio" name="size">
+                            <span class="size__radio-custom">XXXL (60)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="details__colors details__block_margin">
+                    <h4 class="details__header details__block_margin">Подходящий цвет</h4>
+                    <div class="color-btns">
+                        <input class="details__color active" style="background-color: #A550A5;" readonly="" data-color="#f2e656">
+                        <input class="details__color details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
+                        <input class="details__color details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
+                        <input class="details__color details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
+
+                        <a href="#" class="jscolor details__link details__select-color details__color_margin">Выбрать свой</a>
+                    </div>
+                </div>
+                <div class="details__price details__block_margin">
+                    <p class="price">Стоимость: <span class="price__value">1340</span> P</p>
+                </div>
+                <div class="details__btns">
+                    <button class="details__add-basket button button_gradient_blue">
+                        <span class="button_text button_text_color text_bold">Добавить в корзину</span>
+                    </button>
+
+                    <div class="details__save">
+                        <a href="#" class="details__link link__change details__link_margin save">Сохранить в Мои работы</a>
+                        <div class="details__after pending">
+                            <span>Успешно сохранено</span> <br>
+                            <a href="/profile">Перейти к моим работам</a>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </section>
-    </div>
+        <section class="main__products-similar products-similar products-similar_padding">
+            <h1 class="products-similar__header products-similar__header_margin">С этим товаром покупают</h1>
+            <div class="slider__container">
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript" src="js/slick.min.js"></script>
-    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
 
-    <script src = "js/require.js"> </script>
-    <script src = "js/TemplateFactory.js"> </script>
-    <script src="js/user_api.js"></script>
-    <script src="js/index.js"></script>
-    <script src="js/jscolor.js"></script>
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
 
-    <script>
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
 
-    // slider
-    $('.products-similar__slider').slick({
-        dots: false,
-        infinite: false,
-        speed: 300,
-        // variableWidth: true,
-        slidesToShow: 5,
-        prevArrow: '<button type="button" class="slick-prev slider__button button button__left"></button>',
-        nextArrow: '<button type="button" class="slick-prev slider__button button button__right"></button>',
-        slidesToScroll: 2,
-        responsive: [
-            {
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 3,
-                slidesToScroll: 3,
-                infinite: true,
-                dots: false
-            }
-            },
-            {
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
-                slidesToScroll: 1
-            }
-            },
-            {
-            breakpoint: 480,
-            settings: {
-                slidesToShow: 1,
-                slidesToScroll: 2
-            }
-            }
-        ]
-    });
-    </script>
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="slider__item">
+                    <a href="#" class="slider__link">
+                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                        <p class="slider__item-type">Мужкская футболка 3D</p>
+                        <p class="slider__item-name">Fashion flowers</p>
+                        <p class="slider__item-price">1200 P</p>
+                        <div class="slider__buttons">
+                            <button class="button slider__btn-edit button_gradient_yellow"></button>
+                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    <footer class="footer footer_margin footer_background footer_padding main_shadow">
+        <div class="header__logo logo">
+            <a href="#" class="logo__text">Мой бренд</a>
+        </div>
+        <nav class="header__main-menu main-menu">
+            <ul class="main-menu__list">
+                <li class="main-menu__item">
+                    <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
+                </li>
+                <li class="main-menu__item main-menu__item_margin">
+                    <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                </li>
+                <li class="main-menu__item main-menu__item_margin">
+                    <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                </li>
+                <li class="main-menu__item main-menu__item_margin">
+                    <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                </li>
+                <li class="main-menu__item main-menu__item_margin">
+                    <a href="#" class="main-menu__link text_color_main login">Войти</a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+    <section class="add-photo">
+        <div class="file-upload">
+            <h1 class="file-upload__header file-upload__header_margin">Добавление фотографий</h1>
+            <div class="button button__close"></div>
+            <div class="file__menu">
+                <ul class="file__menu-list">
+                    <li class="file__menu-item file-menu__addBtnTab active">Изображение</li>
+                    <li class="file__menu-item file-menu__uploadBtnTab">Загруженные изображения</li>
+                </ul>
+            </div>
+            <div class="file__picture-list file__picture-list_padding active">
+                <div class="picture-list__picture">
+                    <img src="img/1.png" alt="" class="picture__img">
+                    <div class="picture-btns picture__button-file">
+                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
+                    </div>
+                </div>
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/1.png" alt="" class="picture__img">
+                    <div class="picture-btns picture__button-file">
+                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
+                    </div>
+                </div>
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/1.png" alt="" class="picture__img">
+                    <div class="picture-btns picture__button-file">
+                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="file-upload__picture-list file-upload__picture-list_padding">
+                <div class="picture-list__picture">
+                    <img src="img/1.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                        <button class="button picture__button picture__remove">Удалить</button>
+                    </div>
+                </div>
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/1.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                        <button class="button picture__button picture__remove">Удалить</button>
+                    </div>
+                </div>
+                <div class="picture-list__picture picture-list__picture_margin">
+                    <img src="img/1.png" alt="" class="picture__img">
+                    <div class="picture-btns">
+                        <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                        <button class="button picture__button picture__remove">Удалить</button>
+                    </div>
+                </div>
+            </div>
+            <div class="file-upload__button file-upload__button_margin">
+                <button class="button print__send button__add-photo button_gradient_blue button__add-photo_margin">
+                    <span class="button__add-photo_text button_text_color">Выбрать файлы</span>
+                </button>
+                <input type="file" name="upload_print">
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/slick.min.js"></script>
+<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+<script src = "js/require.js"> </script>
+<script src = "js/TemplateFactory.js"> </script>
+<script src="js/user_api.js"></script>
+<script src="js/index.js"></script>
+<script src="js/jscolor.js"></script>
+
+<script>
+
+    // // slider
+    // $('.slider__container').slick({
+    //     dots: false,
+    //     infinite: false,
+    //     speed: 300,
+    //     // variableWidth: true,
+    //     slidesToShow: 4,
+    //     prevArrow: '<button type="button" class="slick-prev slider__button button button__left"></button>',
+    //     nextArrow: '<button type="button" class="slick-next slider__button button button__right"></button>',
+    //     slidesToScroll: 2,
+    //     responsive: [
+    //         {
+    //             breakpoint: 1024,
+    //             settings: {
+    //                 slidesToShow: 3,
+    //                 slidesToScroll: 3,
+    //                 infinite: true,
+    //                 dots: false
+    //             }
+    //         },
+    //         {
+    //             breakpoint: 768,
+    //             settings: {
+    //                 slidesToShow: 2,
+    //                 slidesToScroll: 1
+    //             }
+    //         },
+    //         {
+    //             breakpoint: 480,
+    //             settings: {
+    //                 slidesToShow: 1,
+    //                 slidesToScroll: 2
+    //             }
+    //         }
+    //     ]
+    // });
+</script>
 
 </body>
 </html>
