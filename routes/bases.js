@@ -34,7 +34,7 @@ router.get('/bases', (req, res, next) => {
             bases = data;
         }
 
-        pages = Math.ceil(data.length/20);
+        pages = Math.ceil(data.length/0.25);
 
         bases.reverse();
 

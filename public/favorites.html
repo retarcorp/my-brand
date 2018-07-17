@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <link rel="stylesheet" href="css/admin-panel.css">
+    <link rel="stylesheet" href="css/main.css">
+    <!-- <link rel="stylesheet" href="css/constructor.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/slick.css"/>
+    <link rel="stylesheet" href="css/papaps.css">
+    <link rel="stylesheet" href="css/favorites.css">
+    <link rel="stylesheet" href="css/auth-admin.css">
+    <link rel="stylesheet" href="css/adaptive.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+    <title>Favorites</title>
+</head>
+<body>
+
+    <section class="registration">
+        <form class="registration__form active form form_shadow form_radius form_padding">
+            <header class="form__header form__header-registration">РЕГИСТРАЦИЯ ПОЛЬЗОВАТЕЛЯ</header>
+            <div class="button button__close"></div>
+            <p class="form__text-registration text-registration_margin">Укажите ваш адрес электронного ящика, мы вышлем на него логин и пароль.</p>
+            <div class="form__data form__data_margin">
+                <input id="email" class="input_margin form__input form__input-registration input_padding input_border input_text" type="email" placeholder="Ваш email">
+            </div>
+            <p class="invalid__email">Такой email уже занят другим пользователем</p>
+            <div class="form__btns form__btns_margin">
+                <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color" value="РЕГИСТРАЦИЯ">
+            </div>
+        </form>
+        <section class="congratulations form_radius">
+            <header class="form__header form__header-registration header-congratulations">ПОЗДРАВЛЯЕМ!</header>
+            <p class="form__text-registration text-congratulation_margin">Регистрация успешно завершена! Мы отправили на указанный Вами электронный адрес пароль для входа.</p>
+            <div class="form__btns form__btns_margin">
+                <input type="submit" class="button_margin form__button-registration button button_gradient_blue button_text_color post-reg__button" value="ВОЙТИ">
+            </div>
+        </section>
+    </section>
+
+    <div id="wrapper">
+        <header class="header header_padding header_background">
+
+            <div class="size-header">
+                            <div class="header__adaptive-menu header__adaptive-menu_margin"></div>
+            <div class="header__logo logo">
+                <a href="#" class="logo__text">Мой бренд</a>
+            </div>
+            <nav class="header__main-menu main-menu">
+                <ul class="main-menu__list">
+                    <li class="main-menu__item">
+                        <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin login">
+                        <a href="#" class="main-menu__link text_color_main">Войти</a>
+                        <form class="authorization__form form form_shadow form_radius form_padding">
+                            <header class="form__header">Вход пользователя</header>
+                            <div class="form__data">
+                                <input id="login" class="input_margin form__input input_padding input_border input_text" required name="user" type="text" placeholder="Ваш логин">
+                                <input id="password" class="form__input input_padding input_border input_text" type="password" required name="pass" placeholder="Пароль">
+                            </div>
+                            <div class="form__btns">
+                                <input type="submit" class="button_margin form__button button button_gradient_blue button_text_color" value="Вход">
+                                <a href="#" class="form__link">Восстановить пароль</a>
+                            </div>
+                            <div class="form__socials">
+                                <a href="#" class="social__link vk"></a>
+                                <a href="#" class="social__link odnoklas"></a>
+                                <a href="#" class="social__link facebook"></a>
+                                <a href="#" class="social__link google"></a>
+                                <a href="#" class="social__link twitter"></a>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin registration">
+                        <button class="button button__registration">Регистрация</button>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin profile">
+                        <a href="#" class="profile__name">UserName</a>
+                        <section class="profile__menu">
+                            <a href="/profile" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
+                            <a href="#" class="profile__link link__logout">Выход</a>
+                        </section>
+                    </li>
+                </ul>
+            </nav>
+            </div>
+        </header>
+        <main class="main main_margin main_background main_shadow">
+
+            <section class="main__navigation main__navigation_shadow">
+                <ul class="navigation__list navigation__list_padding">
+                    <li class="navigation__item">
+                        <a href="#" class="navigation__link">Главная</a>
+                    </li>
+                    <li class="navigation__item navigation__item_margin current">Избранное</li>
+                </ul>
+            </section>
+            <section class="main__favorites">
+                <h1 class="section__header">Избранное</h1>
+                <div class="favorites__container">
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="favorites__item">
+                        <img class="favorites__img" src="img/basis/1.jpg" alt="">
+                        <div class="info">
+                            <p class="favorites__type">Мужская футболка</p>
+                            <p class="favorites__name">Fashion flowers</p>
+                            <p class="favorites__price">1990 P</p>
+                        </div>
+                        <div class="favorites__buttons">
+                            <button class="button favorites__edit">
+                                Изменить
+                                <img src="img/icon/paintbrush.png" alt="">
+                            </button>
+                            <div class="favorites__hover">
+                                <button class="button favorites__buy">В корзину</button>
+                                <button class="button favorites__remove">Убрать из избранного</button>        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel__card-page">
+
+                    <ul class="panel__page-list">
+                        <li class="panel__page-point selected">
+                            <span class="panel__page-num">1</span>
+                        </li>
+
+                        <li class="panel__page-point">
+                            <span class="panel__page-num">2</span>
+                        </li>
+
+                        <li class="panel__page-point">
+                            <span class="panel__page-num">3</span>
+                        </li>
+
+                        <li class="panel__page-point">
+                            <span class="panel__page-num">4</span>
+                        </li>
+
+                        <li class="panel__page-point">
+                            <span class="panel__page-num">5</span>
+                        </li>
+
+                        <li class="panel__page-point">
+                            <span class="panel__page-num">6</span>
+                        </li>
+                    </ul>
+
+                </div>
+            </section>
+            <section class="interesting">
+                <h1 class="section__header">Вас может заинтересовать</h1>
+                <div class="slider__container">
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <p class="slider__item-name">Fashion flowers</p>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <p class="slider__item-name">Fashion flowers</p>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <span class="slider__item-name">
+                                Fashion flowers
+                                <div class="type__basis">
+                                    <p class="type__basis-paint" title="Печать"></p>
+                                    <p class="type__basis-needle" title="Вышивка"></p>
+                                </div>
+                            </span>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <p class="slider__item-name">Fashion flowers</p>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <p class="slider__item-name">Fashion flowers</p>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <p class="slider__item-name">Fashion flowers</p>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="slider__item">
+                        <a href="#" class="slider__link">
+                            <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                            <p class="slider__item-type">Мужкская футболка 3D</p>
+                            <p class="slider__item-name">Fashion flowers</p>
+                            <p class="slider__item-price">1200 P</p>
+                            <div class="slider__buttons">
+                                <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+
+
+
+
+
+            </section>
+
+
+
+        </main>
+        <footer class="footer footer_margin footer_background footer_padding main_shadow">
+            <div class="header__logo logo">
+                <a href="#" class="logo__text">Мой бренд</a>
+            </div>
+            <nav class="header__main-menu main-menu">
+                <ul class="main-menu__list">
+                    <li class="main-menu__item">
+                        <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/slick.min.js"></script>
+
+    <script src = "js/require.js"> </script>
+    <script src = "js/TemplateFactory.js"> </script>
+    <script src="js/user_api.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/jscolor.js"></script>
+
+    <script>
+
+        $('.slider__container').slick({
+        dots: false,
+        infinite: false,
+        // speed: 300,
+        slidesToShow: 4,
+        // variableWidth: true,
+        prevArrow: '<button type="button" class="slick-prev"></button>',
+        nextArrow: '<button type="button" class="slick-next"></button>',
+        slidesToScroll: 2,
+        responsive: [
+            {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: false
+            }
+            },
+            {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 1
+            }
+            },
+            {
+            breakpoint: 480,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 2
+            }
+            }
+        ]
+        });
+
+    // slider
+    // $('.products-similar__slider').slick({
+    //     dots: false,
+    //     infinite: false,
+    //     speed: 300,
+    //     slidesToShow: 5,
+    //     // variableWidth: true,
+        // prevArrow: '<button type="button" class="slick-prev"></button>',
+        // nextArrow: '<button type="button" class="slick-next"></button>'
+    //     slidesToScroll: 2,
+    //     responsive: [
+    //         {
+    //         breakpoint: 1024,
+    //         settings: {
+    //             slidesToShow: 3,
+    //             slidesToScroll: 3,
+    //             infinite: true,
+    //             dots: false
+    //         }
+    //         },
+    //         {
+    //         breakpoint: 768,
+    //         settings: {
+    //             slidesToShow: 2,
+    //             slidesToScroll: 1
+    //         }
+    //         },
+    //         {
+    //         breakpoint: 480,
+    //         settings: {
+    //             slidesToShow: 1,
+    //             slidesToScroll: 2
+    //         }
+    //         }
+    //     ]
+    // });
+    </script>
+</body>
+</html>

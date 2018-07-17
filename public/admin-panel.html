@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
-
-    <link rel="stylesheet" href="css/admin-panel.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/papaps.css">
+    <link rel="stylesheet" type="text/css" href="css/admin-panel.css">
+    <link rel="stylesheet" type="text/css" href="css/adaptive.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
 </head>
 <body>
 
     <div class="wrapper">
         <div class="header">
-            <div class="container">
-                <a class="header__home" href="/">
-                    <h1>Мой Бренд</h1>
-                </a>
+            <div class="container header__container_padding">
+                <div class="header__adaptive-container">
+                    <div class="header__adaptive-menu-admin header__adaptive-menu_margin"></div>
+                    <a class="header__home" href="/">
+                        <h1>Мой Бренд</h1>
+                    </a>
+                </div>
 
                 <div class="header__control">
                     <div class="header__admin">Администратор 2</div>
@@ -42,7 +47,7 @@
                         <li class="menu__point">
                             Период оплаты
                         </li>
-                        <li class="menu__point">
+                        <li class="menu__point fontsUI">
                             Управление шрифтами
                         </li>
                         <li class="menu__point baseUI">
@@ -56,7 +61,7 @@
 
                 <div class="panel">
 
-                    <div class="panel__card">
+                    <div class="panel__card fonts__panel">
                         <div class="panel__card-title">
                             Добавить новый шрифт в систему
                         </div>
@@ -71,6 +76,17 @@
                                     <input type="text" name="font" required placeholder="Введи название шрифта">
                                     <input type="file" name="font_file" data-after="Выберите файл">
                                 </div>
+                                <div class="panel__column-item-radio font__radio">
+                                    <p class="panel__column-item-radio-header">Тип шрифта: </p>
+                                    <label class="panel__type-picture">
+                                        <input class="style-ratio" type="checkbox" name="font_print">
+                                        Вышивка
+                                    </label>
+                                    <label class="panel__type-picture">
+                                        <input class="style-ratio" type="checkbox" name="font_fancywork">
+                                        Печать
+                                    </label>
+                                </div>
 
                                 <button class="panel__font-submit simple">Загрузить</button>
                             </form>
@@ -78,11 +94,10 @@
 
                     </div>
 
-                    <div class="panel__card">
+                    <div class="panel__card fonts__panel">
                         <div class="panel__card-title">
                             Загруженные шрифты
                         </div>
-
                         <ul class="panel__font-list">
                             <li class="panel__font-point">
                                 <div class="panel__font-type">
@@ -189,7 +204,13 @@
                                 </div>
                                 <div class="panel__basis-description">
                                     <p class="panel__basis-name">Connor Detroit: Become Human</p>
-                                    <p class="panel__basis-type">Майка - Вышивка, принт</p>
+                                    <span class="panel__basis-type">
+                                        Майка - Вышивка, принт
+                                        <div class="type__basis">
+                                            <p class="type__basis-paint" title="Печать"></p>
+                                            <p class="type__basis-needle" title="Вышивка"></p>
+                                        </div>
+                                    </span>
                                     <p class="panel__basis-price">1300 P</p>
                                 </div>
                                 <div class="panel__basis-button">
@@ -299,7 +320,7 @@
                         <div class="panel__card-title">
                             Добавить новую основу
                         </div>
-                        <div class="panel__content flex">
+                        <div class="panel__content flex base__add">
                             <div class="panel__left-side">
                                 <div class="panel__new-basis">
                                     <img src="img/admin-panel/camera.png" alt="">
@@ -382,10 +403,107 @@
                                     </label>
                                     <label class="panel__type-picture">
                                         <input class="style-ratio" type="checkbox" name="base_fancywork">
-                                        Принт
+                                        Печать
                                     </label>
                                 </div>
                                 <button class="panel__font-submit simple add-basis-upload">Загрузить</button>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="panel__card base__edit">
+                            <div class="panel__card-title">
+                                Редактирование основы
+                            </div>
+                            <div class="panel__content flex base__edit">
+                                <div class="panel__left-side-crate preview">
+
+                                </div>
+                                <div class="panel__right-side-create">
+                                    <div class="panel__column-item panel__column-item_width">
+                                        <label class="panel__left-set-label" for="name">Имя:</label>
+                                        <input type="text" id="name" name="template_name">
+                                    </div>
+                                    <div class="create__btns  create__btns_margin">
+                                        <button class="btns__add-text button button_gradient_blue">
+                                            <span class="button_text button_text_color">Добавить текст</span>
+                                        </button>
+                                        <button class="btns__add-print button button_gradient_blue">
+                                            <span class="button_text button_text_color">Добавить изображение</span>
+                                        </button>
+                                    </div>
+                                    <div class="product__editor editor editor_margin editor-padding">
+                                        <div class="editor__left">
+                                              <div class="editor__text">
+                                                    <input class="editor__text-input" type="text" name="template_text">
+                                                </div>
+                                                <div class="editor__fonts editor__item_margin">
+                                                    <label for="fonts" class="button fonts-list__button">
+                                                    
+                                                    <select class="editor__fonts-list" name="fonts" id="fonts" name="template_font">
+                                                        <option value="">Lato</option>
+                                                        <option value="">Lato</option>
+                                                        <option value="">Lato</option>
+                                                        <option value="">Lato</option>
+                                                        <option value="">Lato</option>
+                                                    </select>
+                                                    </label>
+                                                </div>
+                                                <div class="editor__size editor__item_margin">
+                                                    <input class="size__input" type="number" value="11" name="template_font-size">
+                                                </div>
+                                        </div>
+                                        <div class="editor__right">
+                                            <input type="hidden" value="" id="_color__text" name="template_color">
+                                            <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
+                                            <button class="decoration__button button button__invisible"></button>
+                                            <button class="decoration__button button button__trush"></button>
+                                            <div class="editor__btn-position">
+                                                <button class="decoration__button button editor__btn-top"></button>
+                                                <button class="decoration__button button editor__btn-bottom"></button>
+                                            </div>
+                                            <!-- <button class="decoration__button button button__"></button> -->
+
+                                        </div>
+                      
+                                        <!-- <div class="editor__decoration editor__item_margin">
+                                            <button class="decoration__button button button__bold"></button>
+                                            <button class="decoration__button button button__italic"></button>
+                                            <button class="decoration__button button button__underline"></button>
+                                        </div> -->
+                                        
+                                    </div>
+                                    <div class="panel__container-basis">
+                                        <div class="panel__basis">
+                                            Sample text 
+
+                                            <div class="panel__basis-btns">
+                                                <button class="basis-btn button button-remove"></button>
+                                                <button class="basis-btn button"></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="panel__font-submit simple save-template">Сохранить</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel__card fonts__panel">
+                        <div class="panel__card-title">
+                            Урпавление принтами
+                        </div>
+                        <div class="panel__content">
+                            <button class="simple button__add-print">Добавить принт</button>
+                            <div class="panel__container">
+                                <div class="panel__print">
+                                    <img src="img/prints/doggy.png">
+                                    <div class="type__basis">
+                                        <p class="type__basis-paint" title="Печать"></p>
+                                        <p class="type__basis-needle" title="Вышивка"></p>
+                                    </div>
+                                    <div class="panel__print-btn">
+                                        <button class="simple button__remove-print">Удалить</button>                                  
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -398,6 +516,38 @@
 
         <div class="footer">
 
+        </div>
+        <div class="window__background">
+            <div class="window__add-print">
+                <div class="button button__close"></div>
+                <div class="window__title">
+                    Добавление принта
+                </div>
+                <div class="panel__inputs">
+                    <input type="file" name="font_file" data-after="Выберите файл">
+                </div>
+                <div class="window__container">
+                    <div class="panel__print">
+                        <img src="img/prints/doggy.png">
+                        <div class="panel__print-btn">
+                            <button class="simple button__remove-print">Удалить</button>                                  
+                        </div>
+                    </div>
+                </div>
+                <div class="panel__column-item-radio print__radio">
+                    <p class="panel__column-item-radio-header">Тип принта: </p>
+                    <label class="panel__type-picture">
+                        <input class="style-ratio" type="checkbox" name="font_print">
+                        Вышивка
+                    </label>
+                    <label class="panel__type-picture">
+                        <input class="style-ratio" type="checkbox" name="font_fancywork">
+                        Печать
+                    </label>
+                </div>
+                <button class="simple window-button__add-print">Добавить принт</button>
+
+            </div>          
         </div>
     </div>
 

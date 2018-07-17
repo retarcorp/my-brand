@@ -1,0 +1,112 @@
+.favorites__container{
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    /*justify-content: space-between;*/
+    margin-bottom: 60px;
+    font-size: 1.6rem;
+}
+.favorites__item{
+    min-width: 240px;
+    width: 25%;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 10px;
+    position: relative;
+}
+.favorites__img{
+    width: 100%;
+}
+.favorites__type{
+    font-family: 'Lato', sans-serif;
+    color: #9b9db2;
+    font-size: 15px;
+    font-weight: 400;
+}
+.favorites__name{
+    font-family: 'Lato', sans-serif;
+    font-size: 17px;
+    text-decoration: underline;
+}
+.favorites__price{
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+}
+.favorites__price,
+.favorites__type,
+.favorites__name{
+    margin: 0;
+    padding: 5px 0;
+}
+
+.favorites__edit{
+    display: flex;
+    align-items: center;
+    width: 190px;
+    height: 44px;
+    border: 7px;
+    position: relative;
+    padding: 0 40px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    /* background: linear-gradient(-180deg, #ffbf46, #ff850c); */
+    background-color: #BFBFBF;
+    /* display: block; */
+    margin: auto;
+}
+.favorites__edit img{
+    width: 18px;
+    margin-left: 10px;
+}
+
+.favorites__buy,
+.favorites__remove{
+    width: 172px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(-180deg, #507ef2, #1a59fb);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    display: block;
+    margin: 15px auto;
+}
+.favorites__remove{
+    margin-bottom: 0;
+    color: #393939;
+    font-size: 15px;
+    font-weight: 400;
+    text-decoration: underline;
+    background: none;
+}
+
+.favorites__hover{
+    display: block;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: #fff;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 30px 79px rgba(56,49,187, 0.18);
+}
+
+.favorites__item:hover .favorites__hover{
+    opacity: 1;
+    transition: 0.7s cubic-bezier(0,.62,.16,.75);
+}
+
+.favorites__item:hover .favorites__edit{
+    transition: 0.9s cubic-bezier(0,.62,.16,.75);
+    background: linear-gradient(-180deg, #ffbf46, #ff850c);
+}
+
+.favorites__item:hover{
+    transition: 0.7s cubic-bezier(0,.62,.16,.75);
+    box-shadow: 0 0 79px rgba(56,49,187, 0.18);
+}
+
+
+

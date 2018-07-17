@@ -59,9 +59,7 @@ AdminApp = {
 
             AdminApp.fontsPanel.addClass('loading');
 
-            AdminApp.loadFontsPage(page, (data) => {
-                console.log(data);
-
+            AdminApp.loadFontsPage(1, (data) => {
                 AdminApp.fontsPanel.removeClass('loading');
                 AdminApp.resetUpload();
             });
@@ -132,7 +130,7 @@ AdminApp = {
 
             let page = parseInt($('.panel__page-point.selected span').text());
 
-            AdminApp.loadFontsPage(page, () => {
+            AdminApp.loadFontsPage(1, () => {
                 AdminApp.fontsPanel.removeClass('loading');
                 AdminApp.resetUpload();
             });
@@ -150,9 +148,20 @@ AdminApp = {
                 AdminApp.BaseList.loadBases(1, AdminApp.BaseList.loadFinishing);
                 AdminApp.BaseList.panel.addClass('active');
             }
+
+            if ($(e.target).hasClass('fontsUI')){
+                $('.panel__card').removeClass('active');
+                $('.panel__card.fonts__panel').addClass('active');
+
+                AdminApp.loadFontsPage();
+            }
         }
 
         ,menu: $('.menu__list')
+
+    }
+
+    ,FontsPanel: {
 
     }
 
@@ -211,7 +220,6 @@ AdminApp = {
 
             if (AdminApp.BasePanel.variants.children().length && name.length && price.length) {
                 $.each(AdminApp.BasePanel.size.children(), (index, child) => {
-                    console.log($(child).data('size'));
                     data.append('size', $(child).data('size'));
                 });
 
@@ -562,17 +570,15 @@ AdminApp = {
             if ($(e.target).hasClass('panel__page-point')) {
                 let page = $(e.target).data('page');
 
-                console.log(page);
-
                 AdminApp.BaseList.loadBases(page, (data) => {
                     AdminApp.BaseList.loadFinishing(data);
 
                    // $('.panel__page-point.selected').removeClass('selected');
-                    $(e.target).addClass('selected');
+                    AdminApp.BaseList.pages.children().removeClass('selected');
+                    AdminApp.BaseList.pages.children(":nth-child("+page+")").addClass('selected');
+                    AdminApp.BaseList.pages.css('transform', `translateX(-${44 * (page - 1)}px)`);
                 });
             }
-
-            console.log(e);
         }
 
         ,loadFinishing(data) {
@@ -634,7 +640,7 @@ AdminApp = {
             file_string = images.join('|');
 
             User.Ajax.get(`/delete?name=${base.name}&type=base&files=${file_string}`, (data) => {
-                this.loadBases();
+                this.loadBases(1, this.loadFinishing);
 
                 console.log(data);
             });
@@ -650,16 +656,13 @@ AdminApp = {
         }
 
         ,setBasePagesHtml(pages) {
+            this.pagesCount = pages;
             this.pages.html('');
 
             for (let page = 1; page <= pages; page++) {
                 this.pages.append(TemplateFactory.getAdminPanelPages(page));
                 this.pages.children(":last-child").data('page', page);
             }
-        }
-
-        ,setBasePages(pages) {
-            let pages = null;
         }
 
         ,copyObject(copy, object) {
@@ -685,6 +688,7 @@ AdminApp = {
         ,list: $('.panel__basis-list')
         ,panel: $('.base-list')
         ,pages: $('.panel__page-list.bases')
+        ,pagesCount: 0
     }
 }
 

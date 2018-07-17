@@ -1,12 +1,14 @@
-body{
-    background: #f5f5fc;
-    display: flex;
-    margin: 0;
+html{
+    height: 100%;
+}
+.auth-admin{
+    height: 100vh;
 }
 
 .auth-admin,
 section.registration{
-    margin: auto;
+    display: flex;
+
     z-index: 1;
 }
 
@@ -22,19 +24,18 @@ section.registration{
 
 .auth-admin__form,
 .registration__form{
+    margin: auto;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 400px;
-    height: 360px;
     background-color: #fff;
 }
 .registration__form{
     position: relative;
     margin: auto;
     width: 800px;
-    height: 400px;
     justify-content: flex-start;
 }
 .form_padding{
@@ -86,6 +87,7 @@ section.registration{
 }
 .button_margin{
     margin-bottom: 15px;
+    margin-top: 15px;
 }
 .form__btns{
     text-align: center;
@@ -111,10 +113,10 @@ section.registration{
     font-weight: 700;
 }
 .form__text-registration{
-    width: 470px;
     margin: 0 auto;
     text-align: center;
     font-weight: 400;
+    font-size: 16px;
 }
 .form__button-registration{
     width: 283px;

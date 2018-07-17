@@ -142,7 +142,7 @@ const TemplateFactory = {
 
     ,getAdminPanelPages(page) {
         return `
-            <li class="panel__page-point ${ (page == 1) ? "selected" : "" }">
+            <li class="panel__page-point">
                 <span class="panel__page-num">${page}</span>
             </li>
         `
@@ -201,6 +201,29 @@ const TemplateFactory = {
                     <button class="panel__basis-remove">Удалить</button>
                 </div>
             </li>
+        `
+    }
+
+    ,getProjectsListHtml(project, main_variant) {
+        return `
+            <div class="favorites__item">
+                <img class="favorites__img" src="img/1.png" alt="">
+                <div class="info">
+                    <p class="favorites__type">${project.base.type}</p>
+                    <p class="favorites__name">${project.base.name}</p>
+                    <p class="favorites__price">${project.base.price} P</p>
+                </div>
+                <div class="favorites__buttons">
+                    <button class="button favorites__edit">
+                        Изменить
+                        <img src="img/icon/paintbrush.png" alt="">
+                    </button>
+                    <div class="favorites__hover">
+                        <button class="button favorites__buy">В корзину</button>
+                        <button class="button favorites__remove">Убрать из избранного</button>        
+                    </div>
+                </div>
+            </div>
         `
     }
 

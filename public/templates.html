@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Templates Test</title>
+</head>
+<body>
+
+<form action="" class="templates">
+    <input type="text" name="template_name">
+    <input type="submit">
+</form>
+
+<div class="product-details__product product">
+    <div class="product__rotate rotate_margin">
+        <button class="rotate__btn-left"></button>
+        <p class="rotate__text">Просмотр <span class="rotate__value">360</span></p>
+        <button class="rotate__btn-right"></button>
+    </div>
+    <div class="product__preview preview preview_margin"><canvas width="400" height="400"></canvas></div>
+
+    <div class="product__editor editor editor_margin editor-padding">
+        <div class="editor__text">
+            <input class="editor__text-input" type="text">
+        </div>
+        <div class="editor__fonts editor__item_margin">
+            <label for="fonts" class="button fonts-list__button">
+            </label>
+            <select class="editor__fonts-list" name="fonts" id="fonts">
+                <option style="font-family: 'LuckiestGuy';">LuckiestGuy</option>
+
+                <option style="font-family: 'HelveticaRegular';">HelveticaRegular</option>
+
+                <option style="font-family: 'Chava';">Chava</option>
+
+                <option style="font-family: 'Campanella';">Campanella</option>
+
+                <option style="font-family: 'RobotoCondensed-Regular';">RobotoCondensed-Regular</option>
+
+                <option style="font-family: 'RobotoCondensed-Bold';">RobotoCondensed-Bold</option>
+
+                <option style="font-family: 'RobotoCondensed-Italic';">RobotoCondensed-Italic</option>
+
+                <option style="font-family: 'RobotoCondensed-BoldItalic';">RobotoCondensed-BoldItalic</option>
+            </select>
+        </div>
+        <div class="editor__size editor__item_margin">
+            <input class="size__input" type="number" value="11">
+        </div>
+        <div class="editor__decoration editor__item_margin">
+            <button class="decoration__button button button__bold"></button>
+            <button class="decoration__button button button__italic"></button>
+            <button class="decoration__button button button__underline"></button>
+        </div>
+        <input type="hidden" value="FFFFFF" id="_color__text" autocomplete="off">
+        <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin" style="background-image: none; background-color: rgb(255, 255, 255); color: rgb(0, 0, 0);"></button>
+    </div>
+
+
+
+    <div class="product__create">
+        <button class="create__button-create button button_gradient_yellow">
+            <span class="button_text button_text_color">Создать бренд!</span>
+        </button>
+        <div class="create__btns  create__btns_margin">
+            <button class="btns__add-text button button_gradient_blue">
+                <span class="button_text button_text_color">Добавить текст</span>
+            </button>
+            <button class="btns__add-print button button_gradient_blue">
+                <span class="button_text button_text_color">Добавить изображение</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="layers__list">
+
+</div>
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="js/user_api.js"></script>
+
+<script src="js/require.js"></script>
+
+<script src="js/TemplateFactory.js"></script>
+<script src="js/index.js"></script>
+
+<script>
+
+    Apps = {
+        init() {
+            console.log('App init');
+
+            this.form.on('submit', this.formData);
+        }
+
+        ,formData(e) {
+            e.preventDefault();
+
+            let data = {};
+
+            data.image = new Image();
+
+            data.image.src = App.GraphCore.canvas.toDataURL('image/png');
+            data.name = $('input[name="template_name"]').val();
+
+            Apps.sendData(data);
+        }
+
+        ,sendData(data) {
+            let send = App.Data.getProjectData(App.Project);
+
+            send.name = data.name;
+            send.template = true;
+
+            App.Data.saveProjectData(send);
+        }
+
+
+
+        ,form: $('.templates')
+    }
+
+    Apps.init();
+
+</script>
+
+</html>

@@ -7,19 +7,25 @@ var glor = 100;
 const App = {
     start: async function(){
 
-        this.logged = await User.session();
+        let session = await User.session();
+
+        this.logged = session.status;
+        this.user = session.user;
+        this.saveProject = false;
         this.isPreview = false;
+
+        this.UI.Profile.init();
+        this.UI.Menu.init();
 
         await this.Data.getBases();
         await this.Data.getFonts();
         await this.Data.getPrints();
-        await this.Data.loadProjects();
+
 
         if (this.logged){
             await this.Data.loadProjects();
 
             (this.Data.Projects.length) ? this.setProject(this.Data.Projects[0]) : this.Project = Project.NewProject(this.Data.Bases[0]);
-
         } else  {
             this.Project = Project.NewProject(this.Data.Bases[0]);
         }
@@ -38,6 +44,8 @@ const App = {
 
         this.UI.init();
         this.GraphCore.init();
+
+        this.UI.Profile.setProjectsList();
 
         //Using for tests
 
@@ -77,8 +85,8 @@ const App = {
             //this.Canvas.init();
             this.Create.init();
 
-            this.Profile.init();
-            this.Menu.init();
+            // this.Profile.init();
+            // this.Menu.init();
         }
 
         ,leftMenu: $('.left-menu')
@@ -389,7 +397,7 @@ const App = {
 
                 layer.remove();
 
-            } else if (curr && $(e.target).hasClass('.delete')) {
+            } else if ($(e.target).hasClass('delete__layer')) {
                 let layer = $(e.target).parent().parent(),
                     id = layer.data('id'),
                     widget = App.currentProjectVariant.widgets.find( (w) => w.id == id);
@@ -404,20 +412,15 @@ const App = {
             }
         }
 
-        ,onSaveProject(e) {
-            //let data = Object.assign({}, App.Project);
+        ,onSaveProject(e, callback) {
             if (App.logged) {
-                let data = {
-                    variants: App.Project.variants
-                    ,base: App.Project.base
-                    ,settings: App.Project.settings
-                }
-
-                App.GraphCore.setCurrentWidget(null);
-
-                App.Ajax.postJSON('/save', JSON.stringify(data));
+                App.Data.saveProjectData(callback);
             } else {
-                alert('Необходимо вначале войти!');
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 500);
+
+                App.UI.Profile.showLoginForm(e);
             }
         }
 
@@ -426,44 +429,64 @@ const App = {
             init() {
 
                 this.logins = $('.authorization__form');
+                this.profile = $('.profile__menu');
+
+                $('.main-menu__item.profile').on('click', this.showProfileMenu);
 
                 this.logins.on('submit', () => { this.login(); return false;});
                 $('input[type="submit"][value="Вход"]').on('click', () => this.logins.submit());
-
                 $('body').on('click', this.showLoginForm);
+
                 $('.main-menu__item.registration').on('click', this.showRegistrationForm);
-
-
                 $('section.registration').on('click', this.closeRegistration);
                 $('.post-reg__button').on('click', (e) => {
                     this.closeRegistration(e);
                     $('.main-menu__item.login').addClass('active');
                 })
-                //$(':not(.authorization__form, .main-menu__item)').on('click', this.hideForms);
 
+                $('.details__link.save').on('click', this.saveProject);
+
+                this.checkLogged();
+
+                if (this.container.length) {
+                    this.container.html('Favorites loading...');
+                }
+            }
+
+            ,checkLogged() {
                 if (App.logged) {
                     $('.main-menu__item.login').remove();
                     $('.main-menu__item.registration').remove();
                     $('section.registration').remove();
 
-                    $('.main-menu__list').append(TemplateFactory.getLogoutHtml());
-                    $('.main-menu__item.logout').on('click', this.logout);
-                } else {
+                    ///$('.main-menu__list').append(TemplateFactory.getLogoutHtml());
+                    $('.profile__link.link__logout').on('click', this.logout);
 
+                    $('.main-menu__item.profile').addClass('active');
+                    $('.profile__name').text(App.user);
                 }
             }
 
-            ,logout() {
+            ,logout(e) {
+                e.preventDefault();
+
                 User.logout( (data) => {
-                    console.log(data);
                     location.reload();
                 });
             }
 
+            ,showProfileMenu() {
+                App.UI.Profile.profile.toggleClass('active');
+            }
+
             ,showLoginForm(e) {
-                if (!$('.main-menu__item.login').has($(e.target)).length || $(e.target).hasClass('.post-reg__button')) {
+                if (!$('.main-menu__item.login').has($(e.target)).length) {
                     $('.main-menu__item.login').removeClass('active');
                 } else {
+                    $('.main-menu__item.login').addClass('active');
+                }
+
+                if (!App.logged && ($(e.target).hasClass('save') || $(e.target).hasClass('post-reg__button'))) {
                     $('.main-menu__item.login').addClass('active');
                 }
             }
@@ -478,6 +501,14 @@ const App = {
 
             ,closeRegistration(e) {
                 if ($(e.target).hasClass('registration') || $(e.target).hasClass('button__close') || $(e.target).hasClass('post-reg__button')) {
+                    if ($(e.target).hasClass('post-reg__button')) {
+                        $('body, html').animate( {
+                            scrollTop: 0
+                        }, 500);
+
+                        App.UI.Profile.showLoginForm(e);
+                    }
+
                     $('section.registration').removeClass('active');
                 }
             }
@@ -496,10 +527,103 @@ const App = {
                 };
 
                 App.Ajax.postJSON('/login', JSON.stringify(data), (data) => {
-                    location.reload();
+                    data = JSON.parse(data);
+
+                    if (data.status) {
+                        App.logged = true;
+
+                        if (App.saveProject) {
+                            App.UI.onSaveProject();
+                        }
+
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+
                 });
             }
-            ,
+
+            ,saveProject(e) {
+                e.preventDefault();
+                App.saveProject = true;
+
+                $('.details__after').removeClass('pending');
+                $('.details__after').addClass('active');
+
+                App.UI.onSaveProject(e, () => {
+                    $('.details__after').removeClass('active');
+                    $('.details__after').addClass('pending');
+                });
+            }
+
+            ,setProjectsList() {
+                if (this.container.length) {
+                    let projects = App.Data.Projects;
+
+                    if (!projects || !projects.length) {
+                        this.container.html('There is no favorites yet.');
+
+                    } else {
+                        this.container.html(
+                            projects.reduce((acc, project) => acc + TemplateFactory.getProjectsListHtml(project), ``)
+                        );
+
+                        App.UI.LightBox.setPreviewImage();
+
+                        this.setPreviewImage(projects, 0)
+
+                    }
+
+                }
+            }
+
+            ,setPreviewImage(projects, index) {
+
+                App.setProject(projects[index]);
+
+                App.currentProjectVariant.variant.filterImage.addEventListener('load', () => {
+
+                    console.log(App.currentProjectVariant.variant.loaded);
+
+                    let proj = projects[index];
+
+                    //console.log(App.currentProjectVariant.variant.filterImage.src);
+
+                    App.isPreview = true;
+                    App.GraphCore.RenderList.render(App.GraphCore.ctx);
+                    App.isPreview = false;
+
+                    $('.favorites__img')[index].src = App.GraphCore.canvas.toDataURL('image/png');
+
+                    if (projects[index+1] && App.currentProjectVariant.variant.loaded) {
+                        this.setPreviewImage(projects, index+1);
+                    }
+
+                    console.log('loaded');
+                });
+
+                // if (!App.UI.Profile.projectLoaded) {
+                //     setTimeout(this.setPreviewImage.bind(this), 250, projects, index);
+                //     console.log('Ones')
+                // } else {
+                //     App.isPreview = true;
+                //     App.GraphCore.RenderList.render(App.GraphCore.ctx);
+                //     App.isPreview = false;
+                //
+                //     $('.favorites__img')[index].src = App.GraphCore.canvas.toDataURL('image/png');
+                //
+                //     if (projects[index+1]) {
+                //         App.setProject(projects[index+1]);
+                //         setTimeout(this.setPreviewImage.bind(this), 250, projects, index + 1);
+                //         App.UI.Profile.projectLoaded = false;
+                //     }
+                //
+                //     console.log('loaded');
+                // }
+            }
+
+            ,container: $('.favorites__container')
         }
 
         ,Menu: {
@@ -718,7 +842,6 @@ const App = {
                 this.container.on('click', this.getFont);
 
                 $.each(this.container.children(), (index, child) => {
-                    console.log(App.Data.Fonts[index]);
                     $(child).data('font', App.Data.Fonts[index]);
                 });
             }
@@ -922,6 +1045,8 @@ const App = {
                 let lastId = this.container.data('lastId'),
                     index = widget.index,
                     text = widget.text;
+
+                console.log('addLayer');
 
                 lastId++;
                 this.container.data('lastId', lastId);
@@ -1222,11 +1347,31 @@ const App = {
             this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
         }
 
-        ,loadProjects: async function() {
-            const data = (await App.Ajax.getJSON('/load'));
-            const projects = data.projects;
+
+        ,loadProjects: async function(mod = "") {
+            const projects = (await App.Ajax.getJSON('/load'+mod)).projects;
             this.Projects = projects;
-            console.log(data);
+        }
+
+        ,getProjectData() {
+            let data = {
+                variants: App.Project.variants
+                ,base: App.Project.base
+                ,settings: App.Project.settings
+                ,id: App.Project.id
+            }
+
+            return data;
+        }
+
+        ,saveProjectData(data, callback) {
+
+            if (typeof data == "function") {
+                callback = data;
+                data = null;
+            }
+
+            App.Ajax.postJSON('/save', JSON.stringify(data || this.getProjectData()), callback);
         }
 
     }
@@ -1267,7 +1412,7 @@ const App = {
                 const xhr = new XMLHttpRequest;
                 xhr.open("POST",path, true);
                 xhr.onload = () => {
-                    if (callback) callback(data);
+                    if (callback) callback(xhr.responseText);
                     resolve(JSON.parse(xhr.responseText))
                 }
                 xhr.send(data);

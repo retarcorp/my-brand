@@ -57,7 +57,7 @@ User = {
 
     ,session: async function() {
         let data = JSON.parse(await this.Ajax.get('/onsession'));
-        return data.online;
+        return data;
     }
 
     ,Ajax: {
@@ -81,6 +81,11 @@ User = {
 
         ,post: function(path, data = null, callback) {
 
+            if (typeof data == "function") {
+                callback = data;
+                data = null;
+            }
+
             return new Promise( (resolve, reject) => {
                 let xhr = new XMLHttpRequest();
 
@@ -92,8 +97,6 @@ User = {
                         reject(xhr.responseText);
                     }
                 }
-
-                console.log(data);
 
                 xhr.open('POST', path);
                 xhr.send(data);
