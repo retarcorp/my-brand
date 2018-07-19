@@ -47,4 +47,49 @@ router.post('/save', function(req, res, next) {
 	});
 });
 
+
+router.post('/save/template', (req, res, next) => {
+	let parse = "";
+
+	req.on('data', (data) => {
+		parse += data;
+	});
+
+	req.on('end', (err) => {
+		if (err) console.log(err);
+
+		const user = req.cookies.user.name || req.session.user.name;
+		let data = JSON.parse(parse);
+
+		if (!data.id) {
+			data.id = 1;
+
+			Mongo.select({ user: user }, 'admin', (projects) => {
+
+				if (projects.length) {
+					projects.map( (project) => {
+						if (data.id < project.id) data.id = project.id;
+					});
+
+					data.id++;
+				}
+
+                Mongo.update({ user: user, id: data.id }, data, 'admin', (data) => {
+                    res.send({status: true, message: 'Template saved'});
+                });
+
+			});
+
+		} else {
+            Mongo.update({ user: user, id: data.id }, data, 'admin', (data) => {
+                res.send({status: true, message: 'Template saved'});
+            });
+		}
+
+
+
+	});
+
+});
+
 module.exports = router;

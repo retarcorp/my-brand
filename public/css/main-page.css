@@ -10,6 +10,23 @@
     color: #393939;
 }
 
+#wrapper > *{
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box; 
+}
+.main-page__header > *{
+    max-width: 1240px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box; 
+}
+.main-page__header{
+    max-width: 100% !important;  
+    /*width: auto !important;*/
+}
+
 .header_background{
     background: linear-gradient(to bottom, #507ef2, #2649a4);
     position: relative;
@@ -17,10 +34,10 @@
 .header_background:after{
     content: '';
     position: absolute;
-    width: 50%;
+    width: 53%;
     height: 80%;
     top: 12%;
-    right: 63px;
+    right: 0;
     background-image: url(../img/header-main.png);
     background-repeat: no-repeat;
 }
@@ -69,7 +86,7 @@
 }
 .buttons__create{
     width: 272px;
-    border: 1px solid #fff;
+    border: none;
 }
 .button_margin{
     margin-left: 30px;
@@ -91,9 +108,10 @@
 .description__text{
     line-height: 2;
     font-size: 17px;
+    width: 50%;
 }
 .header__description{
-    width: 50%;
+    /*width: 50%;*/
 }
 
 
@@ -242,6 +260,8 @@
     color: #7f819c;
     line-height: 1.2;
     font-weight: 400;
+    width: 225px;
+    margin: 0 auto;
 }
 
 .dignity__head_margin{
@@ -303,6 +323,7 @@
     justify-content: space-between;
     border-radius: 6px 6px 0 0;
     padding: 30px;
+    width: auto;
 }
 .footer__list{
     display: flex;
@@ -422,7 +443,7 @@
 }
 .slider__item:hover{
     box-shadow: 0 0 79px rgba(56,49,187, 0.18);
-    z-index: 9999999999999;
+    z-index: 100;
 }
 
 .slider__item:hover .slider__buttons{
@@ -445,4 +466,24 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
+
+.adaptive__menu-products{
+    height: 40px;
+}
+
+.adaptive__menu-products .adaptive__button{
+    display: none;
+    background-image: url(../img/icon/icon-burger.png);
+}
+.products__button{
+    margin-top: 20px;
+}
+
+.slick-list.draggable{
+    padding: 30px !important;
+}
+
+.slider__item:hover{
+    box-shadow: 0 0 55px rgba(56,49,187, 0.18);
 }

@@ -2,6 +2,31 @@
     flex-wrap: nowrap;
 }
 @media screen and (max-width: 1024px){
+    .products__menu{
+        position: relative;
+    }
+    .description__text{
+        width: 100%;
+    }
+    .products__list{
+        position: absolute;
+        top: 0;
+        left: 52px;
+        z-index: 10000;
+        display: block;
+        width: 300px;
+        height: auto;
+        background-color: #fff;
+        border-radius: 25px;
+    }
+    .products__list li {
+        z-index: 999;
+        background-color: #fff;
+    }
+    .products__item.active{
+        border-radius: 25px;
+        transform: scale(1);
+    }
     .favorites__item{
         width: 25%;
     }
@@ -36,7 +61,7 @@
     .product-details__product{
         width: 100%;
         order: 1;
-         margin-bottom: 60px;
+        margin-bottom: 60px;
     }
     .product-details__details{
         order: 2;
@@ -64,9 +89,9 @@
         background-size: 100%;
         background-repeat: no-repeat;
     }
-/*    .header__adaptive-menu-admin{
-        display: none;
-    }*/
+    /*    .header__adaptive-menu-admin{
+            display: none;
+        }*/
     .header__adaptive-menu_margin{
         margin-right: 30px;
     }
@@ -115,6 +140,7 @@
 
     /* main page */
     .main-page__header{
+        width: auto;
         padding: 0 20px;
     }
     .header_background:after{
@@ -123,7 +149,7 @@
     .header__description{
         width: 100%;
     }
-     br{
+    br{
         display: none;
     }
     .block_padding{
@@ -145,6 +171,9 @@
     .panel__column-item{
         width: 100%;
         margin: 0 !important;
+    }
+    .panel__content.flex {
+        flex-direction: column;
     }
     .panel__left-set-label:not(:first-child){
         margin-top: 10px;
@@ -177,6 +206,9 @@
     .dignity__container{
         flex-wrap: wrap;
         justify-content: space-around;
+    }
+    .panel__content.flex{
+        flex-direction: column;
     }
 
     /* adaptive-main-page */
@@ -245,7 +277,7 @@
         text-align: center;
     }
     .details__add-basket{
-        display: block; 
+        display: block;
         margin: 0 auto 10px;
     }
     .details__link{
@@ -352,6 +384,7 @@
     }
     .editor.active{
         justify-content: flex-end;
+        flex-wrap: wrap;
     }
     .editor__text-input{
         width: 160px;
@@ -359,7 +392,7 @@
     .editor__fonts{
         width: 140px;
     }
-    .file-upload__picture-list, 
+    .file-upload__picture-list,
     .file__picture-list{
         width: 95%;
     }

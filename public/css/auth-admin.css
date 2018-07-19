@@ -63,7 +63,7 @@ section.registration{
 .input_border{
     border: none;
     border-bottom: 1px solid #7f819c;
-    opacity: 0.6; 
+    opacity: 0.6;
 }
 .input_margin{
     margin-bottom: 20px;
@@ -159,7 +159,7 @@ section.registration{
 .congratulations{
     margin: auto;
     width: 790px;
-    height: 290px;
+    /*height: 290px;*/
     /*display: flex;*/
     flex-direction: column;
     background-color: #fff;

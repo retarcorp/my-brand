@@ -40,11 +40,17 @@ let Users = {
 				Mongo.insert(User, collection, callback);
 
 				Mailer.send({
-					from: 'serehactka@gmail.com'
+                    html : Templates.getRegistrationMail(user)
+                    ,subject : "Registrating in MyBrand"
 					,to: user.name
-					,subject: 'Testing'
-					,html: Templates.getRegistrationMail(user)
 				});
+
+				// Mailer.send({
+				// 	from: 'serehactka@gmail.com'
+				// 	,to: user.name
+				// 	,subject: 'Testing'
+				// 	,html: Templates.getRegistrationMail(user)
+				// });
 
 			} else {
 				callback({ status: false, message: "User already exist!" });

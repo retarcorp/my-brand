@@ -19,5 +19,8 @@
     "morgan": "~1.9.0",
     "multiparty": "^4.1.4",
     "nodemailer": "^4.6.7"
+  },
+  "devDependencies": {
+    "request": "^2.87.0"
   }
 }

@@ -17,6 +17,9 @@ Admin = {
             data.append($(child).attr('name'), $(child).val());
         });
 
+        data.append('fancywork', AdminApp.font_fancywork.prop('checked'));
+        data.append('print', AdminApp.font_print.prop('checked'));
+
         User.Ajax.post('/upload', data, (data) => {
             let status = JSON.parse(data).status;
 

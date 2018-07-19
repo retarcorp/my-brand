@@ -13,20 +13,32 @@ class BaseVariant {
         this.size = size;
 
         this.image = new Image();
-        this.image.src = this.src;
-
-        this.loaded = false;
-
         this.filterImage = new Image();
 
-        this.image.onload = () => {
+        this.image.src = this.src;
+        this.loaded = false;
 
-            this.filterImage.onload = () => {
-                this.loaded = true;
+        // this.image.onload = () => {
+        //
+        //     this.filterImage.onload = () => {
+        //         this.loaded = true;
+        //     }
+        // }
+    }
 
-                console.log('class loaded')
+    loadLazy() {
+        return new Promise( (resolve, reject) => {
+            this.image.src = this.src;
+
+            this.image.onload = () => {
+                App.GraphCore.Filter.setColorFilterImage(this.image, App.Project.settings.color);
+
+                this.filterImage.onload = () => {
+                    resolve(true);
+                }
             }
-        }
+
+        });
     }
 
     getWorkzone() {
@@ -42,7 +54,7 @@ class BaseVariant {
     }
 
     setColor() {
-        App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
+        App.GraphCore.Filter.setColorFilterImage(this.image, App.Project.settings.color);
 
         return this;
     }
@@ -62,17 +74,17 @@ class BaseVariant {
     }
 
     render(ctx) {
-        if (!this.loaded) {
-            App.GraphCore.Filter.colorFilter(App.GraphCore.ctx, this.image, App.Project.settings.color);
-        } else {
+        // if (!this.loaded) {
+        //     App.GraphCore.Filter.setColorFilterImage(App.GraphCore.ctx, this.image, App.Project.settings.color);
+        // } else {
             //ctx.putImageData(this.imageData, 0, 0);
             // if (this.image)
             //document.body.appendChild(this.filterImage);
             //debugger;
             App.UI.Profile.projectLoaded = true;
             ctx.drawImage(this.filterImage, 0, 0, this.size.height, this.size.width)
-            //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.colorFilter(ctx, this.image)
-        }
+            //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.setColorFilterImage(ctx, this.image)
+       // }
 
     }
 }

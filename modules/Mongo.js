@@ -92,6 +92,8 @@ module.exports = {
 
 			if (!(typeof key == 'object')) key = { nothingToDelete: Infinity };
 
+			console.log(key);
+
 			coll.removeMany(key, (err, data) => {
 				this.Assert.equal(err, null);
 

@@ -5,6 +5,9 @@
     background: rgba(0,0,0,0.6);
     overflow: hidden;
     position: fixed;
+    top:0;
+    left:0;
+    z-index: 100;
     /* display: flex; */
 }
 .add-photo.active{
@@ -39,10 +42,10 @@
 .file-upload .button__add-photo{
     /* position: absolute; */
     display: block;
-    width: 280px;    
-	height: 75px;
+    width: 280px;
+    height: 75px;
     border-radius: 37px;
-	color: #fff;
+    color: #fff;
     cursor: pointer;
     left: 0;
     top: 0;
@@ -96,6 +99,9 @@
     justify-content: space-around;
     flex-wrap: wrap;
 }
+.file__picture-list{
+    padding-bottom: 40px;
+}
 
 .picture-list__picture{
     width: 135px;
@@ -147,17 +153,33 @@
 .editor{
     box-sizing: border-box;
     width: 480px;
-    display: none;
+    display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    justify-content: space-between;
     /*border-radius: 5px;*/
     /*background-color: #ececec;*/
 }
-.editor.active{
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
+
+.editor.active .editor__right{
+    width: 140px;
 }
+
+.editor .editor__left,
+.editor .editor__color {
+    opacity: 0;
+    pointer-events: none;
+}
+.editor.active .editor__left,
+.editor.active .editor__color{
+    opacity: 1;
+    pointer-events: all;
+    position: relative;
+}
+
+.editor .editor__color {
+    position: absolute;
+}
+
 .editor__item_margin{
     /*margin-left: 20px;*/
 }
@@ -194,7 +216,7 @@
     border: 0;
     appearance: none;            /* remove arrow        */
     -webkit-appearance: none;    /* remove arrow Chrome */
-    -moz-appearance: none; 
+    -moz-appearance: none;
     outline: none;
     font-size: 17px;
     font-weight: 700;
@@ -202,7 +224,6 @@
 }
 .editor__left,
 .editor__right{
-    height: 40px;
     display: flex;
     align-items: center;
     border-radius: 5px;
@@ -210,12 +231,17 @@
     justify-content: space-between;
     padding: 0 20px;
     box-sizing: border-box;
+    height: 40px;
 }
 .editor__left{
     width: 325px;
 }
+
+.editor__left.active {
+    opacity: 1;
+}
 .editor__right{
-    width: 140px;
+    width: 105px;
 }
 .fonts-list__button{
     /*width: 12px;*/
@@ -225,11 +251,12 @@
     background-size: 12px;
     background-repeat: no-repeat;
 }
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {  
 
-   opacity: 1;
-   background-color: #ececec;
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+
+    opacity: 1;
+    background-color: #ececec;
 
 }
 
@@ -257,7 +284,6 @@ input[type=number]::-webkit-outer-spin-button {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center;
-/*    background-size: 100%;*/
 }
 
 .decoration__button.active{
@@ -397,7 +423,7 @@ input[type=number]::-webkit-outer-spin-button {
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    box-shadow: 0 11px 35px rgba(21,20,55, 0.13);   
+    box-shadow: 0 11px 35px rgba(21,20,55, 0.13);
 }
 .form__data{
     width: 100%;
@@ -416,7 +442,7 @@ input[type=number]::-webkit-outer-spin-button {
 .input_border{
     border: none;
     border-bottom: 1px solid #7f819c;
-    opacity: 0.6; 
+    opacity: 0.6;
 }
 .input_margin{
     margin-bottom: 20px;
@@ -455,9 +481,9 @@ input[type=number]::-webkit-outer-spin-button {
     color: #393939;
 }
 .authorization__form::after {
-    content: ''; 
+    content: '';
     position: absolute; /* Абсолютное позиционирование */
-    right: 20px; 
+    right: 20px;
     top: -20px; /* Положение треугольника */
     border: 10px solid transparent; /* Прозрачные границы */
     border-bottom: 10px solid #fff; /* Добавляем треугольник */
@@ -575,9 +601,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .profile__menu::after {
-    content: ''; 
+    content: '';
     position: absolute; /* Абсолютное позиционирование */
-    right: 20px; 
+    right: 20px;
     top: -20px; /* Положение треугольника */
     border: 10px solid transparent; /* Прозрачные границы */
     border-bottom: 10px solid #fff; /* Добавляем треугольник */
@@ -609,4 +635,13 @@ input[type=number]::-webkit-outer-spin-button {
     width: 13px;
     height: 13px;
     background-image: url(../img/icon/logout.png);
+}
+
+.file__picture-list.active ~ .file-upload__button{
+    display: none;
+}
+
+
+.file-upload__picture-list.active ~ .file-upload__button{
+    display: block;
 }

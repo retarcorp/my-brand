@@ -14,9 +14,11 @@ var saveTemplate = require('./routes/admin_templates');
 var loadAdmin = require('./routes/adminAuth');
 
 var adminPanel = require('./routes/admin');
+var constructor = require('./routes/constructor');
 var profile = require('./routes/profile');
 
 var deleteFile = require('./routes/delete');
+var deleteProject = require('./routes/delete_project');
 
 var uploadFile = require('./routes/upload');
 var loadFonts = require('./routes/fonts');
@@ -50,7 +52,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({ secret: 'keyboard cat', cookie: {}, resave: true, saveUninitialized: true }));
+app.use(session({ secret: 'keyboard cat', cookie: {} }));
 
 //app.use(express.session());
 //app.use(express.static(path.join(__dirname, 'public')));
@@ -58,10 +60,13 @@ app.use(session({ secret: 'keyboard cat', cookie: {}, resave: true, saveUninitia
 app.get('/bases', loadBases);
 app.get('/fonts', loadFonts);
 app.get('/delete', deleteFile);
+app.get('/delete/template', deleteFile);
+app.get('/delete_project', deleteProject);
 
 app.get('/load', loadProject);
+app.get('/load/templates', loadProject);
 app.post('/save', saveProject);
-app.post('/save/template', saveTemplate);
+app.post('/save/template', saveProject);
 
 app.get('/logout', userLogout);
 app.get('/onsession', onsession);
@@ -74,6 +79,9 @@ app.post('/test_blob', testBlob);
 app.get('/admin', adminPanel);
 app.get('/profile', profile);
 
+app.get('/constructor', constructor);
+
+app.get('/', indexRouter);
 app.get('/*', serverRouter);
 
 //app.get('/', indexRouter);

@@ -17,8 +17,6 @@ router.post('/login', (req, res, next) => {
 
 		let user = JSON.parse(parse);
 
-		console.log(user);
-
 		Users.find(user, 'users', (data) => {
 
 			console.log(user, data)

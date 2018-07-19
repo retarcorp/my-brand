@@ -23,7 +23,7 @@ router.post('/upload', (req, res, next) => {
         },
             iterator = 0;
 
-        //console.log(files, fields);
+        console.log(files, fields);
 
 		for (file in files) {
 			let fle = files[file];
@@ -33,7 +33,7 @@ router.post('/upload', (req, res, next) => {
                 if (fl.path) {
                     if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
                         fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${fl.originalFilename}`));
-                        Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${fl.originalFilename}` }, 'fonts', () => {
+                        Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${fl.originalFilename}`, fancywork: fields.fancywork[0], print: fields.print[0] },  'fonts', () => {
 
                         });
                     }

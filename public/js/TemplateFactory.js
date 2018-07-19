@@ -56,7 +56,7 @@ const TemplateFactory = {
             <div class="picture-list__picture picture-list__picture_margin">
                 <img src="${print.src}" alt="" class="picture__img">
                 <div class="picture-btns">
-                    <button class="button picture__button picture__clone button_gradient_blue">Дублировать</button>
+                    <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
                     ${(!isLoad) ? `` : `<button class="button picture__button picture__remove">Удалить</button>`}
                 </div>
             </div>
@@ -69,14 +69,16 @@ const TemplateFactory = {
 
     ,getLayerHtml(layer) {
         return (`
-            <li class="${layer.type} layer" data-id="${layer.id}">
-                <p class="content">${layer.text}</p>
-                <p class="layer_btns">
-                    <button class="to-top__layer"></button>
-                    <button class="to-bottom__layer"></button>
-                    <button class="delete__layer"></button>
-                </p>
-            </li>
+            <div class="panel__basis" data-id="${layer.id}">
+                <div class="panel__basis-text">${layer.text}</div>
+
+                <input type="checkbox" class="panel__template-layer-config" name="template_config-layer" ${ (layer.config) ? "checked" : "som"}>
+
+                <div class="panel__basis-btns">
+                    <button class="basis-btn button button-remove"></button>
+                    <button class="basis-btn button"></button>
+                </div>
+            </div>
         `);
     }
 
@@ -192,8 +194,15 @@ const TemplateFactory = {
                     <img src="${main_variant.image}" alt="">
                 </div>
                 <div class="panel__basis-description">
-                    <p class="panel__basis-name">${base.name}</p>
-                    <p class="panel__basis-type">${base.type} - ${ (base.fancywork == "true") ? "вышивка" : "" } ${(base.fancywork == "true" && base.print == "true") ? "," : "" } ${ (base.print == "true") ? "принт" : "" }</p>
+                    <span class="panel__basis-name">
+                        ${base.name}
+                        <div class="type__basis">
+                            ${ (base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
+                            ${ (base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
+                        </div>
+                    </span>
+
+                    <p class="panel__basis-type">${base.type} </p>
                     <p class="panel__basis-price">${base.price} Р</p>
                 </div>
                 <div class="panel__basis-button">
@@ -223,6 +232,54 @@ const TemplateFactory = {
                         <button class="button favorites__remove">Убрать из избранного</button>        
                     </div>
                 </div>
+            </div>
+        `
+    }
+
+    ,getAdminPanelTemplateListPointHtml(template) {
+        return `
+            <li class="panel__basis-item">
+                <div class="panel__basis-img">
+                    <img src="" alt="">
+                </div>
+                <div class="panel__basis-description">
+                    <span class="panel__basis-name">
+                        ${template.name}
+                        <div class="type__basis">
+                            ${ (template.base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
+                            ${ (template.base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
+                        </div>
+                    </span>
+                    <p class="panel__basis-type">${template.base.type}</p>
+                    <p class="panel__basis-price">${template.base.price} Р</p>
+                </div>
+                <div class="panel__basis-button">
+                    <button class="panel__basis-edit">Редактировать</button>
+                    <button class="panel__basis-remove">Удалить</button>
+                </div>
+            </li>
+        `
+    }
+
+    ,getSliderSlideHtml(base) {
+        return `
+            <div class="slider__item">
+                <a href="#" class="slider__link">
+                    <img class="slider__item-img" src="${base.variants[0].src}" alt="">
+                    <p class="slider__item-type">${base.type}</p>
+                    <span class="slider__item-name">
+                        ${base.name}
+                        <div class="type__basis">
+                            ${ (base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
+                            ${ (base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
+                        </div>
+                    </span>
+                    <p class="slider__item-price">${base.price} P</p>
+                    <div class="slider__buttons">
+                        <button class="button slider__btn-edit button_gradient_yellow"></button>
+                        <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                    </div>
+                </a>
             </div>
         `
     }

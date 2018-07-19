@@ -174,7 +174,7 @@ h1 {
 .panel__card {
     margin-bottom: 20px;
     background: #fff;
-    /*display: none;*/
+    display: none;
 }
 
 .panel__card.active {
@@ -240,13 +240,13 @@ input[type="file"]::before {
 }
 
 /*.panel__inputs::after {*/
-    /*content: "";*/
-    /*background: url('../img/icon/cross.png') center center no-repeat;*/
-    /*position: absolute;*/
-    /*right: 0;*/
-    /*width: 21px;*/
-    /*height: 21px;*/
-    /*cursor: pointer;*/
+/*content: "";*/
+/*background: url('../img/icon/cross.png') center center no-repeat;*/
+/*position: absolute;*/
+/*right: 0;*/
+/*width: 21px;*/
+/*height: 21px;*/
+/*cursor: pointer;*/
 /*}*/
 
 .panel__font-list {
@@ -448,6 +448,10 @@ button.button__add-print{
     margin-bottom: 10px;
 }
 
+.panel__left-set-label.template {
+    margin: 10px 0;
+}
+
 .panel__left-side{
     margin-right: 20px;
 }
@@ -639,13 +643,14 @@ select{
 
 .panel__uploaded-pic:hover .panel__uploaded-name,
 .panel__uploaded-pic:hover .panel__uploaded-remove,
-.panel__uploaded-pic.main .panel__uploaded-name {
+.panel__uploaded-pic.first_all .panel__uploaded-name {
     display: block;
 }
 
 .panel__container-picture{
     display: flex;
     justify-content: start;
+    margin-top: 10px;
 }
 
 .panel__uploaded-pic-add{
@@ -701,6 +706,7 @@ select{
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background: #fff;
 }
 
 .panel__card{
@@ -734,6 +740,7 @@ select{
     width: calc(100% - 420px);
     margin-left: 20px;
     min-width: 410px;
+    padding-bottom: 70px;
 }
 
 .panel__column-item_width{
@@ -801,7 +808,7 @@ select{
 
 .editor{
     width: 100%;
-    display: flex;
+    /*display: flex;*/
     align-items: stretch;
     justify-content: space-between;
 }
@@ -849,7 +856,7 @@ select{
 }
 .panel__print-btn{
     display: none;
-    position: absolute; 
+    position: absolute;
     width: 100%;
     height: calc(100% - 35px);
     top: 0;
@@ -940,4 +947,9 @@ button.window-button__add-print{
 }
 .window__add-print .panel__print{
     margin: 0;
+}
+
+.panel__tag-container{
+    display: flex;
+    flex-wrap: wrap;
 }
