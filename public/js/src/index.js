@@ -1560,13 +1560,19 @@ class Application {
         await this.Data.getFonts();
         await this.Data.getPrints();
 
-        if (this.logged){
+        try {
+            if (this.logged){
             await this.Data.loadProjects();
 
-            (this.Data.Projects.length) ? this.setProject(this.Data.Projects[0]) : this.Project = Project.newProject(this.Data.Bases[0]);
-        } else  {
-            this.Project = Project.newProject(this.Data.Bases[0]);
+                (this.Data.Projects.length) ? this.setProject(this.Data.Projects[0]) : this.Project = Project.newProject(this.Data.Bases[0]);
+            } else  {
+                this.Project = Project.newProject(this.Data.Bases[0]);
+            }
+        } catch(err) {
+            console.error(err);
         }
+
+        
 
 
         this.currentProjectVariant = this.Project.variants[0];

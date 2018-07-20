@@ -384,7 +384,7 @@ class BaseList {
 
         console.log(size);
 
-        if (typeof size != 'string') {
+        if (size && typeof size != 'string' && typeof size != "number") {
             size.children('input').prop('checked', true);
         }
 
@@ -1974,40 +1974,49 @@ class Application {
     }
 
     async start(){
-        let session = await User.session();
+        try {
+            let session = await User.session();
 
-        this.logged = session.status;
-        this.user = session.user;
-        this.saveProject = false;
-        this.isPreview = false;
+            this.logged = session.status;
+            this.user = session.user;
+            this.saveProject = false;
+            this.isPreview = false;
 
-        this.UI.Profile.init();
-        this.UI.Menu.init();
+            this.UI.Profile.init();
+            this.UI.Menu.init();
 
-        // TODO use await Promise.all([])
+            // TODO use await Promise.all([])
 
-        await Promise.all([this.Data.getBases(), this.Data.getFonts(), this.Data.getPrints()]);
+            await Promise.all([this.Data.getBases(), this.Data.getFonts(), this.Data.getPrints()]);
 
-        if (this.logged){
-            await this.Data.loadProjects();
+            if (this.logged){
+                await this.Data.loadProjects();
 
-            const id = localStorage.getItem('project_id') || 0;
-            const project = this.Data.Projects.find( p => p.id == id ) || this.Data.Projects[0];
+                const id = localStorage.getItem('project_id') || 0;
+                const project = this.Data.Projects.find( p => p.id == id ) || this.Data.Projects[0];
 
-            // TODO rename method setProject to more evident one
-            (this.Data.Projects.length && !(this.parseURL()).id) ? await this.setProject(project) : await this.getNewProject();
-        } else  {
-            await this.getNewProject();
+                // TODO rename method setProject to more evident one
+                (this.Data.Projects.length && !(this.parseURL()).id) ? await this.setProject(project) : await this.getNewProject();
+            } else  {
+                await this.getNewProject();
+            }
+
+            this.currentWorkzone = this.currentProjectVariant.variant.workzone;
+
+            this.UI.init();
+            this.GraphCore.init();
+
+            await this.UI.Profile.setProjectsList();
+
+            //Using for tests
+
+            
+
+
+            this.startRender();
+        } catch (error) {
+            console.error(error);
         }
-
-        this.currentWorkzone = this.currentProjectVariant.variant.workzone;
-
-        this.UI.init();
-        this.GraphCore.init();
-
-        await this.UI.Profile.setProjectsList();
-
-        //Using for tests
 
         try {
             if (AdminApp) AdminApp.init();
@@ -2016,9 +2025,7 @@ class Application {
         catch(error) {
             console.error(error)
         }
-
-
-        this.startRender();
+        
     }
 
     parseURL() {

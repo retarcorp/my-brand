@@ -294,20 +294,41 @@ AdminApp = {
                     }
                 });
 
+                if (!AdminApp.BasePanel._id.length) AdminApp.BasePanel._id = AdminApp.BasePanel.makeid();
+                console.log(AdminApp.BasePanel._id);
+
                 data.append('name', name);
                 data.append('price', price);
                 data.append('type', AdminApp.BasePanel.inputs.type.val());
                 data.append('print', AdminApp.BasePanel.inputs.print.prop('checked'));
                 data.append('fancywork', AdminApp.BasePanel.inputs.fancywork.prop('checked'));
+                data.append('_id', AdminApp.BasePanel._id);
+                //data.append('redact', AdminApp.BasePanel.redact || false);
+
+                console.log(AdminApp.BasePanel._id);
 
                 AdminApp.BasePanel.panel.addClass('loading');
 
-                User.Ajax.post('/upload', data, (data) => {
+                User.Ajax.post('/upload'+AdminApp.BasePanel.redact, data, (data) => {
                     AdminApp.BasePanel.panel.removeClass('loading');
+                    AdminApp.BasePanel.redact = '/redact';
+
                     console.log(data);
-                })
+
+                    AdminApp.BasePanel.parseData((JSON.parse(data)).base);                    
+                });
             }
 
+        }
+
+       ,makeid() {
+          var text = "";
+          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          for (var i = 0; i < 17; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+          return text;
         }
 
         ,loadData() {
@@ -324,7 +345,12 @@ AdminApp = {
             let base = data,
                 main = null;
 
-            this.clearInputs();
+            console.log(base);
+
+            AdminApp.BasePanel.clearInputs();
+
+            AdminApp.BasePanel.redact = '/redact';
+            AdminApp.BasePanel._id = base._id;
 
             AdminApp.BasePanel.inputs.name.val(base.name);
             AdminApp.BasePanel.inputs.price.val(base.price);
@@ -354,7 +380,7 @@ AdminApp = {
 
             base.variants.forEach( (variant, index) => {
                 fetch(variant.image).then( data => data.blob() ).then( (blob) => {
-                    let file = new File([blob], variant.image.replace(/[a-zA-Z:]*\//g, ""), { type: blob.type, size: blob.size });
+                    let file = new File([blob], variant.image.replace(/[a-zA-Z0-9\.\-\_\\]+\//g, ""), { type: blob.type, size: blob.size });
 
                     AdminApp.BasePanel.checkFileSpace();
 
@@ -558,6 +584,9 @@ AdminApp = {
         }
 
         ,clearInputs() {
+            this.redact = "";
+            this._id = "";
+
             this.variants.html(this.upload_base_variant);
             this.size.html(``);
 
@@ -713,7 +742,7 @@ AdminApp = {
         ,copyObject(copy, object) {
             for (let key in object) {
 
-                if (typeof object[key] == "object") {
+                if (typeof object[key] == "object" && object[key] !== null) {
 
                     if (object[key].length) {
                         copy[key] = [];
@@ -910,7 +939,7 @@ AdminApp = {
 
         ,removeTemplate(id) {
             App.Ajax.get('/delete/template?id='+id, (data) => {
-                console.log(data);
+                this.loadTemplates(1);
             });
         }
 

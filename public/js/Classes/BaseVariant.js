@@ -34,8 +34,14 @@ class BaseVariant {
                 App.GraphCore.Filter.setColorFilterImage(this.image, App.Project.settings.color);
 
                 this.filterImage.onload = () => {
+                    this.loaded = true;
                     resolve(true);
                 }
+            }
+
+            this.image.onerror = () => {
+                this.loaded = false;
+                resolve(true);
             }
 
         });
@@ -81,8 +87,11 @@ class BaseVariant {
             // if (this.image)
             //document.body.appendChild(this.filterImage);
             //debugger;
-            App.UI.Profile.projectLoaded = true;
-            ctx.drawImage(this.filterImage, 0, 0, this.size.height, this.size.width)
+            if (this.loaded) {
+                App.UI.Profile.projectLoaded = true;
+                ctx.drawImage(this.filterImage, 0, 0, this.size.height, this.size.width)
+            }
+            
             //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.setColorFilterImage(ctx, this.image)
        // }
 

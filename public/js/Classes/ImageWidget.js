@@ -33,8 +33,12 @@ class ImageWidget extends Widget {
             this.image.src = this.src;
 
             this.image.onload = () => {
-                console.log(this.src);
                 this.download = true;
+                resolve(true);
+            }
+
+            this.image.onerror = () => {
+                this.download = false;
                 resolve(true);
             }
         });

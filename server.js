@@ -74,6 +74,7 @@ app.post('/login', loadUser);
 app.post('/register', register);
 
 app.post('/upload', uploadFile);
+app.post('/upload/redact', uploadFile);
 app.post('/test_blob', testBlob);
 
 app.get('/admin', adminPanel);
