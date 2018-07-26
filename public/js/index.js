@@ -349,14 +349,40 @@ class BaseList {
         this.colorContainer = $('.workspace-color');
         this.sizeContainer = $('.size__container');
         this.container = $("#bases-container");
+        this.info_item = $('.link__info');
+        this.info = $('.info-basis');
 
 
         this.arrows.on('click', this.setProjectVariant);
         this.sizeContainer.on('click', this.UI.onBaseSize);
+        this.info_item.on('click', this.checkInfoEvent.bind(this));
+        this.info.on('click', this.checkInfoEvent.bind(this));
 
 
         this.setSizeHtml();
         this.setBaseSize(this.UI.App.Project.settings.size || this.sizeContainer.children(":first-child"));
+    }
+
+    checkInfoEvent(e) {
+        e.preventDefault();
+
+        const target = $(e.target);
+
+        if (target.hasClass('link__info')) {
+            this.openInfo();
+        }
+
+        if (target.hasClass('info-basis') || target.hasClass('button__close')) {
+            this.closeInfo();
+        }
+    }
+
+    openInfo() {
+        this.info.addClass('active');
+    }
+
+    closeInfo() {
+        this.info.removeClass('active');
     }
 
     select(e) {
@@ -375,7 +401,7 @@ class BaseList {
             );
         }
 
-        
+
     }
 
     setBaseSize(size) {
@@ -408,6 +434,7 @@ class BaseList {
     resetVariant() {
         this.UI.App.currentWorkzone = this.UI.App.currentProjectVariant.variant.getWorkzone();
         this.UI.App.currentProjectVariant.variant.setColor();
+
 
         this.UI.Layers.loadLayers();
 
@@ -642,6 +669,20 @@ class Create {
             App.GraphCore.setCurrentWidget(widget);
         }
     }
+
+    createConfigurableImageWidget(src) {
+        if (src && src.length) {
+            const widget = ImageWidget.getDefault(src);
+
+            widget.text = "configurable";
+            widget.id = this.UI.Layers.addLayer(widget, 'space');
+
+            widget.loadLazy();
+
+            this.UI.App.currentProjectVariant.addWidget(widget);
+            this.UI.App.GraphCore.setCurrentWidget(widget);
+        }
+    }
 }
 class PrintsList {
     constructor(ui) {
@@ -854,7 +895,7 @@ class LightBox {
 
         this.previewImage = {
             image: null
-                ,position: { x: 0, y: 0 }
+            ,position: { x: 0, y: 0 }
         };
 
 
@@ -890,14 +931,21 @@ class LightBox {
         this.previewImage.position = new Position(0,0);
     }
 
-    movePreview(e) {
-        let dx = e.offsetX - App.GraphCore.lastX,
+    movePreview(e) { //WORKFLOW
+        let dx = App.GraphCore.ctx,
             dy = e.offsetY - App.GraphCore.lastY;
 
-        this.moveBy(dx, dy);
+        this.moveTo(-e.offsetX / PREVIEW_SCALE, -e.offsetY / PREVIEW_SCALE);
+
+        // this.moveBy(dx, dy);
 
         App.GraphCore.lastX = e.offsetX;
         App.GraphCore.lastY = e.offsetY;
+    }
+
+    moveTo(x,y) { //WORKFLOW
+        this.previewImage.position.x = x;
+        this.previewImage.position.y = y;
     }
 
     moveBy(dx, dy) {
@@ -1101,6 +1149,11 @@ class UI {
         this.Tabs.customization.base.removeClass('active');
         this.Tabs.customization.layer.removeClass('active');
 
+        // debugger;
+
+        if (this.TextSettings.inputs.widgetText.length)
+            setTimeout(() => this.TextSettings.inputs.widgetText[0].focus(), 0);
+
         const curr = this.App.GraphCore.currentWidget;
         $('.btn-add-text').addClass('active');
 
@@ -1108,14 +1161,21 @@ class UI {
             this.Create.createTextWidget('Text');
     }
 
-    onPrint() {
-        this.Tabs.customization.print.addClass('active');
-        this.Tabs.customization.layer.removeClass('active');
-        this.Tabs.customization.text.removeClass('active');
-        this.Tabs.customization.base.removeClass('active');
+    onPrint(e) {
+        const target = $(e.target),
+            currentTarget = $(e.currentTarget);
 
-        const curr = this.App.GraphCore.currentWidget;
-        $('.btn-add-text').removeClass('active');
+        if (!currentTarget.hasClass('template__image')) {
+            this.Tabs.customization.print.addClass('active');
+            this.Tabs.customization.layer.removeClass('active');
+            this.Tabs.customization.text.removeClass('active');
+            this.Tabs.customization.base.removeClass('active');
+
+            const curr = this.App.GraphCore.currentWidget;
+            $('.btn-add-text').removeClass('active');
+        } else {
+            this.Create.createConfigurableImageWidget('img/prints/noImage.png');
+        }
 
         // if (!(curr instanceof ImageWidget)) {
         //     let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof ImageWidget);
@@ -1166,7 +1226,7 @@ class UI {
         if (curr instanceof TextWidget) {
             let int = curr.fontSettings.fontSize/curr.size.width;
 
-            if ( (data / int < App.currentWorkzone.size.width - 10 && curr.isInWorkzone()) && (14 < curr.fontSettings.fontSize && parseInt(data) > 14)){
+            if ( (14 < curr.fontSettings.fontSize && parseInt(data) > 14)){
                 curr.setFontSize(data);
                 // console.log(data);
             } else {
@@ -1294,13 +1354,13 @@ class UI {
         if (App.isPreview && target.hasClass('button__invisible')) {
             App.UI.LightBox.closeBlock(e);
         } else {
-                App.UI.leftMenu.addClass('on-preview');
-                App.UI.BaseList.colorContainer.addClass('on-preview');
-                App.UI.LightBox.preview.addClass('on-preview');
+            App.UI.leftMenu.addClass('on-preview');
+            App.UI.BaseList.colorContainer.addClass('on-preview');
+            App.UI.LightBox.preview.addClass('on-preview');
 
-                App.isPreview = true;
+            App.isPreview = true;
 
-                App.UI.LightBox.setPreviewImage();
+            App.UI.LightBox.setPreviewImage();
         }
 
     }
@@ -1382,6 +1442,8 @@ class Canvas {
         this.GraphCore.canvas.addEventListener('mousedown', this.GraphCore.mouseDown.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mousemove', this.GraphCore.mouseMove.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mousewheel', this.GraphCore.mouseWheel.bind(this.GraphCore));
+        this.GraphCore.canvas.addEventListener('mouseover', this.GraphCore.mouseOver.bind(this.GraphCore));
+        this.GraphCore.canvas.addEventListener('mouseout', this.GraphCore.mouseOut.bind(this.GraphCore));
     }
 
     clear(ctx) {
@@ -1438,7 +1500,7 @@ class Toolkit {
             target = $(`[name="${curr.text}"]`),
             collection = $('.print-img.selected');
 
-            this.GraphCore.App.UI.closeTabs();
+        this.GraphCore.App.UI.closeTabs();
 
         collection.removeClass('selected');
         target.addClass('selected');
@@ -1739,6 +1801,21 @@ class GraphCore {
         }
     }
 
+    mouseOver(e) { //WORKFLOW
+        if (this.App.isPreview) {
+            this.ctx.setTransform(PREVIEW_SCALE,0,0,PREVIEW_SCALE,0,0);
+            this.previewDragged = true;
+        }
+    }
+
+    mouseOut(e) { //WORKFLOW
+        if (this.App.isPreview) {
+            this.resetScale();
+            this.previewDragged = false;
+            this.App.UI.LightBox.resetPreviewPosition();
+        }
+    }
+
     scales(e) {
         // TODO make scale named constants
         if (this.scale >= 0.25 && this.scale <= 2) {
@@ -1827,6 +1904,68 @@ class GraphCore {
         }
     }
 }
+class Data {
+    constructor(app) {
+        this.App = app;
+
+        this.Bases = [];
+        this.Fonts = [];
+        this.Prints = [];
+        this.Projects = [];
+    }
+
+    async getBases(){
+        const data = await this.App.Ajax.getJSON("/bases");
+        this.Bases = data.bases.map((obj) => Base.fromJSON(obj));
+    }
+
+    async getPrints() {
+        const data = await App.Ajax.getJSON('prints.json');
+        this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
+    }
+
+    async getFonts(page) {
+        if (typeof page != 'number') page = 1;
+
+        const data = await this.App.Ajax.getJSON(`/fonts?page=${page}`);
+        this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
+
+        this.App.UI.FontsList.injectFont();
+        const promises = this.Fonts.map( (font) => {
+            document.fonts.load('12px ' + font.name);
+        });
+
+        Promise.all(promises);
+    }
+
+    async loadProjects(page = 1) {
+        const projects = (await this.App.Ajax.getJSON('/load?page='+page)).projects;
+        this.Projects = projects;
+    }
+
+    getProjectData() {
+        let data = {
+            variants: App.Project.variants
+            ,base: App.Project.base
+            ,settings: App.Project.settings
+            ,id: App.Project.id
+        }
+
+        data.templates = (App.Project.templates) ? App.Project.templates : [];
+
+        return data;
+    }
+
+    saveProjectData(data, callback) {
+        if (typeof data == "function") {
+            callback = data;
+            data = null;
+        }
+
+        this.App.Ajax.postJSON('/save', JSON.stringify(data || this.getProjectData()), callback);
+    }
+
+}
 class Ajax {
     constructor(app) {
         this.App = app;
@@ -1903,67 +2042,6 @@ class Ajax {
         });
     }
 }
-class Data {
-    constructor(app) {
-        this.App = app;
-
-        this.Bases = [];
-        this.Fonts = [];
-        this.Prints = [];
-        this.Projects = [];
-    }
-
-    async getBases(){
-        const data = await this.App.Ajax.getJSON("/bases");
-        this.Bases = data.bases.map((obj) => Base.fromJSON(obj));
-    }
-
-    async getPrints() {
-        const data = await App.Ajax.getJSON('prints.json');
-        this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
-    }
-
-    async getFonts(page) {
-        if (typeof page != 'number') page = 1;
-
-        const data = await this.App.Ajax.getJSON(`/fonts?page=${page}`);
-        this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
-
-        this.App.UI.FontsList.injectFont();
-        const promises = this.Fonts.map( (font) => {
-            document.fonts.load('12px ' + font.name);
-        });
-
-        Promise.all(promises);
-    }
-
-    async loadProjects(page = 1) {
-        const projects = (await this.App.Ajax.getJSON('/load?page='+page)).projects;
-        this.Projects = projects;
-    }
-
-    getProjectData() {
-        let data = {
-            variants: App.Project.variants
-            ,base: App.Project.base
-            ,settings: App.Project.settings
-            ,id: App.Project.id
-        }
-
-        return data;
-    }
-
-    saveProjectData(data, callback) {
-        if (typeof data == "function") {
-            callback = data;
-            data = null;
-        }
-
-        this.App.Ajax.postJSON('/save', JSON.stringify(data || this.getProjectData()), callback);
-    }
-
-}
-
 
 class Application {
     constructor() {
@@ -2010,7 +2088,7 @@ class Application {
 
             //Using for tests
 
-            
+
 
 
             this.startRender();
@@ -2025,7 +2103,7 @@ class Application {
         catch(error) {
             console.error(error)
         }
-        
+
     }
 
     parseURL() {
@@ -2048,8 +2126,6 @@ class Application {
     getProject(data) {
         if (data) {
             const project = new Project(Base.fromJSON(data.base));
-            let ID = 0;
-            this.currentProjectVariant = project.variants[0];
 
             project.settings.color = data.settings.color;
             project.id = data.id;
@@ -2057,41 +2133,80 @@ class Application {
             // project.price = project.base.price;
             // TODO replace foreach to .map
 
-            project.variants = data.variants.map( (variant, index) => {
-                const v = project.variants[index];
+            project.variants = this.getProjectVariants(data.variants);
+            this.currentProjectVariant = project.variants[0];
 
-                v.layers = variant.layers;
-                v.widgets = variant.widgets.map( (widget, index) =>  {
-                    const w = Widget.fromJSON(widget);
-                    w.index = index;
-                    w.layer = widget.layer;
-
-                    v.layers[index].id = ID;
-                    w.layer.id = ID;
-                    w.id = ID;
-                    ID++;
-
-                    if (w instanceof TextWidget) {
-                        w.lines = widget.lines;
-                        let biggestLine = "";
-
-                        w.lines.map( line => biggestLine = (line.length > biggestLine.length) ? line : biggestLine);
-
-                        w.biggest_line = biggestLine;
-                    }
-
-                    return w;
-                });
-
-                return v;
-            });
+            // data.variants.map( (variant, index) => {
+            //     const v = project.variants[index];
+            //
+            //     v.layers = variant.layers;
+            //     v.widgets = variant.widgets.map( (widget, index) =>  {
+            //         const w = Widget.fromJSON(widget);
+            //         w.index = index;
+            //         w.layer = widget.layer;
+            //
+            //         v.layers[index].id = ID;
+            //         w.layer.id = ID;
+            //         w.id = ID;
+            //         ID++;
+            //
+            //         if (w instanceof TextWidget) {
+            //             w.lines = widget.lines;
+            //             let biggestLine = "";
+            //
+            //             w.lines.map( line => biggestLine = (line.length > biggestLine.length) ? line : biggestLine);
+            //
+            //             w.biggest_line = biggestLine;
+            //         }
+            //
+            //         return w;
+            //     });
+            //
+            //     return v;
+            // });
 
             project.settings.size = data.settings.size;
             return project;
         }
 
         return null;
+    }
 
+    getProjectVariants(variants) {
+         return variants.map(this.getProjectVariant.bind(this));
+    }
+
+    getProjectVariant(variant) {
+        const v = new VariantProject(BaseVariant.fromJSON(variant.variant));
+        let ID = 0;
+
+        v.layers = variant.layers;
+        v.widgets = variant.widgets.map( (widget, index) =>  {
+            const w = Widget.fromJSON(widget);
+            w.index = index;
+            w.layer = widget.layer;
+
+            v.layers[index].id = ID;
+            w.layer.id = ID;
+            w.id = ID;
+            ID++;
+
+            if (w instanceof TextWidget) {
+                w.lines = widget.lines;
+                let biggestLine = "";
+
+                w.lines.map( line => biggestLine = (line.length > biggestLine.length) ? line : biggestLine);
+
+                w.biggest_line = biggestLine;
+            }
+
+            console.log(w);
+            return w;
+        });
+
+        v.recountWidgets();
+
+        return v;
     }
 
     async getNewProject() {
@@ -2112,6 +2227,8 @@ class Application {
 
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
+
+        return this.Project;
     }
 
     async setProject(project) {
@@ -2129,6 +2246,35 @@ class Application {
         $('.price__value').text(this.Project.base.price);
 
         await this.loadProjectAssets();
+
+
+        return this.Project;
+    }
+
+    async setCurrentVariant(variant) {
+        // debugger;
+
+        this.currentProjectVariant = variant;
+        this.currentWorkzone = variant.variant.workzone;
+
+        await this.loadProjectAssets();
+    }
+
+    async setParsedProject(project, variant_index) {
+        this.Project = project;
+        this.currentProjectVariant = this.Project.variants[variant_index || 0];
+        this.currentWorkzone = this.currentProjectVariant.variant.workzone;
+
+
+        if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
+        if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
+
+        $('.details__name span').text(this.Project.base.name);
+        $('.price__value').text(this.Project.base.price);
+
+        await this.loadProjectAssets();
+
+        return this.Project;
     }
 
     async loadProjectAssets() {
@@ -2146,6 +2292,8 @@ class Application {
         requestAnimationFrame(this.startRender.bind(this));
     }
 }
+
+
 
 let App = null;
 
@@ -2179,3 +2327,5 @@ class Starter {
 }
 
 new Starter().Start();
+
+const PREVIEW_SCALE = 2;

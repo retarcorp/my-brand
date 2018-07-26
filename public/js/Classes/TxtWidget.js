@@ -19,7 +19,7 @@ class TextWidget extends Widget {
         this.text = text;
         this.color = color;
 
-        this.lines = [];
+        this.lines = [text];
         this.biggest_line = "";
 
         this.remainder = {
@@ -39,7 +39,7 @@ class TextWidget extends Widget {
 
         this.resizeDirection = 'upLeft';
 
-        this.index = App.currentProjectVariant.widgets.length;
+        this.index = 0;
 
         this.path = new Path(this.position, this.size);
 
@@ -144,39 +144,39 @@ class TextWidget extends Widget {
             },
             int = this.fontSettings.fontSize/this.size.width;
 
-        if (_x < 0) {
-            if (this.size.width > workzone.size.width) {
-                this.size.width = workzone.size.width;
-                this.fontSettings.fontSize = Math.round(this.size.width*int);
-                this.position.x = 0;
-
-            } else this.position.x = 0;
-
-            out.x = false;
-        }
-
-        if (_x + this.size.width > workzone.size.width) {
-
-            if (this.size.width > workzone.size.width) {
-                this.size.width = workzone.size.width;
-                this.fontSettings.fontSize = Math.round(this.size.width*int);
-                this.position.x = 0;
-
-            } else this.position.x = workzone.size.width - this.size.width;
-
-
-            out.x = false;
-        }
-
-        if (_y < 0) {
-            this.position.y = 0;
-            out.y = false;
-        }
-
-        if (_y + this.size.height > workzone.size.height) {
-            this.position.y = workzone.size.height - this.size.height;
-            out.y = false;
-        }
+        // if (_x < 0) {
+        //     if (this.size.width > workzone.size.width) {
+        //         this.size.width = workzone.size.width;
+        //         this.fontSettings.fontSize = Math.round(this.size.width*int);
+        //         this.position.x = 0;
+        //
+        //     } else this.position.x = 0;
+        //
+        //     out.x = false;
+        // }
+        //
+        // if (_x + this.size.width > workzone.size.width) {
+        //
+        //     if (this.size.width > workzone.size.width) {
+        //         this.size.width = workzone.size.width;
+        //         this.fontSettings.fontSize = Math.round(this.size.width*int);
+        //         this.position.x = 0;
+        //
+        //     } else this.position.x = workzone.size.width - this.size.width;
+        //
+        //
+        //     out.x = false;
+        // }
+        //
+        // if (_y < 0) {
+        //     this.position.y = 0;
+        //     out.y = false;
+        // }
+        //
+        // if (_y + this.size.height > workzone.size.height) {
+        //     this.position.y = workzone.size.height - this.size.height;
+        //     out.y = false;
+        // }
 
         return out;
     }
@@ -374,14 +374,18 @@ class TextWidget extends Widget {
         ctx.font = fontSettings.getFontString();
         this.size.height = fontSettings.fontSize*this.lines.length;
 
+        this.biggest_line = this.text;
+
         if (this.biggest_line.length)
             this.size.width = ctx.measureText(this.biggest_line).width;
         else this.size.width = ctx.measureText(this.lines[0]).width;
 
-        if (this.edit || !this.lines.length) {
-            this.formTextLines(ctx);
-            console.log(this.lines);
-        }
+        // if (this.edit || !this.lines.length) {
+        //     this.formTextLines(ctx);
+        //     console.log(this.lines);
+        // }
+
+        this.lines[0] = this.text;
 
         fontSettings.fontSize = parseInt(fontSettings.fontSize);
 

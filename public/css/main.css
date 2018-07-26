@@ -138,6 +138,32 @@ body,
     color: inherit;
 }
 
+.cart {
+    display: block;
+    width: 21px;
+    height: 19px;
+    background-image: url(../img/icon/cart.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+.cart__count{
+    display: block;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    color: #fff;
+    background: linear-gradient(-180deg, #507ef2, #1a59fb);
+    font-size: 11px;
+    line-height: 23px;
+    text-align: center;
+    margin-left: 6px;
+}
+.cart-li{
+    display: flex;
+    align-items: center;
+}
+
 
 
 

@@ -29,8 +29,19 @@ AdminApp = {
         this.BasePanel.init();
         this.TemplatePanel.init();
         this.TemplatesList.init();
+        this.TemplatesUI.init();
 
         console.log('AdminPanel init');
+    }
+
+    ,makeid(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < length; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
     ,onEvent(e) {
@@ -628,6 +639,7 @@ AdminApp = {
         init() {
             this.loadBases(1, this.loadFinishing);
 
+            this.template_on.on('click', this.changeConf.bind(this));
             this.list.on('click', this.checkBaseListEvent);
             $('.button__add-basis').on('click', this.checkBaseListEvent);
 
@@ -680,6 +692,41 @@ AdminApp = {
             if ($(e.target).hasClass('panel__basis-remove')) {
                 AdminApp.BaseList.deleteBase(e);
             }
+
+            if ($(e.target).hasClass('panel__basis-add-templ')) {
+                const base = $(e.target).parent().parent().data('base');
+
+                AdminApp.BaseList.openTemplateUI(base);
+            }
+        }
+
+        ,changeConf(e) {
+            const target = $(e.target),
+                currentTaget = $(e.currentTarget),
+                prop = target.prop('checked');
+
+            if (prop) {
+                this.setTemplateConf();
+            } else {
+                this.setBaseConf();
+            }
+        }
+
+        ,setTemplateConf() {
+            $('.panel__new-template').addClass('active');
+            $('.panel__basis-button').removeClass('active');
+        }
+
+        ,setBaseConf() {
+            $('.panel__new-template').removeClass('active');
+            $('.panel__basis-button').addClass('active');
+        }
+
+        ,openTemplateUI(base) {
+            // debugger
+            console.log(base);
+            this.panel.removeClass('active');
+            AdminApp.TemplatesUI.loadTemplates(base);
         }
 
         ,redactBase(e) {
@@ -711,9 +758,11 @@ AdminApp = {
                 images.push(variant.image);
             });
 
+            console.log(base);
+
             file_string = images.join('|');
 
-            User.Ajax.get(`/delete?name=${base.name}&type=base&files=${file_string}`, (data) => {
+            User.Ajax.get(`/delete?name=${base.name}&type=base&files=${file_string}&_id=${base._id}`, (data) => {
                 this.loadBases(1, this.loadFinishing);
 
                 console.log(data);
@@ -763,6 +812,150 @@ AdminApp = {
         ,panel: $('.base-list')
         ,pages: $('.panel__page-list.bases')
         ,pagesCount: 0
+        ,template_on: $('[name="templates_conf"]')
+        ,new_template: $('.panel__new-template')
+        ,add_template: $('.panel__basis-add-templ')
+        ,base_buttons: $('.panel__basis-button')
+    }
+
+    ,TemplatesUI: {
+        init() {
+            this.template.html('');
+
+            this.template.on('click', this.checkEvent.bind(this));
+        }
+
+        ,checkEvent(e) {
+            let target = $(e.target),
+                currentTarget = $(e.currentTarget);
+
+            const base = this.template.data('base'),
+                template = this.template.data('template'),
+                project = new Project(base);
+
+            while (!target.is(currentTarget)) {
+                if (target.hasClass('template__btn-add')) {
+                    let variant_index = target.parent().data('variant_index'),
+                        variant = project.variants[variant_index];
+
+                    AdminApp.TemplatePanel.useTemplate(variant, variant_index, template, true);
+                    break;
+                }
+
+                if (target.hasClass('panel__template')) {
+                    let variant_index = target.parent().parent().data('variant_index');
+
+                    const template_variant = target.data('variant');
+
+                    AdminApp.TemplatePanel.useTemplate(template_variant, variant_index, template, false);
+                    console.log('taregt');
+                    break;
+                }
+
+                console.log(target);
+                target = target.parent();
+            }
+
+        }
+
+        ,loadTemplates(base) {
+            App.Ajax.get('/load/templates?page=all&_id='+base._id, (response) => {
+                response = JSON.parse(response);
+                console.log(response);
+
+                this.panel.addClass('active');
+
+                if (response.data) {
+                    this.formTemplate(response.data, Base.fromJSON(base))
+                }
+
+                // if (response.data.length) {
+                //     const template = App.getProject(response.data);
+                //
+                // }
+                //
+                // template.templates = response.data.templates;
+                // this.formTemplate(template);
+            });
+        }
+
+        ,async formTemplate(data, base) {
+            data._id = base._id;
+            data.templates = data.templates || [];
+
+            data.templates.sort( (a, b) => a.index - b.index);
+
+            App.Project.settings.color = App.GraphCore.Filter.getAverageImageColor(App.Project.variants[0].variant.image);
+
+            this.template.html(
+                base.variants.reduce( (acc, v, index) => acc + TemplateFactory.getAdminPanelTemplateAddHtml(v, data.templates || [], index), ``)
+            );
+
+            this.template.data('template', data);
+            this.template.data('base', base);
+
+            $.each(this.template.children(), (index, child) => {
+                $(child).data('variant_index', index);
+            });
+
+            let template_index = 0,
+                variant_index = 0;
+
+            for (let template of data.templates) {
+                for (let variant of template.variants) {
+                    let id = variant.id,
+                        name = variant.name,
+                        tags = variant.tags;
+
+                    variant = App.getProjectVariant(variant);
+
+                    await this.getPreviewImage(variant, template_index, variant_index);
+
+                    App.currentProjectVariant.name = name;
+                    App.currentProjectVariant.tags = tags;
+                    App.currentProjectVariant.id = id;
+
+                    variant_index++;
+                }
+                variant_index = 0;
+                template_index++;
+            }
+
+            console.log('Template formed');
+        }
+
+        ,async getPreviewImage(variant, ti, vi) {
+            await App.setCurrentVariant(variant);
+
+            console.log(variant);
+
+            console.log(App.currentProjectVariant);
+
+            const template_container = $('.panel__templ-container').eq(ti),
+                node = template_container.children().eq(vi),
+                image = template_container.find('img').eq(vi);
+
+            App.isPreview = true;
+            App.GraphCore.RenderList.render(App.GraphCore.ctx);
+            App.isPreview = false;
+
+            $(image).attr('src', App.GraphCore.canvas.toDataURL('image/png'));
+
+            node.data('variant', variant);
+            // $('body').append(image);
+        }
+
+        ,setTemplateBase(base) {
+            const b = Base.fromJSON(base),
+                template = Project.newProject(b);
+
+            console.log(b);
+
+            this.formTemplate(template);
+        }
+
+        ,panel: $('.panel__card.create-template')
+        ,template: $('.panel__templates')
     }
 
     ,TemplatePanel: {
@@ -783,12 +976,19 @@ AdminApp = {
 
             App.Ajax.post('/save/template', JSON.stringify(data), (data) => {
                 this.panel.removeClass('loading');
+                this.panel.removeClass('active');
+
+                AdminApp.TemplatesUI.loadTemplates(AdminApp.TemplatesUI.template.data('base'));
                 console.log(data);
             });
         }
 
         ,formData() {
-            const data = App.Data.getProjectData(),
+            if (this.new_variant) {
+                //App.Project.templates.push({ index: this.template_variant, template: JSON.parse(JSON.stringify(App.currentProjectVariant)) });
+            }
+
+            const data = AdminApp.TemplatesUI.template.data('template'),
                 name = this.inputs.name.val(),
                 tags = [];
 
@@ -796,28 +996,67 @@ AdminApp = {
                 tags.push($(tag).text());
             });
 
-            data.name = name;
-            data.tags = tags;
+            App.currentProjectVariant.name = name;
+            App.currentProjectVariant.tags = tags;
+
+            let buffer = data.templates.find( t => t.index == this.template_variant),
+                vi = 0;
+
+            if (!buffer) {
+                buffer = { index: this.template_variant, variants: [] };
+                data.templates.push(buffer);
+            }
+
+            let vr = buffer.variants.find( (v, index) => {
+                vi = index;
+                return App.currentProjectVariant.id == v.id;
+            });
+
+            if (!vr) {
+                App.currentProjectVariant.id = AdminApp.makeid(12);
+                buffer.variants.push(App.currentProjectVariant);
+            } else {
+                buffer.variants[vi] = App.currentProjectVariant;
+            }
+
+            console.log(data);
 
             this.sendData(data);
+        }
+
+        ,async useTemplate(variant, variant_index, template, isNew = true) {
+            AdminApp.TemplatesUI.panel.removeClass('active');
+            this.panel.addClass('active');
+
+            await App.setCurrentVariant(variant);
+
+            this.new_variant = isNew;
+            this.template_variant = variant_index;
+
+            this.setTemplateData(template, variant);
         }
 
         ,async setTemplate(template, cb) {
             await App.setProject(template);
 
-            console.log(template);
-
-            this.inputs.name.val(template.name);
-            this.tag.html(
-                template.tags.reduce( (acc, tag) => acc + TemplateFactory.getAdminPanelSizeHtml(tag), ``)
-            );
-
-            App.GraphCore.setCurrentWidget(null);
-            App.UI.Layers.formLayersHtml();
+            this.setTemplateData(template);
 
             if (cb) {
                 cb();
             }
+        }
+
+        ,setTemplateData(template, variant) {
+            this.inputs.name.val(variant.name);
+
+            variant.tags = variant.tags || [];
+
+            this.tag.html(
+                variant.tags.reduce( (acc, tag) => acc + TemplateFactory.getAdminPanelSizeHtml(tag), ``)
+            );
+
+            App.GraphCore.setCurrentWidget(null);
+            App.UI.Layers.formLayersHtml();
         }
 
         ,checkTagEvent(e) {
@@ -895,7 +1134,7 @@ AdminApp = {
                 const data = JSON.parse(response);
 
                 this.list.removeClass('loading');
-                this.formTemplatesPage(data.data, data.pages, page);
+                //this.formTemplatesPage(data.data, data.pages, page);
             });
         }
 

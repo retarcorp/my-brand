@@ -48,3 +48,17 @@
 canvas {
     border: 1px solid #bbb;
 }
+
+.info-basis.active {
+    display: flex;
+}
+
+.panel__basis-button,
+.panel__new-template {
+    display: none;
+}
+
+.panel__basis-button.active,
+.panel__new-template.active {
+    display: flex;
+}

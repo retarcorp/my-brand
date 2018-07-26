@@ -45,6 +45,9 @@
     display: flex;
     justify-content: space-between;
 }
+.cart{
+    background-image: url(../img/icon/cart-white.png);
+}
 .block_padding{
     padding: 0 63px;
 }
@@ -66,6 +69,7 @@
 }
 .head__list{
     display: flex;
+    align-items: center;
 }
 .head_padding{
     padding: 35px 0 80px;

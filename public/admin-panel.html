@@ -8,6 +8,8 @@
     <link rel="stylesheet" type="text/css" href="css/papaps.css">
     <link rel="stylesheet" type="text/css" href="css/admin-panel.css">
     <link rel="stylesheet" type="text/css" href="css/adaptive.css">
+    <link rel="stylesheet" type="text/css" href="css/cart.css">
+
 
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
@@ -57,9 +59,9 @@
                     <li class="menu__point baseUI">
                         Управление основами
                     </li>
-                    <li class="menu__point templateUI">
+                    <!-- <li class="menu__point templateUI">
                         Управление шаблонами
-                    </li>
+                    </li> -->
                     <li class="menu__point">
                         Настройки
                     </li>
@@ -204,7 +206,15 @@
                     <div class="panel__card-title">
                         Список основ
                     </div>
-                    <button class="panel__font-submit simple button__add-basis">Добавить основу</button>
+                    <div class="basis__setting">
+                        <button class="panel__font-submit simple button__add-basis">Добавить основу</button>
+                        <div class="panel__column-item-radio font__radio">
+                            <label class="panel__type-picture">
+                                <input class="style-ratio" id="template-add" type="checkbox" name="templates_conf">
+                                Режим создания шаблонов
+                            </label>
+                        </div>
+                    </div>
                     <ul class="panel__basis-list">
                         <li class="panel__basis-item">
                             <div class="panel__basis-img">
@@ -216,6 +226,7 @@
                                 <p class="panel__basis-price">1300 P</p>
                             </div>
                             <div class="panel__basis-button">
+                                <button class="panel__basis-add-templ">Добавить шаблоны</button>
                                 <button class="panel__basis-edit">Редактировать</button>
                                 <button class="panel__basis-remove">Удалить</button>
                             </div>
@@ -546,10 +557,10 @@
                                 <input type="text" name="template_name" id="name">
                             </div>
                             <div class="create__btns  create__btns_margin">
-                                <button class="btns__add-text button button_gradient_blue">
-                                    <span class="button_text button_text_color">Добавить текст</span>
+                                <button class="btns__add-text button button_gradient_blue template__image">
+                                    <span class="button_text button_text_color template__image">Добавить текст</span>
                                 </button>
-                                <button class="btns__add-print button button_gradient_blue">
+                                <button class="btns__add-print button button_gradient_blue template__image">
                                     <span class="button_text button_text_color">Добавить изображение</span>
                                 </button>
                             </div>
@@ -620,6 +631,286 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel__card create-template">
+                    <div class="panel__card-title">
+                        Добавление шаблона
+                    </div>
+                    <div class="panel__content">
+                        <div class="panel__templates">
+                            <div class="template__basis">
+                                <div class="basis__img">
+                                    <img src="img/basis/3.jpg" alt="">
+                                </div>
+                                <div class="panel__templ-container Scrollable">
+                                    <div class="panel__template">
+                                        <img src="" alt="">
+                                        <div class="loader-container">
+                                            <div class="loader"></div>
+                                        </div>
+                                    </div> 
+                                    <div class="panel__template">
+                                        <img src="" alt="">
+                                        <div class="loader-container">
+                                            <div class="loader"></div>
+                                        </div>
+                                    </div> 
+                                    <div class="panel__template">
+                                        <img src="" alt="">
+                                        <div class="loader-container">
+                                            <div class="loader"></div>
+                                        </div>
+                                    </div> 
+                                    <div class="panel__template">
+                                        <img src="" alt="">
+                                        <div class="loader-container">
+                                            <div class="loader"></div>
+                                        </div>
+                                    </div> 
+                                    <div class="panel__template">
+                                        <img src="" alt="">
+                                        <div class="loader-container">
+                                            <div class="loader"></div>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <button class="template__btn-add"></button>
+                            </div>
+
+                            <div class="template__basis">
+                                <div class="basis__img">
+                                    <img src="img/basis/3.jpg" alt="">
+                                </div>
+                                <div class="panel__templ-container">
+                                    <div class="panel__template">
+                                        <img src="img/basis/3.jpg" alt="">
+                                    </div> 
+                                </div>
+                                <button class="template__btn-add"></button>
+                            </div>
+                            <div class="template__basis">
+                                <div class="basis__img">
+                                    <img src="img/basis/3.jpg" alt="">
+                                </div>
+                                <div class="panel__templ-container">
+                                    <div class="panel__template">
+                                        <img src="img/basis/3.jpg" alt="">
+                                    </div> 
+                                </div>
+                                <button class="template__btn-add"></button>
+                            </div>
+                            <div class="template__basis">
+                                <div class="basis__img">
+                                    <img src="img/basis/3.jpg" alt="">
+                                </div>
+                                <div class="panel__templ-container">
+                                    <div class="panel__template">
+                                        <img src="img/basis/3.jpg" alt="">
+                                    </div> 
+                                </div>
+                                <button class="template__btn-add"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="panel__card orders">
+                    <div class="panel__card-title order-head">
+                        Заказы
+                        <ul class="select__order">
+                            <li class="onen__order select__type active">Открытые</li>
+                            <li class="close__order select__type">Закрытые</li>
+                        </ul>
+                    </div>
+                    <div class="panel__content">
+                        <table class="order__table">
+                            <tr class="o_tr-head">
+                                <th class="o_th th_number">№</th>
+                                <th class="o_th th_date">Дата заказа</th>
+                                <th class="o_th th_status">Статус</th>
+                                <th class="o_th th_price">Сумма</th>
+                                <th class="o_th th_link"></th>
+                            </tr>
+                            <tr class="o_tr">
+                                <td class="o_td td_number">1236</td>
+                                <td class="o_td td_date" >12.12.2018 20:30</td>
+                                <td class="o_td td_status">О бработке</td>
+                                <td class="o_td td_price">3400 руб</td>
+                                <td class="o_td td_link">
+                                    <a href="" class="link__table">Просмотреть</a>
+                                </td>
+                            </tr>
+                            <tr class="o_tr">
+                                <td class="o_td td_number">1236</td>
+                                <td class="o_td td_date" >12.12.2018 20:30</td>
+                                <td class="o_td td_status">О бработке</td>
+                                <td class="o_td td_price">3400 руб</td>
+                                <td class="o_td td_link">
+                                    <a href="" class="link__table">Просмотреть</a>
+                                </td>
+                            </tr>
+                            <tr class="o_tr">
+                                <td class="o_td td_number">1236</td>
+                                <td class="o_td td_date" >12.12.2018 20:30</td>
+                                <td class="o_td td_status">О бработке</td>
+                                <td class="o_td td_price">3400 руб</td>
+                                <td class="o_td td_link">
+                                    <a href="" class="link__table">Просмотреть</a>
+                                </td>
+                            </tr>
+                            <tr class="o_tr">
+                                <td class="o_td td_number">1236</td>
+                                <td class="o_td td_date" >12.12.2018 20:30</td>
+                                <td class="o_td td_status">О бработке</td>
+                                <td class="o_td td_price">3400 руб</td>
+                                <td class="o_td td_link">
+                                    <a href="" class="link__table">Просмотреть</a>
+                                </td>
+                            </tr>
+                            <tr class="o_tr">
+                                <td class="o_td td_number">1236</td>
+                                <td class="o_td td_date" >12.12.2018 20:30</td>
+                                <td class="o_td td_status">О бработке</td>
+                                <td class="o_td td_price">3400 руб</td>
+                                <td class="o_td td_link">
+                                    <a href="" class="link__table">Просмотреть</a>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="panel__card-page">
+
+                            <ul class="panel__page-list templates">
+                                <li class="panel__page-point selected">
+                                    <span class="panel__page-num">1</span>
+                                </li>
+    
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">2</span>
+                                </li>
+    
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">3</span>
+                                </li>
+    
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">4</span>
+                                </li>
+    
+                                <li class="panel__page-point">
+                                    <span class="panel__page-num">5</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <section class="window__order">
+                    <div class="order__ticket">
+                        <h1 class="header__ticket">Заказ № <span>23534</span></h1>
+                        <div class="button button__close"></div>
+                        <div class="ticket__container Scrollable">
+                            <div class="card__container">
+                                <div class="cart__item">
+                                    <img src="img/basis/2.jpg" alt="">
+                                    <div class="cart__description">
+                                        <p class="cart__name">Мужской свитшот STAR</p>
+                                        <div class="cart__size">
+                                            <p>Размеры: </p>
+                                            <p>L (52)</p>
+                                        </div>
+                                        <div class="cart__color">
+                                            <p>Цвет: </p>
+                                            <div class="item__color" style="background-color: red"></div>
+                                        </div>
+                                    </div>
+                                    <div class="count">
+                                        <p>2</p>
+                                        <p>(Количество)</p>
+                                    </div>
+                                    <p class="cart__price">1700 <span>P</span></p>
+                                    <a href="#" class="remove__cart-ticket">Убрать</a>
+                                </div>
+                                <div class="cart__item">
+                                    <img src="img/basis/2.jpg" alt="">
+                                    <div class="cart__description">
+                                        <p class="cart__name">Мужской свитшот STAR</p>
+                                        <div class="cart__size">
+                                            <p>Размеры: </p>
+                                            <p>L (52)</p>
+                                        </div>
+                                        <div class="cart__color">
+                                            <p>Цвет: </p>
+                                            <div class="item__color" style="background-color: red"></div>
+                                        </div>
+                                    </div>
+                                    <div class="count">
+                                        <p>2</p>
+                                        <p>(Количество)</p>
+                                    </div>
+                                    <p class="cart__price">1700 <span>P</span></p>
+                                    <a href="#" class="remove__cart-ticket">Убрать</a>
+                                </div>
+                            </div>
+                            <div class="customer__info">
+                                <div class="field__customer">
+                                    <span>Ф.И.О: </span>
+                                    <span>Иванов Иван Иванович</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Email: </span>
+                                    <span>samplusermail@ya.com</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Телефон: </span>
+                                    <span>+ 7729-905-65-01</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Город: </span>
+                                    <span>Москва</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Адрес: </span>
+                                    <span>ул. Молодежная 8 кв. 20</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Оплата: </span>
+                                    <span>При полоучении</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Доставка: </span>
+                                    <span>Почтой</span>
+                                </div>
+                                <div class="field__customer">
+                                    <span>Итог: </span>
+                                    <span>4550 Р</span>
+                                </div>
+                            </div>
+                            <div class="field__comment">
+                                <label for="comment">Оставить комментарий (виден только администратору): </label>
+                                <textarea id="comment">
+    
+                                </textarea>
+                            </div>
+                            <div class="panel__column-item-radio font__radio">
+                                <p class="panel__column-item-radio-header">Статус: </p>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="font_print">
+                                    В обработке
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="font_fancywork">
+                                    Закрыт
+                                </label>
+                            </div>
+                            <button class="save__customer-info">Сохранить</button>
+                        </div>
+                        
+                    </div>
+                </section>
 
             </div>
         </div>

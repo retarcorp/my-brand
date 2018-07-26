@@ -93,6 +93,10 @@
                             <a href="#" class="profile__link link__logout">Выход</a>
                         </section>
                     </li>
+                    <li class="main-menu__item main-menu__item_margin cart-li">
+                        <a href="#" class="cart"></a>
+                        <span class="cart__count">12</span>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -239,8 +243,8 @@
                         <input class="details__color details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
                         <input class="details__color details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
 
-                        <input type="hidden" value="" id="base_color">
-                        <button class="jscolor {valueElement:'base_color'} button color__basis editor__item_margin">Выбрать свой</button>
+                        <!-- <input type="hidden" value="" id="base_color"> -->
+                        <!-- <button class="jscolor {valueElement:'base_color'} button color__basis editor__item_margin">Выбрать свой</button> -->
                     </div>
                 </div>
                 <div class="details__price details__block_margin">
@@ -258,6 +262,7 @@
                             <a href="/profile">Перейти к моим работам</a>
                         </div>
                     </div>
+                    <a href="#" class="details__link link__change details__link_margin link__info">Информация о товаре</a>
 
                 </div>
             </div>
@@ -378,6 +383,23 @@
                 <input type="file" name="upload_print">
             </div>
 
+        </div>
+    </section>
+    <section class="info-basis">
+        <div class="info">
+            <h1 class="info__header">Информация о продукте</h1>
+            <div class="button button__close"></div>
+            <div class="info__description">
+                <h2 class="info__sub-header">Описание</h2>
+                <p class="info__shirt-descr">
+                    Комфортная толстовка-кенгуру подходит для прогулок и тренировок. Конечно, уместней всего она выглядит с джинсами и кроссовками. Мягкий подклад приятен к телу, а наружный слой позволяет надолго сохранить яркий рисунок.
+                </p>
+                <ul class="info__list">
+                    <li class="info__composition"><span>Состав: Полиэстер 100%</span></li>
+                    <li class="info__details"><span>Детали: двухслойный капюшон со шнурком для регулировки,переди карман-кенгуру</span></li>
+                    <li class="info__season"><span>Сезон: демисезон</span></li>
+                </ul>
+            </div>
         </div>
     </section>
 </div>

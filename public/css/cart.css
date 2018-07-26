@@ -1,0 +1,175 @@
+.section__cart{
+    padding: 0 30px;
+}
+.block__header{
+    font-size: 30px;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cart__item{
+    display: flex;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.cart__item:not(:last-child){
+    border-bottom: 1px solid #f0f0fa;
+}
+
+.cart__item img{
+    width: 160px;
+}
+
+.cart__name{
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+.cart__size{
+    margin-bottom: 15px;
+}
+.cart__size,
+.cart__color{
+    display: flex;
+    align-items: center;
+}
+
+.cart__size p,
+.cart__color p{
+    font-size: 18px;
+    font-weight: 400;
+    margin-right: 15px;
+}
+
+.item__size {
+    width: 93px;
+    height: 37px;
+    text-align: center;
+    line-height: 37px;
+    background-color: #F0F0FA;
+    border-radius: 5px; 
+}
+
+.item__color{
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+}
+
+
+/* INPUT NUMBER */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.quantity-block {
+  margin: auto;
+  font-size: 20px;
+}
+.quantity-arrow-minus,
+.quantity-arrow-plus {
+  cursor: pointer;
+  font-size: 20px;
+  padding: 6px 12px;
+  width: 60px;
+  box-sizing: border-box;
+  /* border-radius: 4px; */
+  outline: none;
+  color: #393939;
+  border: none;
+  background-color: #F0F0FA;
+}
+.quantity-arrow-minus{
+    border-radius: 5px 0 0 5px;
+}
+.quantity-arrow-plus{
+    border-radius: 0 5px 5px 0;
+}
+.quantity-num {
+  box-sizing: border-box;
+  text-align: center;  
+  width: 55px;
+  border: none;
+  font-size: 20px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  outline: none;
+}
+
+.cart__price{
+    font-size: 18px;
+    margin-right: 100px;
+}
+
+.cart__remove-btn{
+    width: 25px;
+    height: 25px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: url(../img/icon/cross.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+}
+.cart__buttons{
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 80px;
+}
+
+
+.link__link{
+    text-decoration: none;
+    color: #393939;
+    font-size: 16px;
+}
+.total__price{
+    font-size: 25px;
+    margin-left: auto;
+    margin-right: 50px;
+}
+.button__issue-cart{
+    width: 272px;
+    height: 60px;
+    border-radius: 10px;
+    border:none;
+    outline: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #fff;
+    background: linear-gradient(-180deg, #507ef2, #1a59fb);
+}
+
+.info__profile-card{
+    padding: 0 30px;
+}
+
+.info__field{
+    display: flex;
+    flex-direction: column;
+}
+
+.field__label{
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+
+.field__input{
+    border: 1px solid #b7b7b7;
+    outline: none;
+    width: 319px;
+    height: 40px;
+    border-radius: 2px;
+}

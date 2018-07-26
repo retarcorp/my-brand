@@ -12,6 +12,8 @@ class VariantProject {
     }
 
     async loadLazy() {
+        this.static_loaded = false;
+
         const promises = this.widgets
             .filter(w => w instanceof ImageWidget)
             .map( (widget) => {
@@ -133,14 +135,17 @@ class VariantProject {
 
     render(ctx) {
         //if (this.projectLoaded()) {
-            this.variant.render(ctx);
+        this.variant.render(ctx);
 
-            this.widgets.forEach( (widget) => {
-                widget.render(ctx);
-            });
+        this.widgets.forEach( (widget) => {
+            widget.render(ctx);
+        });
 
-            if (!App.preview)
-                this.variant.workzone.render(ctx);
+        ctx.drawImage(this.variant.static, 0, 0, 400, 400 * this.variant.static.height/this.variant.static.width);
+
+
+        if (!App.preview)
+            this.variant.workzone.render(ctx);
         //}
     }
 }

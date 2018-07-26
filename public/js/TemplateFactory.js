@@ -205,7 +205,10 @@ const TemplateFactory = {
                     <p class="panel__basis-type">${base.type} </p>
                     <p class="panel__basis-price">${base.price} Р</p>
                 </div>
-                <div class="panel__basis-button">
+                <div class="panel__new-template">
+                    <button class="panel__basis-add-templ">Добавить шаблоны</button>
+                </div>
+                <div class="panel__basis-button active">
                     <button class="panel__basis-edit">Редактировать</button>
                     <button class="panel__basis-remove">Удалить</button>
                 </div>
@@ -280,6 +283,28 @@ const TemplateFactory = {
                         <button class="button slider__btn-add button_gradient_blue">В корзину</button>
                     </div>
                 </a>
+            </div>
+        `
+    }
+
+    ,getAdminPanelVariantTemplates() {
+        return `
+             <div class="panel__template">
+                <img src="" alt="">
+            </div>
+        `
+    }
+
+    ,getAdminPanelTemplateAddHtml(variant, templates, index) {
+        console.log(variant);
+        const template = templates.find( t => t.index == index );
+        return `
+            <div class="template__basis">
+                <div class="basis__img">
+                    <img src="${variant.src}" alt="">
+                </div>
+                ${ (template) ?`<div class="panel__templ-container Scrollable">${template.variants.reduce( (acc, t) => acc + this.getAdminPanelVariantTemplates(t), ``)} </div>` : "" }
+                <button class="template__btn-add"></button>
             </div>
         `
     }
