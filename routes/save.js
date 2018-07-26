@@ -61,33 +61,11 @@ router.post('/save/template', (req, res, next) => {
 		const user = req.cookies.user.name || req.session.user.name;
 		let data = JSON.parse(parse);
 
-		if (!data.id) {
-			data.id = 1;
+		console.log(data);
 
-			Mongo.select({ user: user }, 'admin', (projects) => {
-
-				if (projects.length) {
-					projects.map( (project) => {
-						if (data.id < project.id) data.id = project.id;
-					});
-
-					data.id++;
-				}
-
-                Mongo.update({ user: user, id: data.id }, data, 'admin', (data) => {
-                    res.send({status: true, message: 'Template saved'});
-                });
-
-			});
-
-		} else {
-            Mongo.update({ user: user, id: data.id }, data, 'admin', (data) => {
-                res.send({status: true, message: 'Template saved'});
-            });
-		}
-
-
-
+		Mongo.update( { _id: data._id }, data, 'admin', (response_db) => {
+            res.send({status: true});
+        });
 	});
 
 });

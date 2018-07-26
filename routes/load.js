@@ -8,9 +8,9 @@ var qrs = require('querystring');
 var fs = require('fs');
 
 router.get('/load', function(req, res, next) {
-	// let data = qrs.parse(URL.parse(req.url).query);
+    // let data = qrs.parse(URL.parse(req.url).query);
 
-	if (req.cookies.user) {
+    if (req.cookies.user) {
         let user = req.cookies.user.name || req.session.user.name,
             key = { user: user },
             query = qrs.parse(URL.parse(req.url).query);
@@ -51,30 +51,19 @@ router.get('/load', function(req, res, next) {
 
 router.get('/load/templates', (req, res, next) => {
     const user = req.cookies.user.name || req.session.user.name; ////WORKFLOW
+    const query = qrs.parse(URL.parse(req.url).query);
 
-    
-    Mongo.select( {user: user}, 'admin', (data) => {
-        const query = qrs.parse(URL.parse(req.url).query);
-        let templates = [],
+    console.log(query);
+
+    Mongo.select( { _id : query._id }, 'admin', (data) => {
+        let templates = data[0],
             pages = 0,
             response = {};
-
-        console.log(query)
-
-        if(query.page != 'all') {
-            templates = data.filter( (project, index) => {
-                if ((parseInt(query.page) - 1) * 20 <= index && parseInt(query.page) * 20 > index) {
-                    return project;
-                }
-            });
-        } else {
-            templates = data;
-        }
 
         response.status = true;
         response.pages = Math.ceil(data.length/20);
         response.messasge = 'Templates loaded';
-        response.data = templates;
+        response.data = templates || { _id: null, templates: [] };
 
         res.send(response);
     });
