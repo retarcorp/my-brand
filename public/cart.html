@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/constructor.css">
-
+    <!-- <link rel="stylesheet" type="text/css" href="css/admin-panel.css"> -->
     <link rel="stylesheet" type="text/css" href="css/slick.css"/>
     <link rel="stylesheet" href="css/papaps.css">
     <link rel="stylesheet" href="css/cart.css">
@@ -186,10 +186,47 @@
                 <button class="button__issue-cart">Оформить заказ</button>
             </div>
         </section>
-        <section class="info__profile-card">
-            <div class="info__field">
-                <label class="field__label" for="fio">Ф.И.О</label>
-                <input class="field__input" type="text">
+        <section class="info__profile-card order__section">
+            <div class="order-papap">
+                <h1 class="header__order">ОФОРМЛЕНИЕ ЗАКАЗА</h1>
+                <div class="button button__close"></div>
+                <form class="order__form">
+                    <div class="info__field">
+                        <label class="field__label" for="fio">Ф.И.О: </label>
+                        <input class="field__input" type="text" id="fio">
+                    </div>
+                    <div class="info__field">
+                        <label class="field__label" for="phone">Телефон: </label>
+                        <input class="field__input" type="text" id="phone">
+                    </div>
+                    <div class="info__field">
+                        <label class="field__label" for="email">Email: </label>
+                        <input class="field__input" type="text" id="email">
+                    </div>
+                    <div class="info__field">
+                        <label class="field__label" for="town">Город: </label>
+                        <input class="field__input" type="text" id="town">
+                    </div>
+                    <div class="info__field">
+                        <label class="field__label" for="address">Адрес: </label>
+                        <input class="field__input" type="text" id="address">
+                    </div>
+                    <div class="panel__column-item-radio font__radio">
+                        <p class="panel__column-item-radio-header">Оплата: </p>
+                        <label class="panel__type-picture">
+                            <input class="style-ratio" type="checkbox" name="font_print">
+                            При получении
+                        </label>
+                        <label class="panel__type-picture">
+                            <input class="style-ratio" type="checkbox" name="font_fancywork">
+                            Онлайн
+                        </label>
+                    </div>
+                    <div class="order__form_bot">
+                        <p class="total">Итог: <span>4550 P</span> </p>
+                        <input type="submit" class="order__button" value="Подтвердить">
+                    </div>
+                </form>
             </div>
         </section>
 

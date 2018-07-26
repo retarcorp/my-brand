@@ -157,6 +157,7 @@ input[type="number"] {
 }
 
 .info__field{
+  margin-top: 20px;
     display: flex;
     flex-direction: column;
 }
@@ -167,9 +168,128 @@ input[type="number"] {
 }
 
 .field__input{
+  box-sizing: border-box;
     border: 1px solid #b7b7b7;
     outline: none;
-    width: 319px;
+    width: 314px;
     height: 40px;
     border-radius: 2px;
+}
+
+
+.order__section{
+  position: fixed;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0,0,0,0.6);
+  z-index: 10000;
+}
+
+.order-papap{
+  box-sizing: border-box;
+  margin: auto;
+  max-width: 710px;
+  border-radius: 10px;
+  width: 100%;
+  padding: 30px;
+  background-color: #fff;
+    position: relative;
+}
+
+.order__form{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.header__order{
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.button__close{
+  top: 23px !important; 
+}
+
+.panel__column-item{
+    width: 210px;
+}
+.panel__column-item:nth-child(2n-1){
+    margin-right: 20px;
+}
+.panel__column-item:not(:first-child){
+    margin-top: 20px;
+}
+.panel__column-item:nth-child(2){
+    margin-top: 0;
+}
+.style-ratio{
+    position: relative;
+    background: transparent;
+    margin-right: 5px;
+    width: 15px;
+}
+.style-ratio:after{
+    content: '';
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    background: #b7b7b7;
+    border-radius: 2px;
+    position: absolute;
+    left: 0px;
+    top: 0;
+}
+.style-ratio:checked:after{
+    background-color: #3d71f5;
+    background-image: url(../img/admin-panel/checkmark.png);
+    background-position: center;
+    background-size: 60%;
+    background-repeat: no-repeat;
+}
+.panel__type-picture{
+    display: inline-flex;
+    align-items: center;
+    font-size: 15px;
+    color: #393939;
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.panel__column-item-radio-header{
+    font-size: 17px;
+    color: #393939;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 25px;
+}
+.panel__column-item-radio{
+    margin-top: 20px;
+    width: 314px;
+}
+.order__form_bot{
+  margin-top: 35px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.order__button{
+      width: 186px;
+    height: 55px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 17px;
+    color: #fff;
+    background: linear-gradient(-180deg, #507ef2, #1a59fb);
+}
+.total{
+  font-size: 22px;
 }

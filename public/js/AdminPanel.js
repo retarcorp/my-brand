@@ -178,7 +178,7 @@ AdminApp = {
         }
 
         ,selectPanels(e) {
-            if ($(e.target).hasClass('baseUI')) {
+            if ($(e.target).hasClass('baseUI') || $(e.target).hasClass('basis_back')) {
                 $('.panel__card').removeClass('active');
                 AdminApp.BaseList.loadBases(1, AdminApp.BaseList.loadFinishing);
                 AdminApp.BaseList.panel.addClass('active');
@@ -975,6 +975,8 @@ AdminApp = {
             this.tag.on('click', this.checkTagEvent.bind(this));
             this.tag_add.on('click', this.addTag.bind(this));
             this.template_save.on('click', this.formData.bind(this));
+            this.goBack.on('click', this.goBackToTemplatesUI.bind(this));
+            this.goToBaseList.on('click', this.goBackToBaseList.bind(this));
         }
 
         ,sendData(data) {
@@ -1028,6 +1030,19 @@ AdminApp = {
             console.log(data);
 
             this.sendData(data);
+        }
+
+        ,goBackToTemplatesUI(e) {
+            e.preventDefault();
+
+            this.panel.removeClass('loading');
+            this.panel.removeClass('active');
+
+            AdminApp.TemplatesUI.loadTemplates(AdminApp.TemplatesUI.template.data('base'));
+        }
+
+        ,goBackToBaseList(e) {
+            AdminApp.UI.selectPanels(e);
         }
 
         ,async useTemplate(variant, variant_index, template, isNew = true) {
@@ -1095,7 +1110,8 @@ AdminApp = {
         ,tag_add: $('.templates-add .add-tag')
         ,template_save: $('.save-template')
         ,layers: $('.panel__container-basis')
-
+        ,goBack: $('.templates_back')
+        ,goToBaseList: $('.basis_back ')
 }
 
     ,TemplatesList: {

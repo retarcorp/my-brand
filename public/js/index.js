@@ -1699,6 +1699,16 @@ class GraphCore {
         }
 
         this.Canvas.init();
+
+        this.defineDimensions();
+    }
+
+    defineDimensions() {
+        const variant = App.currentProjectVariant,
+            width = 400,
+            height = width * variant.variant.image.height/variant.variant.image.width;
+
+        this.setDimensions(width, height);
     }
 
     findSprite(position) {

@@ -1003,7 +1003,7 @@ button.window-button__add-print{
 .panel__templates{
     width: 100%;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
 }
 
 .panel__templ-container{
@@ -1027,7 +1027,7 @@ button.window-button__add-print{
 }
 
 .Scrollable, .Core-Scrollable{
-    height: 300px;
+    max-height: 300px;
     overflow: auto;
 }
 .Scrollable::-webkit-scrollbar,.Core-Scrollable::-webkit-scrollbar{
@@ -1225,4 +1225,18 @@ button.window-button__add-print{
 
 .cart__price{
     margin: auto;
+}
+
+.template__basis{
+    width: 25%;
+}
+
+
+.btn-back{
+    cursor: pointer;
+    outline: none;
+    text-decoration: underline;
+    font-size: 16px;
+    float: right;
+    padding-right: 30px;
 }
