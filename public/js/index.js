@@ -796,6 +796,14 @@ class Layers {
             index = widget.index,
             text = widget.text;
 
+        const widgets = App.currentProjectVariant.widgets;
+
+        widgets.forEach( (w) => {
+            if (lastId < w.id) {
+                lastId = w.id;
+            }
+        });
+
         $.each(this.container.children(), (index, child) => {
             if (lastId < $(child).attr('data-id')) {
                 lastId = $(child).attr('data-id');
@@ -860,7 +868,7 @@ class Layers {
             let id = $(e.target).parent().parent().data('id'),
                 curr = App.currentProjectVariant.widgets.find( (w) => w.id == id );
 
-            App.currentProjectVariant.downWidget(curr.index);
+            App.currentProjectVariant.downWidget(curr.id);
 
             //$(e.target).parent().parent().insertBefore($(e.target).parent().parent().prev());
         }
@@ -871,7 +879,7 @@ class Layers {
             let id = $(e.target).parent().parent().data('id'),
                 curr = App.currentProjectVariant.widgets.find( (w) => w.id == id );
 
-            App.currentProjectVariant.upWidget(curr.index);
+            App.currentProjectVariant.upWidget(curr.id);
 
             //$(e.target).parent().parent().insertAfter($(e.target).parent().parent().next());
         }
@@ -1376,7 +1384,7 @@ class UI {
                 console.log();
             }
 
-            App.currentProjectVariant.deleteWidget(curr.index);
+            App.currentProjectVariant.deleteWidget(curr.id);
             App.GraphCore.setCurrentWidget(null);
 
             layer.remove();
@@ -1392,7 +1400,7 @@ class UI {
             }
 
             if (widget) {
-                App.currentProjectVariant.deleteWidget(widget.index);
+                App.currentProjectVariant.deleteWidget(widget.id);
                 App.GraphCore.setCurrentWidget(null);
 
                 layer.remove();
@@ -1408,11 +1416,11 @@ class UI {
 
         if (curr) {
             if (target.hasClass('editor__btn-top')) {
-                App.currentProjectVariant.upWidget(curr.index);
+                App.currentProjectVariant.upWidget(curr.id);
             }
 
             if (target.hasClass('editor__btn-bottom')) {
-                App.currentProjectVariant.downWidget(curr.index);
+                App.currentProjectVariant.downWidget(curr.id);
             }
         }
 

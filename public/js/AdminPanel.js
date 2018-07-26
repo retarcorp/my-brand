@@ -700,6 +700,10 @@ AdminApp = {
             }
         }
 
+        ,setConf(conf) {
+            this.template_on.prop('checked', conf);
+        }
+
         ,changeConf(e) {
             const target = $(e.target),
                 currentTaget = $(e.currentTarget),
@@ -724,8 +728,10 @@ AdminApp = {
 
         ,openTemplateUI(base) {
             // debugger
-            console.log(base);
+            // console.log(base);
+            this.setConf(false);
             this.panel.removeClass('active');
+
             AdminApp.TemplatesUI.loadTemplates(base);
         }
 

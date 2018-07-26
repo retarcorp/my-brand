@@ -45,9 +45,9 @@ class VariantProject {
         return this;
     }
 
-    deleteWidget(index) {
-        this.removeWidget(index);
-        this.removeLayer(index);
+    deleteWidget(id) {
+        this.removeWidget(id);
+        this.removeLayer(id);
     }
 
     /**
@@ -56,7 +56,14 @@ class VariantProject {
      * @returns {VariantProject}
      */
 
-    removeWidget(index){
+    removeWidget(id){
+        let index = -1;
+
+        const _del = this.widgets.find( (w, ind) => {
+            index = ind;
+            return w.id == id;
+        });
+
         this.widgets.splice(index, 1);
 
         this.recountWidgets();
@@ -64,7 +71,14 @@ class VariantProject {
         return this;
     }
 
-    removeLayer(index) {
+    removeLayer(id) {
+        let index = -1;
+
+        const _del = this.layers.find( (w, ind) => {
+            index = ind;
+            return w.id == id;
+        });
+
         this.layers.splice(index, 1);
 
         this.recountLayers();
@@ -78,7 +92,14 @@ class VariantProject {
      * @returns {VariantProject}
      */
 
-    upWidget(index){
+    upWidget(id){
+        let index = -1;
+
+        const widget = this.widgets.find( (w, ind) => {
+            index = ind;
+            return w.id == id;
+        })
+
         if (index >= 0 && index < this.widgets.length - 1) {
             let buffer = this.widgets[index];
 
@@ -99,7 +120,14 @@ class VariantProject {
      * @returns {VariantProject}
      */
 
-    downWidget(index){
+    downWidget(id){
+        let index = -1;
+
+        const widget = this.widgets.find( (w, ind) => {
+            index = ind;
+            return w.id == id;
+        });
+
         if (index <= this.widgets.length-1 && index > 0) {
             let buffer = this.widgets[index];
 
