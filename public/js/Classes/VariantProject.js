@@ -161,16 +161,37 @@ class VariantProject {
         return (widgetsLoaded && variantLoaded);
     }
 
-    render(ctx) {
+    getImageData(ctx) {
+        return ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+
+    render(ctx) { //INNER
         //if (this.projectLoaded()) {
         this.variant.render(ctx);
+
+        const variant_layer = this.getImageData(ctx);
 
         this.widgets.forEach( (widget) => {
             widget.render(ctx);
         });
 
-        ctx.drawImage(this.variant.static, 0, 0, 400, 400 * this.variant.static.height/this.variant.static.width);
+        const widgets_layer = this.getImageData(ctx);
 
+        const variant_data = variant_layer.data,
+            length = variant_data.length,
+            widgets_data = widgets_layer.data;
+
+        for (let i = 0; i < length; i+=4) {
+            if (variant_data[i+3] == 0) {
+                widgets_data[i+3] = 0;
+            }
+        }
+
+        ctx.putImageData(widgets_layer, 0,0);
+
+        this.widgets.forEach( w => w.renderPath(ctx));
+
+        //ctx.drawImage(this.variant.static, 0, 0, 400, 400 * this.variant.static.height/this.variant.static.width);
 
         if (!App.preview)
             this.variant.workzone.render(ctx);

@@ -359,7 +359,12 @@ class TextWidget extends Widget {
 
     }
 
-    render(ctx) {
+    renderPath(ctx) { //INNER
+        if (this.isSelected && !App.isPreview)
+            this.path.render(ctx);
+    }
+
+    render(ctx) { //INNER
         const fontSettings = this.fontSettings;
 
         ctx.textBaseline = "bottom";
@@ -403,8 +408,6 @@ class TextWidget extends Widget {
             }
         });
 
-        if (this.isSelected && !App.isPreview)
-            this.path.render(ctx);
     }
 
     static getDefault(text){
@@ -421,7 +424,6 @@ class TextWidget extends Widget {
             ,fontSettings
         );
     }
-
 }
 
 TextWidget.Default = {

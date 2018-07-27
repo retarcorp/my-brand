@@ -233,15 +233,17 @@ class ImageWidget extends Widget {
         return this.position;
     }
 
-    render(ctx) {
+    renderPath(ctx) { //INNER
+        if (this.isSelected && !App.isPreview && this.download)
+            this.path.render(ctx);
+    }
+
+    render(ctx) { //INNER
         if (this.download) {
             let _x = this.position.x + App.currentWorkzone.position.x,
                 _y = this.position.y + App.currentWorkzone.position.y;
 
             ctx.drawImage(this.image, _x, _y, this.size.width, this.size.height);
-
-            if (this.isSelected && !App.isPreview)
-                this.path.render(ctx);
         }
     }
 

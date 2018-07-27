@@ -174,7 +174,7 @@ h1 {
 .panel__card {
     margin-bottom: 20px;
     background: #fff;
-     display: none; 
+    /* display: none; */
 }
 
 .panel__card.active {
@@ -392,7 +392,8 @@ button.button__add-print{
 }
 
 
-.panel__new-basis{
+.panel__new-basis,
+.panel__new-print{
     width: 370px;
     height: 370px;
     display: flex;
@@ -403,7 +404,8 @@ button.button__add-print{
     position: relative;
 }
 
-.panel__file{
+.panel__file,
+.panel__file-print{
     font-size: 15px;
     color: #393939;
     font-family: 'Lato', sans-serif;
@@ -415,7 +417,8 @@ button.button__add-print{
     margin-bottom: 10px;
 }
 
-.panel__file-add{
+.panel__file-add,
+.panel__file-add-print{
     position: absolute;
     top: 20px;
     border: 1px solid #000;
@@ -553,13 +556,15 @@ select{
     font-weight: 700;
 }
 
-.add-basis-upload{
+.add-basis-upload,
+.add-print-upload{
     position: absolute;
     bottom: 0;
     right: 0;
 }
 
-.panel__size-container{
+.panel__size-container,
+.panel__tags-container{
     margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
@@ -568,7 +573,8 @@ select{
 }
 
 
-.size-container__item{
+.size-container__item,
+.tags-container__item{
     cursor: pointer;
     width: 105px;
     height: 37px;
@@ -581,7 +587,8 @@ select{
     margin-top: 10px;
     margin-right: 7px;
 }
-.size-container__value{
+.size-container__value,
+.tags-container__value{
     width: 100%;
     font-size: 15px;
     color: #393939;
@@ -590,7 +597,8 @@ select{
     text-align: center;
     padding: 0 7px;
 }
-.size-container__close{
+.size-container__close,
+.tags-container__close{
     cursor: pointer;
     width: 10px;
     height: 10px;
@@ -712,7 +720,7 @@ select{
 }
 
 .panel__card{
-    /* display: none; */
+     display: none; 
 }
 
 .panel__basis-img {
@@ -1027,7 +1035,7 @@ button.window-button__add-print{
 }
 
 .Scrollable, .Core-Scrollable{
-    max-height: 300px;
+    height: 300px;
     overflow: auto;
 }
 .Scrollable::-webkit-scrollbar,.Core-Scrollable::-webkit-scrollbar{
@@ -1078,7 +1086,7 @@ button.window-button__add-print{
 }
 .th_status,
 .td_status{
-    flex: 1.5; 
+    flex: 1.5;
 }
 .th_price,
 .td_price{
@@ -1112,7 +1120,6 @@ button.window-button__add-print{
     text-align: center;
     line-height: 45px;
     border-radius: 6px;
-    cursor: pointer;
 }
 
 .select__type.active{
@@ -1133,7 +1140,7 @@ button.window-button__add-print{
     font-weight: 400;
 }
 .window__order{
-    /*display: flex;*/
+    /* display: flex; */
     display: none;
     z-index: 100;
     position: fixed;
@@ -1239,4 +1246,91 @@ button.window-button__add-print{
     font-size: 16px;
     float: right;
     padding-right: 30px;
+}
+
+
+
+
+/* PRINTS */
+
+button.button__add-prints{
+    margin: 30px auto 0 30px;
+}
+
+.container__prints{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.prints__item{
+    position: relative;
+    cursor: pointer;
+    width: 203px;
+    padding: 15px 10px;
+    border-radius: 5px;
+    margin-right: 15px;
+}
+
+.prints__item img{
+    width: 100%;
+}
+
+.prints__item-name{
+    font-size: 16px;
+    margin-top: 7px;
+}
+
+.prints__item-tags{
+    font-size: 13px;
+    color: #797979;
+    font-weight: 400;
+}
+
+.prints__item:hover{
+    box-shadow: 0 0 79px rgba(56, 49, 187, 0.18);
+}
+
+.prints__item:hover .prints__item-name{
+    text-decoration: underline;
+}
+
+.btn__print-remove{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 2px;
+    background: none;
+    background-color: #346bf7;
+    background-image: url(../img/icon/white-trush.png);
+    background-size: 10px 12px;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    left: 20px;
+    top: 25px;
+    display: none;
+}
+
+.prints__item:hover .btn__print-remove{
+    display: block;
+}
+
+.panel__column-item-radio.margin-print{
+    margin: 0;
+    width: 210px;
+}
+
+.btn__remove-print{
+    display: block;
+    top: auto;
+    left: auto;
+    bottom: 10px;
+    right: 10px;
+}
+
+.margin-print .panel__column-item-radio-header{
+    margin-bottom: 16px;
 }

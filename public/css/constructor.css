@@ -102,7 +102,8 @@
     margin-bottom: 27px;
 }
 
-.details__color{
+.details__color,
+.details__color-pick{
     width: 27px;
     height: 27px;
     border: none;
@@ -111,6 +112,10 @@
     outline: none;
     border-radius: 50%;
     cursor: pointer;
+}
+
+.details__color-pick {
+    border-radius: 0;
 }
 .details__color_margin{
     margin-left: 20px;

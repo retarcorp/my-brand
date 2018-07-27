@@ -9,10 +9,11 @@ class Profile {
         this.logins_submit = $('input[type="submit"][value="Вход"]');
 
         this.logout_item = $('.profile__link.link__logout');
+        this.logout_admin = $('.header__logout');
 
         this.profile = $('.profile__menu');
         this.profile_item = $('.main-menu__item.profile');
-        this.profile_name = $('.profile__name');
+        this.profile_name = $('.profile__name, .header__admin');
 
         this.container = $('.favorites__container');
 
@@ -44,6 +45,8 @@ class Profile {
         this.logins_item.on('click', this.showLoginForm);
 
         this.logout_item.on('click', this.logout);
+        this.logout_admin.on('click', this.logout);
+
 
         this.save_project_item.on('click', this.saveProject);
 
@@ -173,7 +176,11 @@ class Profile {
                     App.UI.onSaveProject();
                 }
 
-                location.href = '/constructor';
+                if (data.data.admin) {
+                    location.href = '/admin';
+                } else {
+                    location.href = '/constructor';
+                }
             } else {
                 alert(data.message);
             }
@@ -418,7 +425,7 @@ class BaseList {
         target.attr('checked', true);
     }
 
-    setProjectVariant(e) {
+    async setProjectVariant(e) {
         App.GraphCore.resetScale();
 
         if ($(e.target).hasClass('rotate__btn-right')) {
@@ -427,7 +434,7 @@ class BaseList {
             App.currentProjectVariant = App.Project.getPrevVariant();
         }
 
-        App.currentProjectVariant.loadLazy();
+        await App.currentProjectVariant.loadLazy();
         App.UI.BaseList.resetVariant();
     }
 
@@ -438,7 +445,7 @@ class BaseList {
 
         this.UI.Layers.loadLayers();
 
-        this.UI.App.GraphCore.setDimensions(this.UI.App.currentProjectVariant.variant.size.width, this.UI.App.currentProjectVariant.variant.size.height);
+        this.UI.App.GraphCore.setDimensions(400, 400 * this.UI.App.currentProjectVariant.variant.size.height/this.UI.App.currentProjectVariant.variant.size.width);
         this.UI.App.GraphCore.setCurrentWidget(null);
 
         this.UI.LightBox.setPreviewImage();
@@ -1439,6 +1446,26 @@ class UI {
         }
     }
 
+    onVerticalAlign(e) {
+        const curr = App.GraphCore.currentWidget,
+            workzone = App.currentWorkzone,
+            vl = workzone.verticalLine;
+
+        if (curr) {
+            curr.position.x = vl.position.x - curr.size.width / 2 - workzone.position.x;
+        }
+    }
+
+    onHorizontalAlign(e) {
+        const curr = App.GraphCore.currentWidget,
+            workzone = App.currentWorkzone,
+            hl = workzone.horizontalLine;
+
+        if (curr) {
+            curr.position.y = hl.position.y - curr.size.height / 2 - workzone.position.y;
+        }
+    }
+
 }
 class Canvas {
     constructor(GraphCore) {
@@ -1449,14 +1476,15 @@ class Canvas {
         this.GraphCore.canvas.addEventListener('mouseup', this.GraphCore.mouseUp.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mousedown', this.GraphCore.mouseDown.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mousemove', this.GraphCore.mouseMove.bind(this.GraphCore));
-        this.GraphCore.canvas.addEventListener('mousewheel', this.GraphCore.mouseWheel.bind(this.GraphCore));
+        //this.GraphCore.canvas.addEventListener('mousewheel', this.GraphCore.mouseWheel.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mouseover', this.GraphCore.mouseOver.bind(this.GraphCore));
         this.GraphCore.canvas.addEventListener('mouseout', this.GraphCore.mouseOut.bind(this.GraphCore));
     }
 
     clear(ctx) {
         ctx = ctx || this.GraphCore.ctx;
-        ctx.clearRect(0,0,ctx.canvas.width, ctx.canvas.height);
+        ctx.clearRect(-1,-1,ctx.canvas.width+2, ctx.canvas.height+2);
+
     }
 }
 class Toolkit {
@@ -1644,6 +1672,7 @@ class RenderList {
 
     render(ctx) {
         this.GraphCore.Canvas.clear(ctx);
+        //this.GraphCore.defineDimensions();
         this.GraphCore.App.currentProjectVariant.render(ctx);
     }
 }
@@ -1704,6 +1733,8 @@ class GraphCore {
     }
 
     defineDimensions() {
+        this.resetScale();
+
         const variant = App.currentProjectVariant,
             width = 400,
             height = width * variant.variant.image.height/variant.variant.image.width;
@@ -2102,6 +2133,8 @@ class Application {
             this.UI.init();
             this.GraphCore.init();
 
+            this.GraphCore.ctx.translate(0.5,0.5);
+
             await this.UI.Profile.setProjectsList();
 
             //Using for tests
@@ -2275,6 +2308,7 @@ class Application {
         this.currentProjectVariant = variant;
         this.currentWorkzone = variant.variant.workzone;
 
+        this.GraphCore.defineDimensions();
         await this.loadProjectAssets();
     }
 
