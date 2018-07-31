@@ -42,7 +42,12 @@ router.get('/delete', (req, res, next) => {
                     });
                 });
 
-                Mongo.delete({ name: data.name }, 'bases', () => {
+                console.log(data);
+
+                Mongo.delete( { "base._id": data._id }, 'uniq');
+                Mongo.delete( { "base._id": data._id }, 'admin');
+
+                Mongo.delete({ _id: data._id }, 'bases', () => {
                     res.send({status: true});
                 });
 
