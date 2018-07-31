@@ -28,7 +28,7 @@ AdminApp = {
         this.BaseList.init();
         this.BasePanel.init();
         this.TemplatePanel.init();
-        this.TemplatesList.init();
+        //this.TemplatesList.init();
         this.TemplatesUI.init();
 
         console.log('AdminPanel init');
@@ -55,7 +55,6 @@ AdminApp = {
             let page = parseInt($(e.target).text());
 
             AdminApp.fontPage = page;
-            console.log(AdminApp.fontPage);
 
             AdminApp.panelPageList.children('.selected').removeClass('selected');
             $(e.target).addClass('selected');
@@ -74,8 +73,6 @@ AdminApp = {
 
     ,checkPrint(e) {
         const target = $(e.target);
-
-        console.log(target.attr('name'));
 
         if (target.attr('name') == "font_fancywork" && !target.prop('checked')) {
             this.font_print.prop('checked', true);
@@ -180,8 +177,7 @@ AdminApp = {
         ,selectPanels(e) {
             if ($(e.target).hasClass('baseUI') || $(e.target).hasClass('basis_back')) {
                 $('.panel__card').removeClass('active');
-                AdminApp.BaseList.loadBases(1, AdminApp.BaseList.loadFinishing);
-                AdminApp.BaseList.panel.addClass('active');
+                AdminApp.BaseList.openPanel();
             }
 
             if ($(e.target).hasClass('fontsUI')){
@@ -238,7 +234,7 @@ AdminApp = {
             this.inputs.fancywork.on('change', this.setPrintType);
 
             $('.base__add .add-size').on('click', this.addSize);
-            $('.panel__font-submit').on('click', this.sendData);
+            $('.add-basis-upload').on('click', this.sendData);
 
             this.workzoneInputs.x.on('input', this.updateWorkzone);
             this.workzoneInputs.y.on('input', this.updateWorkzone);
@@ -306,7 +302,6 @@ AdminApp = {
                 });
 
                 if (!AdminApp.BasePanel._id.length) AdminApp.BasePanel._id = AdminApp.BasePanel.makeid();
-                console.log(AdminApp.BasePanel._id);
 
                 data.append('name', name);
                 data.append('price', price);
@@ -315,16 +310,11 @@ AdminApp = {
                 data.append('fancywork', AdminApp.BasePanel.inputs.fancywork.prop('checked'));
                 data.append('_id', AdminApp.BasePanel._id);
                 //data.append('redact', AdminApp.BasePanel.redact || false);
-
-                console.log(AdminApp.BasePanel._id);
-
                 AdminApp.BasePanel.panel.addClass('loading');
 
                 User.Ajax.post('/upload'+AdminApp.BasePanel.redact, data, (data) => {
                     AdminApp.BasePanel.panel.removeClass('loading');
                     AdminApp.BasePanel.redact = '/redact';
-
-                    console.log(data);
 
                     AdminApp.BasePanel.parseData((JSON.parse(data)).base);                    
                 });
@@ -355,9 +345,6 @@ AdminApp = {
         ,parseData(data) {
             let base = data,
                 main = null;
-
-            console.log(base);
-
             AdminApp.BasePanel.clearInputs();
 
             AdminApp.BasePanel.redact = '/redact';
@@ -448,7 +435,6 @@ AdminApp = {
                 reader = new FileReader();
 
             reader.onload = (e) => {
-                console.log(AdminApp.BasePanel.main_variant_image);
 
                 AdminApp.BasePanel.fileCount++;
                 AdminApp.BasePanel.checkFileSpace();
@@ -511,7 +497,6 @@ AdminApp = {
         }
 
         ,checkFileSpace() {
-            console.log('check file space');
             if (this.fileCount >= 4) {
                 this.upload_base_variant.addClass('inactive');
             } else if (this.fileCount <= 0) {
@@ -646,6 +631,11 @@ AdminApp = {
             this.pages.on('click', this.loadBasesPage)
         }
 
+        ,openPanel() {
+            this.loadBases(1, this.loadFinishing);
+            this.panel.addClass('active');
+        }
+
         ,loadBases(page = 1, callback) {
             this.list.addClass('loading');
 
@@ -732,7 +722,7 @@ AdminApp = {
             this.setConf(false);
             this.panel.removeClass('active');
 
-            AdminApp.TemplatesUI.loadTemplates(base);
+            AdminApp.TemplatesUI.loadUI(base);
         }
 
         ,redactBase(e) {
@@ -764,14 +754,10 @@ AdminApp = {
                 images.push(variant.image);
             });
 
-            console.log(base);
-
             file_string = images.join('|');
 
             User.Ajax.get(`/delete?name=${base.name}&type=base&files=${file_string}&_id=${base._id}`, (data) => {
                 this.loadBases(1, this.loadFinishing);
-
-                console.log(data);
             });
         }
 
@@ -829,295 +815,269 @@ AdminApp = {
             this.template.html('');
 
             this.template.on('click', this.checkEvent.bind(this));
+            this.new_template.on('click', this.createNewTemplate.bind(this));
+            this.pages.on('click', this.checkEvent.bind(this));
+            this.list.on('click', this.checkEvent.bind(this));
+            this.back.on('click', this.goBackToBaseList.bind(this));
         }
 
         ,checkEvent(e) {
             let target = $(e.target),
                 currentTarget = $(e.currentTarget);
 
-            const base = this.template.data('base'),
-                template = this.template.data('template'),
-                project = new Project(base);
-
             while (!target.is(currentTarget)) {
-                if (target.hasClass('template__btn-add')) {
-                    let variant_index = target.parent().data('variant_index'),
-                        variant = project.variants[variant_index];
+                if (target.hasClass('panel__page-point')) {
+                    const page = target.data('page');
+                    this.loadUIPage(page);
 
-                    AdminApp.TemplatePanel.useTemplate(variant, variant_index, template, true);
                     break;
                 }
 
-                if (target.hasClass('panel__template')) {
-                    let variant_index = target.parent().parent().data('variant_index');
+                if (target.attr('name') == 'templateRedact') {
+                    const template = target.parent().parent().data('template');
 
-                    const template_variant = target.data('variant');
-
-                    AdminApp.TemplatePanel.useTemplate(template_variant, variant_index, template, false);
-                    console.log('taregt');
+                    this.openTemplateConstructor(template);
                     break;
                 }
 
-                console.log(target);
+                if (target.attr('name') == 'templateDelete') {
+                    const child = target.parent().parent(),
+                        template = child.data('template');
+
+                    this.deleteTemplate(template, child);
+                    break;
+                }
+
                 target = target.parent();
             }
 
         }
 
-        ,loadTemplates(base) {
-            App.Ajax.get('/load/templates?page=all&_id='+base._id, (response) => {
+        ,loadUI(base) {
+            this.openPanel();
+            this.list.addClass('loading');
+
+            this.base = Base.fromJSON(base);
+
+            this.loadTemplatesPage(1, base._id, (response) => {
+                response = JSON.parse(response);
+
+                this.formTemplatesList(response.data);
+                this.formPages(response.pages, 1);
+            });
+        }
+
+        ,loadUIPage(page) {
+            this.openPanel();
+            this.list.addClass('loading');
+
+            this.loadTemplatesPage(page, this.base._id, (response) => {
+                response = JSON.parse(response);
+
+                this.formTemplatesList(response.data);
+                this.formPages(response.pages, page);
+            });
+        }
+
+        ,loadTemplatesAll(_id, cb) {
+            App.Ajax.get('/load/templates?page=all&_id='+_id, cb);
+        }
+
+        ,loadTemplatesPage(page = 1, _id, cb) {
+            App.Ajax.get(`/load/templates?page=${page}&_id=${_id}`, cb);
+        }
+
+        ,createNewTemplate(e) {
+            const target = $(e.target),
+                currentTarget = $(e.currentTarget);
+
+            this.openBaseConstructor();
+        }
+
+        ,openTemplateConstructor(template) {
+            this.closePanel();
+            AdminApp.TemplatePanel.openPanel();
+            AdminApp.TemplatePanel.useTemplate(template);
+        }
+
+        ,openBaseConstructor() {
+            this.closePanel();
+            AdminApp.TemplatePanel.openPanel();
+            AdminApp.TemplatePanel.useBase(this.base);
+        }
+
+        ,deleteTemplate(template, child) {
+            child.remove();
+
+            App.Ajax.get('/delete/template?_id='+template._id, (response) => {
                 response = JSON.parse(response);
                 console.log(response);
-
-                this.panel.addClass('active');
-
-                if (response.data) {
-                    this.formTemplate(response.data, Base.fromJSON(base))
-                }
-
-                // if (response.data.length) {
-                //     const template = App.getProject(response.data);
-                //
-                // }
-                //
-                // template.templates = response.data.templates;
-                // this.formTemplate(template);
             });
         }
 
-        ,async formTemplate(data, base) {
-            data._id = base._id;
-            data.templates = data.templates || [];
+        ,goBackToBaseList() {
+            this.closePanel();
 
-            data.templates.sort( (a, b) => a.index - b.index);
+            AdminApp.BaseList.openPanel();
+        }
 
-            App.Project.settings.color = App.GraphCore.Filter.getAverageImageColor(App.Project.variants[0].variant.image);
+        ,openPanel(base) {
+            this.panel.addClass('active');
+        }
 
-            this.template.html(
-                base.variants.reduce( (acc, v, index) => acc + TemplateFactory.getAdminPanelTemplateAddHtml(v, data.templates || [], index), ``)
-            );
+        ,closePanel() {
+            this.panel.removeClass('active');
+        }
 
-            this.template.data('template', data);
-            this.template.data('base', base);
+        ,async formTemplatesList(templates) {
+            this.list.html('');
 
-            $.each(this.template.children(), (index, child) => {
-                $(child).data('variant_index', index);
-            });
+            let sources = [];
 
-            let template_index = 0,
-                variant_index = 0;
+            App.setProjectOnBase(this.base);
+            const color = App.GraphCore.Filter.getAverageImageColor(App.currentProjectVariant.variant.image);
 
-            for (let template of data.templates) {
-                for (let variant of template.variants) {
-                    let id = variant.id,
-                        name = variant.name,
-                        tags = variant.tags;
+            if (templates.length) {
+                for (let t of templates) {
+                    this.list.append(TemplateFactory.getAdminPanelTemplateListPointHtml(t));
+                    this.list.children(':last-child').data('template', t);
 
-                    variant = App.getProjectVariant(variant);
+                    await App.setProject(t);
+                    App.Project.settings.color = App.GraphCore.Filter.getAverageImageColor(App.Project.variants[0].variant.image);
 
-                    await this.getPreviewImage(variant, template_index, variant_index);
+                    for (let v of App.Project.variants) {
+                        sources.push(await App.getVariantPreview(v, true, color));
+                    }
 
-                    App.currentProjectVariant.name = name;
-                    App.currentProjectVariant.tags = tags;
-                    App.currentProjectVariant.id = id;
+                    this.list.children(':last-child').find('[name="templateImageContainer"]').html(
+                        sources.reduce( (acc, src) => acc + TemplateFactory.getImageHtml(src), ``)
+                    );
 
-                    variant_index++;
+                    sources = [];
                 }
-                variant_index = 0;
-                template_index++;
+
             }
 
-            console.log('Template formed');
+            this.list.removeClass('loading');
         }
 
-        ,async getPreviewImage(variant, ti, vi) {
-            await App.setCurrentVariant(variant);
+        ,formPages(pages, selected) {
+            this.pages.html('');
 
-            console.log(variant);
+            for(let page = 1; page <= pages; page++) {
+                this.pages.append(TemplateFactory.getAdminPanelPages(page));
+                this.pages.children(':last-child').data('page', page);
+            }
 
-            console.log(App.currentProjectVariant);
-
-            const template_container = $('.panel__templ-container').eq(ti),
-                node = template_container.children().eq(vi),
-                image = template_container.find('img').eq(vi);
-
-            App.isPreview = true;
-            App.GraphCore.RenderList.render(App.GraphCore.ctx);
-            App.isPreview = false;
-
-            $(image).attr('src', App.GraphCore.canvas.toDataURL('image/png'));
-
-            node.data('variant', variant);
-            // $('body').append(image);
+            this.pages.children(`:nth-child(${selected || 1})`).addClass('selected');
         }
 
-        ,setTemplateBase(base) {
-            const b = Base.fromJSON(base),
-                template = Project.newProject(b);
+        
 
-            console.log(b);
+        // ,async getPreviewImage(variant, ti, vi) {
+        //     await App.setCurrentVariant(variant);
 
-            this.formTemplate(template);
-        }
+        //     console.log(variant);
 
-        ,panel: $('.panel__card.create-template')
+        //     console.log(App.currentProjectVariant);
+
+        //     const template_container = $('.panel__templ-container').eq(ti),
+        //         node = template_container.children().eq(vi),
+        //         image = template_container.find('img').eq(vi);
+
+        //     App.isPreview = true;
+        //     App.GraphCore.RenderList.render(App.GraphCore.ctx);
+        //     App.isPreview = false;
+
+        //     $(image).attr('src', App.GraphCore.canvas.toDataURL('image/png'));
+
+        //     node.data('variant', variant);
+        //     // $('body').append(image);
+        // }
+
+        ,panel: $('.panel__card.templates-list')
+        ,list: $('[name="templatesList"]')
+        ,pages: $('[name="templatesPages"]')
         ,template: $('.panel__templates')
+        ,new_template: $('[name="templateAdd"]')
+        ,back: $('[name="backToBasesList"]')
+        ,base: null
     }
 
     ,TemplatePanel: {
         init() {
-
-            this.inputs = {
-                tag: $('input[name="template_size"]'),
-                name: $('input[name="template_name"]')
-            }
-
-            this.tag.on('click', this.checkTagEvent.bind(this));
-            this.tag_add.on('click', this.addTag.bind(this));
-            this.template_save.on('click', this.formData.bind(this));
-            this.goBack.on('click', this.goBackToTemplatesUI.bind(this));
-            this.goToBaseList.on('click', this.goBackToBaseList.bind(this));
+            this.save.on('click', this.formData.bind(this));
+            this.back.on('click', this.goBackToTemplates.bind(this));
         }
 
-        ,sendData(data) {
-            this.panel.addClass('loading');
-
-            App.Ajax.post('/save/template', JSON.stringify(data), (data) => {
-                this.panel.removeClass('loading');
-                this.panel.removeClass('active');
-
-                AdminApp.TemplatesUI.loadTemplates(AdminApp.TemplatesUI.template.data('base'));
-                console.log(data);
-            });
+        ,sendData(data, cb) {
+            App.Ajax.post('/save/template', data, cb)
         }
 
         ,formData() {
-            if (this.new_variant) {
-                //App.Project.templates.push({ index: this.template_variant, template: JSON.parse(JSON.stringify(App.currentProjectVariant)) });
-            }
+            const data = App.Data.getProjectData();
 
-            const data = AdminApp.TemplatesUI.template.data('template'),
-                name = this.inputs.name.val(),
-                tags = [];
+            this.panel.addClass('loading');
 
-            $.each(this.tag.children().children('.size-container__value'), (index, tag) => {
-                tags.push($(tag).text());
+            data.name = this.name.val();
+            data._id = this.template._id;
+
+            this.sendData(JSON.stringify(data), (response) => {
+                response = JSON.parse(response);
+
+                this.panel.removeClass('loading');
+                this.goBackToTemplates();
             });
-
-            App.currentProjectVariant.name = name;
-            App.currentProjectVariant.tags = tags;
-
-            let buffer = data.templates.find( t => t.index == this.template_variant),
-                vi = 0;
-
-            if (!buffer) {
-                buffer = { index: this.template_variant, variants: [] };
-                data.templates.push(buffer);
-            }
-
-            let vr = buffer.variants.find( (v, index) => {
-                vi = index;
-                return App.currentProjectVariant.id == v.id;
-            });
-
-            if (!vr) {
-                App.currentProjectVariant.id = AdminApp.makeid(12);
-                buffer.variants.push(App.currentProjectVariant);
-            } else {
-                buffer.variants[vi] = App.currentProjectVariant;
-            }
-
-            console.log(data);
-
-            this.sendData(data);
         }
 
-        ,goBackToTemplatesUI(e) {
-            e.preventDefault();
-
-            this.panel.removeClass('loading');
-            this.panel.removeClass('active');
-
-            AdminApp.TemplatesUI.loadTemplates(AdminApp.TemplatesUI.template.data('base'));
-        }
-
-        ,goBackToBaseList(e) {
-            AdminApp.UI.selectPanels(e);
-        }
-
-        ,async useTemplate(variant, variant_index, template, isNew = true) {
-            AdminApp.TemplatesUI.panel.removeClass('active');
-            this.panel.addClass('active');
-
-            await App.setCurrentVariant(variant);
-
-            this.new_variant = isNew;
-            this.template_variant = variant_index;
-
-            this.setTemplateData(template, variant);
-        }
-
-        ,async setTemplate(template, cb) {
+        ,async useTemplate(template) {
             await App.setProject(template);
+            App.Project.settings.color = App.GraphCore.Filter.getAverageImageColor(App.Project.variants[0].variant.image);
+            App.GraphCore.Filter.setColorFilterImage(App.Project.variants[0].variant.image, App.Project.settings.color);
 
-            this.setTemplateData(template);
+            this.template = App.Project;
+            this.template._id = template._id;
+            this.template.name = template.name;
 
-            if (cb) {
-                cb();
-            }
+            this.setTemplateData();
         }
 
-        ,setTemplateData(template, variant) {
-            this.inputs.name.val(variant.name);
+        ,async useBase(base) {
+            await App.setProjectOnBase(base);
 
-            variant.tags = variant.tags || [];
+            this.template = App.Project;
+            this.template._id = 0;
 
-            this.tag.html(
-                variant.tags.reduce( (acc, tag) => acc + TemplateFactory.getAdminPanelSizeHtml(tag), ``)
-            );
-
-            App.GraphCore.setCurrentWidget(null);
-            App.UI.Layers.formLayersHtml();
+            this.setTemplateData();
         }
 
-        ,checkTagEvent(e) {
-            const target = $(e.target);
-
-            if (target.hasClass('size-container__close')) {
-                this.removeTag(target.parent());
-            }
-
-            if (target.hasClass('panel__template-layer-config')) {
-                const id = target.data('id'),
-                    layer = App.currentProjectVariant.layers.find( l => l.id == id);
-
-                console.log(layer);
-            }
+        ,setTemplateData() {
+            this.name.val(this.template.name);
         }
 
-        ,addTag() {
-            const tag = this.inputs.tag.val();
-
-            this.tag.append(TemplateFactory.getAdminPanelSizeHtml(tag));
+        ,goBackToTemplates() {
+            this.closePanel();
+            AdminApp.TemplatesUI.loadUIPage();
         }
 
-        ,removeTag(tag) {
-            tag.remove();
+        ,openPanel() {
+            this.panel.addClass('active');
+        }
+
+        ,closePanel() {
+            this.panel.removeClass('active');
         }
 
         ,panel: $('.templates-add')
-        ,tag: $('.templates-add .panel__tag-container')
-        ,tag_add: $('.templates-add .add-tag')
         ,template_save: $('.save-template')
-        ,layers: $('.panel__container-basis')
-        ,goBack: $('.templates_back')
-        ,goToBaseList: $('.basis_back ')
-}
+        ,name: $('[name="template_name"]')
+        ,save: $('[name="saveTemplate"]')
+        ,back: $('[name="goBackToTemplates"]')
+        ,template: null
+    }
 
     ,TemplatesList: {
         init() {
-            console.log('Templates panel init');
-
             this.list.on('click', this.checkEvent.bind(this));
             this.page_list.on('click', this.checkEvent.bind(this));
             this.loadTemplates(1);
@@ -1143,8 +1103,6 @@ AdminApp = {
 
             if(target.hasClass('panel__basis-remove')) {
                 const id = (target.parent().parent().data('template')).id;
-
-                console.log(id);
                 this.removeTemplate(id);
             }
         }
@@ -1207,6 +1165,8 @@ AdminApp = {
         ,list: $('.templates-list .panel__basis-list')
         ,page_list: $('.panel__page-list.templates')
         ,panel: $('.templates-list')
+        //,new_template: $('[name="templateAdd"]')
+        ,base: null
     }
 }
 

@@ -58,14 +58,27 @@ router.get('/delete', (req, res, next) => {
 router.get('/delete/template', (req, res, next) => {
 
     const user = req.cookies.user.name || req.session.user.name,
-        query = qrs.parse(URL.parse(req.url).query);
+        query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            data: [],
+            query: query,
+            status: false,
+            message: "Unexpected error",
+            errors: [],
+            log:  {
+                type: "GET",
+                path: '/delete/template',
+                headers: req.headers
+            }
+        }
 
     // res.send({status: true, message: 'Template delete'});
 
-    console.log(query);
+    Mongo.delete({ _id: query._id}, 'admin', (data) => {
+        response.status = true;
+        response.message = "Template deleted";
 
-    Mongo.delete({ user: user, id: parseInt(query.id)}, 'admin', (data) => {
-        res.send({status: true, message: 'Template delete'});
+        res.send(response);
     });
 
 });

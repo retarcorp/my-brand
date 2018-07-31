@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 var Mongo = require('../modules/Mongo');
+var User = require('../modules/Users');
 
 var URL = require('url');
 var qrs = require('querystring');
 var fs = require('fs');
+var md5 = require('md5');
 
 router.post('/save', function(req, res, next) {
 	let parse = '';
@@ -62,6 +64,8 @@ router.post('/save/template', (req, res, next) => {
 		let data = JSON.parse(parse);
 
 		console.log(data);
+
+		data._id = (data._id) ? data._id : md5(User.genSalt(12));
 
 		Mongo.update( { _id: data._id }, data, 'admin', (response_db) => {
             res.send({status: true});

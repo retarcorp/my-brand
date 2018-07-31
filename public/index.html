@@ -122,10 +122,69 @@
                     <p class="rotate__text">Просмотр <span class="rotate__value">360</span></p>
                     <button class="rotate__btn-right"></button>
                 </div>
-                <div class="product__preview preview preview_margin">
-                    <div class="loader-container">
-                        <div class="loader"></div>
+                <div class="product-work-zone">
+                    <div class="template__list">
+                        <div class="constr__item-templ">
+                            <img src="img/basis/3.jpg">
+                        </div>
+                        <div class="constr__item-templ">
+                            <img src="img/basis/3.jpg">
+                        </div>
+                        <div class="constr__item-templ">
+                            <img src="img/basis/3.jpg">
+                        </div>
+                        <div class="constr__item-templ">
+                            <img src="img/basis/3.jpg">
+                        </div>
                     </div>
+                    <div class="product__preview preview preview_margin">
+                        <div class="loader-container">
+                            <div class="loader"></div>
+                        </div>
+                    </div>
+                    <div class="left-setting-panel">
+                        <div class="editor__right" style="position: relative;">
+                            <!-- <button class="decoration__button button button__constructor-prew"></button> -->
+                            <button class="decoration__button button button__horizontal"></button>
+                            <button class="decoration__button button button__vertical"></button>
+                            <button class="decoration__button button button__trush"></button>
+                            <div class="editor__btn-position">
+                                <button class="decoration__button button editor__btn-top"></button>
+                                <button class="decoration__button button editor__btn-bottom"></button>
+                            </div>
+    <!--                         <div class="colotgovno" style="width: 300px; height: 200px; border: 2px solid red; position: absolute; top: 0; left: 40px; background-color: #fff">
+                                <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin">Custom color</button>
+                                <input class="details__color-pick details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
+                                <input class="details__color-pick details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
+                                <input class="details__color-pick details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
+                                <input class="details__color-pick details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
+
+                            </div> -->
+                            <!-- <button class="decoration__button button button__"></button> -->
+                        </div>
+                        <div class="editor__preview">
+                            <button class="decoration__button button button__preview"></button>
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- FOR PREVIEW -->
+                    <div class="constructor-preview">
+                        <div class="preview-picture">
+                            <div class="preview-image">
+                                <img src="img/basis/3.jpg">
+                            </div>
+                            <div class="editor__unpreview">
+                                <button class="decoration__button button button__unpreview"></button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
 
                 <div class="product__editor editor editor_margin editor-padding">
@@ -157,26 +216,24 @@
                         <div class="editor__size editor__item_margin">
                             <input class="size__input" type="number" value="11">
                         </div>
-                    </div>
-                    <div class="editor__right" style="position: relative;">
-                        <input type="hidden" value="" id="_color__text">
-                        <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
-                        <button class="decoration__button button button__invisible"></button>
-                        <button class="decoration__button button button__trush"></button>
-                        <div class="editor__btn-position">
-                            <button class="decoration__button button editor__btn-top"></button>
-                            <button class="decoration__button button editor__btn-bottom"></button>
+                        <div class="example-pick color-pick" style="background-color: #393939"></div>
+                        <div class="color-picker">
+                            <div class="example-pick" style="background-color: red"></div>
+                            <div class="example-pick" style="background-color: green"></div>
+                            <div class="example-pick" style="background-color: blue"></div>
+                            <div class="example-pick" style="background-color: yellow"></div>
+                            <div class="example-pick" style="background-color: grey"></div>
+                            <div class="example-pick" style="background-color: orange"></div>
+                            <div class="example-pick" style="background-color: pink"></div>
+                            <div class="custom-color">
+                                <input type="hidden" value="" id="_color__text">
+                                <label for="color-text">
+                                    <button id="color-text" class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
+                                    <p>Выбрать свой цвет</p>  
+                                </label>
+
+                            </div>
                         </div>
-<!--                         <div class="colotgovno" style="width: 300px; height: 200px; border: 2px solid red; position: absolute; top: 0; left: 40px; background-color: #fff">
-                            <button class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin">Custom color</button>
-                            <input class="details__color-pick details__color_margin" style="background-color: #676EC3;" readonly="" data-color="#f2e656">
-                            <input class="details__color-pick details__color_margin" style="background-color: #F54B77;" readonly="" data-color="#f2e656">
-                            <input class="details__color-pick details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
-                            <input class="details__color-pick details__color_margin" style="background-color: #FEC24E;" readonly="" data-color="#f2e656">
-
-                        </div> -->
-                        <!-- <button class="decoration__button button button__"></button> -->
-
                     </div>
 
                     <!-- <div class="editor__decoration editor__item_margin">

@@ -55,15 +55,26 @@ router.get('/load/templates', (req, res, next) => {
 
     console.log(query);
 
-    Mongo.select( { _id : query._id }, 'admin', (data) => {
-        let templates = data[0],
+    Mongo.select( { "base._id" : query._id }, 'admin', (data) => {
+        let templates = data,
             pages = 0,
             response = {};
+
+        if (query.page || query.page != 'all') {
+            query.page = parseInt(query.page);
+
+            response.data = templates.filter( (t, index) => {
+                if (index >= 20 * (query.page - 1) && index < 20 * query.page) {
+                    return t;
+                }
+            });
+        } else {
+            response.data = templates;
+        }
 
         response.status = true;
         response.pages = Math.ceil(data.length/20);
         response.messasge = 'Templates loaded';
-        response.data = templates || { _id: null, templates: [] };
 
         res.send(response);
     });

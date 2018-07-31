@@ -297,6 +297,10 @@ class TextWidget extends Widget {
     }
 
     setColor(color) {
+        this.color = color;
+    }
+
+    setHexColor(color) {
         this.color = '#' + color;
     }
 

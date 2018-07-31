@@ -174,7 +174,7 @@ h1 {
 .panel__card {
     margin-bottom: 20px;
     background: #fff;
-    /* display: none; */
+     display: none; 
 }
 
 .panel__card.active {
@@ -336,7 +336,8 @@ input[type="file"]::before {
 /* NEW */
 
 button.button__add-basis,
-button.button__add-print{
+button.button__add-print,
+button.button__add-template {
     width: 209px;
     margin: 30px 0 50px 28px;
 }
@@ -720,7 +721,7 @@ select{
 }
 
 .panel__card{
-     display: none; 
+     /*display: none; */
 }
 
 .panel__basis-img {
@@ -747,9 +748,9 @@ select{
 
 .panel__right-side-create{
     position: relative;
-    width: calc(100% - 420px);
+    /*width: calc(100% - 530px);*/
     margin-left: 20px;
-    min-width: 410px;
+    /*min-width: 410px;*/
     padding-bottom: 70px;
 }
 
@@ -1035,7 +1036,6 @@ button.window-button__add-print{
 }
 
 .Scrollable, .Core-Scrollable{
-    height: 300px;
     overflow: auto;
 }
 .Scrollable::-webkit-scrollbar,.Core-Scrollable::-webkit-scrollbar{
@@ -1333,4 +1333,50 @@ button.button__add-prints{
 
 .margin-print .panel__column-item-radio-header{
     margin-bottom: 16px;
+}
+
+.panel__turn-container img{
+    width: 200px;
+    margin-right: 20px;
+}
+
+.template__header{
+    font-size: 21px;
+    color: inherit;
+    margin-bottom: 40px;
+}
+.panel__templ-item{
+    margin: 40px 30px 0;
+}
+
+.panel__templ-button{
+    width: 100%;
+    margin-top: 20px;
+}
+.panel__templ-edit,
+.panel__templ-remove{
+    color: #393939;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: underline;
+    background-color: #fff;
+    cursor: pointer; 
+}
+.panel__templ-edit{
+    margin-right: 15px;
+}
+
+.panel .create__btns{
+    width: auto;
+}
+.panel .product-work-zone{
+    margin-top: 0;
+}
+
+.panel .create__btns{
+    flex-direction: column;
+}
+
+.panel .btns__add-text{
+    margin-bottom: 20px;
 }

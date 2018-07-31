@@ -241,24 +241,14 @@ const TemplateFactory = {
 
     ,getAdminPanelTemplateListPointHtml(template) {
         return `
-            <li class="panel__basis-item">
-                <div class="panel__basis-img">
-                    <img src="" alt="">
+            <li class="panel__templ-item">
+                <h1 class="template__header">${template.name}</h1>
+                <div class="panel__turn-container" name="templateImageContainer">
+                    
                 </div>
-                <div class="panel__basis-description">
-                    <span class="panel__basis-name">
-                        ${template.name}
-                        <div class="type__basis">
-                            ${ (template.base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
-                            ${ (template.base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
-                        </div>
-                    </span>
-                    <p class="panel__basis-type">${template.base.type}</p>
-                    <p class="panel__basis-price">${template.base.price} Р</p>
-                </div>
-                <div class="panel__basis-button">
-                    <button class="panel__basis-edit">Редактировать</button>
-                    <button class="panel__basis-remove">Удалить</button>
+                <div class="panel__templ-button">
+                    <button class="panel__templ-edit" name="templateRedact">Редактировать</button>
+                    <button class="panel__templ-remove" name="templateDelete">Удалить</button>
                 </div>
             </li>
         `
@@ -306,6 +296,20 @@ const TemplateFactory = {
                 ${ (template) ?`<div class="panel__templ-container Scrollable">${template.variants.reduce( (acc, t) => acc + this.getAdminPanelVariantTemplates(t), ``)} </div>` : "" }
                 <button class="template__btn-add"></button>
             </div>
+        `
+    }
+
+    ,getVariantsHtml(variant) {
+        return `
+            <div class="constr__item-templ">
+                <img src="${variant.variant.src}">
+            </div>
+        `
+    }
+
+    ,getImageHtml(src) {
+        return `
+            <img src="${src}">
         `
     }
 

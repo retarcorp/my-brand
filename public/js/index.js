@@ -54,7 +54,7 @@ class Profile {
 
         this.page_list.on('click', this.checkFavoritesEvent);
 
-        $('body').on('click', this.showLoginForm);
+        //$('body').on('click', this.showLoginForm);
 
 
         this.checkLogged();
@@ -263,7 +263,6 @@ class Profile {
 
             for (let project of projects) {
                 await this.loadPreviewImage(project, $('.favorites__img')[index], this.favorites.children()[index]);
-                console.log(project);
                 index++;
             }
 
@@ -313,9 +312,10 @@ class Tabs {
             layer: $('.addition-layer')
         };
 
-        this.invis = $('.button__invisible');
+        this.invis = $('.button__constructor-prew');
+        this.horizontal_align = $('.button__vertical');
+        this.vertical_align = $('.button__horizontal');
 
-        console.log(this.invis);
 
         this.invis.on('click', this.UI.onPreview);
 
@@ -324,7 +324,8 @@ class Tabs {
 
         this.widgets_control.on('click', this.UI.onWidgetPositionChange);
         this.delete.on('click', this.UI.onDelete)
-
+        this.horizontal_align.on('click', this.UI.onHorizontalAlign.bind(this.UI));
+        this.vertical_align.on('click', this.UI.onVerticalAlign.bind(this.UI));
 
 
         this.customization.print.on('click', (e) => {
@@ -359,12 +360,17 @@ class BaseList {
         this.info_item = $('.link__info');
         this.info = $('.info-basis');
 
+        this.variants_container = $('.template__list');
+
 
         this.arrows.on('click', this.setProjectVariant);
         this.sizeContainer.on('click', this.UI.onBaseSize);
         this.info_item.on('click', this.checkInfoEvent.bind(this));
         this.info.on('click', this.checkInfoEvent.bind(this));
+        this.variants_container.on('click', this.checkVariantsEvent.bind(this));
 
+
+        this.setVariantsList(this.UI.App.Project);
 
         this.setSizeHtml();
         this.setBaseSize(this.UI.App.Project.settings.size || this.sizeContainer.children(":first-child"));
@@ -384,6 +390,21 @@ class BaseList {
         }
     }
 
+    checkVariantsEvent(e) {
+        let target = $(e.target),
+            currentTarget = $(e.currentTarget);
+
+        while(!target.is(currentTarget)) {
+            if (target.hasClass('constr__item-templ')) {
+                const variant = target.data('variant');
+
+                this.selectProjectVariant(variant, target);
+            }
+
+            target = target.parent();
+        }
+    }
+
     openInfo() {
         this.info.addClass('active');
     }
@@ -399,6 +420,12 @@ class BaseList {
         App.Project.addVariants();
     }
 
+    selectProjectVariant(variant, child) {
+        this.variants_container.children().removeClass('active');
+        child.addClass('active');
+        this.UI.App.setCurrentVariant(variant);
+    }
+
     setSizeHtml() {
         this.sizeContainer.html('');
 
@@ -411,11 +438,23 @@ class BaseList {
 
     }
 
+    setVariantsList(project) {
+        const variants = project.variants;
+
+        $('.template__list').html('');
+
+        variants.forEach( (v, index) => {
+            $('.template__list').append(TemplateFactory.getVariantsHtml(v));
+            $('.template__list').children(':last-child').data('variant', v);
+        });
+
+        $('.template__list').children(':first-child').addClass('active');
+    }
+
     setBaseSize(size) {
         let target = $(`.size__block[data-size="${size}"] > input`),
             collection = $(`[data-size] > input`);
 
-        console.log(size);
 
         if (size && typeof size != 'string' && typeof size != "number") {
             size.children('input').prop('checked', true);
@@ -531,7 +570,6 @@ class FontsList {
 
 
                 li.data('font', App.Data.Fonts[i]);
-                console.log(li.data('font'));
             }
 
             // Cache the list items
@@ -574,7 +612,6 @@ class FontsList {
     setFont(font) {
         const curr = App.GraphCore.currentWidget;
 
-        console.log('data');
 
         if (curr instanceof TextWidget) {
             curr.fontSettings.fontFamily = font.name;
@@ -584,7 +621,6 @@ class FontsList {
     getFont(e) {
         const curr = App.GraphCore.currentWidget;
 
-        console.log('data');
 
         if (curr instanceof TextWidget) {
             curr.fontSettings.fontFamily = $(e.target.options[e.target.selectedIndex]).data('font').name;
@@ -603,15 +639,23 @@ class TextSettings {
             color: $('#_color__text')
         };
 
+        this.color_picker = $('.color-picker');
+        this.color_button = $('.color-pick');
+
         this.colorView = $('.editor__color');
 
-        this.btnsStyle = $('.decoration__button')
+        this.btnsStyle = $('.decoration__button');
 
-        this.inputs.widgetText.on('input', App.UI.onChangeText);
-        this.inputs.textSize.on('input', App.UI.onSize);
-        this.inputs.color.on('change', App.UI.onColor);
 
-        this.btnsStyle.on('click', App.UI.onStyle);
+        this.inputs.widgetText.on('input', this.UI.onChangeText);
+
+        this.inputs.textSize.on('input', this.UI.onSize);
+
+        this.color_button.on('click', this.toggleTextColorPicker.bind(this));
+        this.color_picker.on('click', this.UI.onColor);
+        this.inputs.color.on('change', this.UI.onColor);
+
+        //this.btnsStyle.on('click', App.UI.onStyle);
     }
 
     setSettings() {
@@ -623,6 +667,22 @@ class TextSettings {
             this.inputs.color.val(curr.color);
             this.inputs.textSize.val(curr.fontSettings.fontSize);
             this.inputs.widgetText.val(curr.text);
+        }
+    }
+
+    toggleTextColorPicker() {
+        this.color_picker.toggleClass('active');
+    }
+
+    closeTextColorPicker() {
+        this.color_picker.removeClass('active');
+    }
+
+    closeColorPicker(e) {
+        const target = $(e.target);
+
+        if (!this.color_picker.has(target).length && !this.color_picker.is(target) && !target.is(this.color_button)) {
+            this.closeTextColorPicker();
         }
     }
 }
@@ -669,7 +729,6 @@ class Create {
             widget.text = data.text;
             widget.id = App.UI.Layers.addLayer(widget, 'space');
 
-            console.log(widget, data);
             widget.loadLazy();
 
             App.currentProjectVariant.addWidget(widget);
@@ -904,7 +963,12 @@ class LightBox {
     }
 
     init() {
-        this.preview = $('.btn-show-result');
+        //this.preview = $('.btn-show-result');
+        this.preview = $('.button__preview');
+        this.preview_image = $('.preview-image img');
+        this.preview_container = $('.constructor-preview');
+        this.preview_unpreview = $('.button__unpreview');
+
         this.box = $('.preview');
         this.content = $('.preview__picture img');
 
@@ -914,23 +978,43 @@ class LightBox {
         };
 
 
-        this.preview.on('click', App.UI.onPreview);
+        this.preview_unpreview.on('click', this.closeBlock.bind(this));
+        this.preview.on('click', this.UI.onPreview);
+        this.preview_container.on('mousemove', this.movePreviewImage.bind(this));
+        this.preview_container.on('mouseout', this.resetPreviewTranslate.bind(this));
         //this.box.on('click', this.closeBlock.bind(this));
     }
 
     closeBlock(e) {
         this.UI.App.isPreview = false;
 
-        this.UI.App.UI.leftMenu.removeClass('on-preview');
-        this.UI.App.UI.BaseList.colorContainer.removeClass('on-preview');
-        this.preview.removeClass('on-preview');
+        // this.UI.App.UI.leftMenu.removeClass('on-preview');
+        // this.UI.App.UI.BaseList.colorContainer.removeClass('on-preview');
+        // this.preview.removeClass('on-preview');
 
+        this.closePreview();
         this.UI.App.GraphCore.resetScale(this.UI.App.GraphCore.ctx);
+        this.UI.App.GraphCore.ctx.translate(0.5,0.5);
+
+    }
+
+    openPreview() {
+        this.preview_container.addClass('active');
+        this.setPreviewImage();
+    }
+
+    closePreview() {
+        this.preview_container.removeClass('active');
     }
 
     setPreviewImage() {
+        this.setPreviewHeight();
         this.UI.App.GraphCore.resetScale();
         this.UI.App.UI.LightBox.resetPreview();
+    }
+
+    setPreviewHeight() {
+        this.preview_container.css('height', this.UI.App.GraphCore.canvas.height);
     }
 
     resetPreview() {
@@ -940,10 +1024,26 @@ class LightBox {
 
         this.previewImage.image = new Image();
         this.previewImage.image.src = App.GraphCore.canvas.toDataURL('image/png');
+        this.preview_image.attr('src', App.GraphCore.canvas.toDataURL('image/png'));
     }
 
     resetPreviewPosition() {
         this.previewImage.position = new Position(0,0);
+    }
+
+    resetPreviewTranslate() {
+        this.preview_image.css('transform', 'translateY(0)');
+    }
+
+
+    movePreviewImage(e) {
+        const preview_height = this.preview_image.prop('height'),
+            container_height = parseInt(this.preview_container.css('height')),
+            _int = (preview_height - container_height)/container_height,
+            _y = e.offsetY;
+
+
+        this.preview_image.css('transform', `translateY(-${_y * _int}px)`);
     }
 
     movePreview(e) { //WORKFLOW
@@ -1036,7 +1136,6 @@ class Slider {
     init() {
         var bases = this.UI.App.Data.Bases;
         var container = this.container = $(".slider__container");
-        console.log(bases);
         container.html(bases.reduce((acc, base) => acc + TemplateFactory.getSliderSlideHtml(base),""));
         $.each(container.children(), (index, child) => {
             $(child).data("base", bases[index]);
@@ -1140,6 +1239,13 @@ class UI {
 
         //this.Profile.init();
         //this.Menu.init();
+
+        $('body').on('click', this.closePopups.bind(this));
+    }
+
+    closePopups(e) {
+        this.Profile.showLoginForm(e);
+        this.TextSettings.closeColorPicker(e);
     }
 
     closeTabs() {
@@ -1251,12 +1357,19 @@ class UI {
 
     }
 
-    onColor() {
-        let data = $(this).val();
-        const curr = App.GraphCore.currentWidget;
+    onColor(e) {
+        const data = $(this).val(),
+            target = $(e.target),
+            bgColor = target.css('backgroundColor'),
+            curr = App.GraphCore.currentWidget;
 
         if (curr instanceof TextWidget) {
-            curr.setColor(data);
+            if (data) {
+                curr.setHexColor(data);
+            } else if ((target.hasClass('example-pick') || target.hasClass('jscolor') ) && bgColor) {
+                curr.setColor(bgColor);
+            }
+            
         }
     }
 
@@ -1268,7 +1381,6 @@ class UI {
                     image = App.currentProjectVariant.variant.image;
 
                 if (data) {
-                    console.log(data);
                     App.GraphCore.Filter.setColorFilterImage(image, "#" + data);
                     App.Project.settings.color = "#" + data;
 
@@ -1366,16 +1478,15 @@ class UI {
     onPreview(e) {
         const target = $(e.target);
 
-        if (App.isPreview && target.hasClass('button__invisible')) {
+        if (App.isPreview && target.hasClass('button__preview')) {
             App.UI.LightBox.closeBlock(e);
         } else {
-            App.UI.leftMenu.addClass('on-preview');
-            App.UI.BaseList.colorContainer.addClass('on-preview');
-            App.UI.LightBox.preview.addClass('on-preview');
+            // App.UI.leftMenu.addClass('on-preview');
+            // App.UI.BaseList.colorContainer.addClass('on-preview');
+            // App.UI.LightBox.preview.addClass('on-preview');
 
             App.isPreview = true;
-
-            App.UI.LightBox.setPreviewImage();
+            App.UI.LightBox.openPreview();
         }
 
     }
@@ -1388,7 +1499,6 @@ class UI {
 
             if (curr instanceof TextWidget) {
                 App.UI.closeTabs.call(App.UI);
-                console.log();
             }
 
             App.currentProjectVariant.deleteWidget(curr.id);
@@ -1416,8 +1526,6 @@ class UI {
     }
 
     onWidgetPositionChange(e) {
-        console.log('Change position');
-
         const target = $(e.target),
             curr = App.GraphCore.currentWidget;
 
@@ -1894,6 +2002,7 @@ class GraphCore {
     resetScale() {
         this.ctx.restore();
         this.ctx.save();
+        this.ctx.translate(0.5,0.5);
         this.scale = 0.25;
     }
 
@@ -2169,8 +2278,6 @@ class Application {
             qBody[eq[0]] = eq[1];
         });
 
-        console.log(qBody);
-
         return qBody;
     }
 
@@ -2251,7 +2358,6 @@ class Application {
                 w.biggest_line = biggestLine;
             }
 
-            console.log(w);
             return w;
         });
 
@@ -2279,16 +2385,14 @@ class Application {
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
 
+        this.UI.BaseList.setVariantsList(this.Project);
+
         return this.Project;
     }
 
     async setProject(project) {
         this.Project = this.getProject(project);
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
-
-        console.log($('.details__name').text(), $('.price__value').text(), this.Project.name, this.Project.price)
-
-        console.log(project.base.fancywork, project.base.print)
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
         if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
@@ -2298,6 +2402,28 @@ class Application {
 
         await this.loadProjectAssets();
 
+        this.UI.BaseList.setVariantsList(this.Project);
+
+
+        return this.Project;
+    }
+
+    async setProjectOnBase(base) {
+        this.Project = Project.newProject(base || this.Data.Bases[0]);
+        this.currentProjectVariant = this.Project.variants[0];
+        this.currentWorkzone = this.currentProjectVariant.variant.workzone;
+
+
+        if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
+        if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
+
+        $('.details__name span').text(this.Project.base.name);
+        $('.price__value').text(this.Project.base.price);
+
+        this.GraphCore.setCurrentWidget(null);
+        await this.loadProjectAssets();
+
+        this.UI.BaseList.setVariantsList(this.Project);
 
         return this.Project;
     }
@@ -2310,6 +2436,9 @@ class Application {
 
         this.GraphCore.defineDimensions();
         await this.loadProjectAssets();
+
+        this.GraphCore.setCurrentWidget(null);
+        this.GraphCore.ctx.translate(0.5, 0.5);
     }
 
     async setParsedProject(project, variant_index) {
@@ -2332,6 +2461,26 @@ class Application {
     async loadProjectAssets() {
         const variant = this.currentProjectVariant;
         await variant.loadLazy();
+    }
+
+    // async getProjectPreviewImage(variant) {
+
+    // }
+
+    async getVariantPreview(variant) {
+        await this.setCurrentVariant(variant);
+
+        // if (isDefault) {
+        //     this.GraphCore.Filter.setColorFilterImage(variant.variant.image, color);
+
+        //     variant.variant.loadLazy();
+        // }
+
+        this.isPreview = true;
+        this.GraphCore.RenderList.render(this.GraphCore.ctx);
+        this.isPreview = false;
+
+        return this.GraphCore.canvas.toDataURL('image/png');
     }
 
     // TODO rename to verb-based name

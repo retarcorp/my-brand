@@ -46,7 +46,7 @@
 /*DELETE*/
 
 canvas {
-    border: 1px solid #bbb;
+    border: 1px solid #ececec;
 }
 
 .info-basis.active {
@@ -62,3 +62,38 @@ canvas {
 .panel__new-template.active {
     display: flex;
 }
+
+
+.color-picker {
+    display: none;
+}
+
+.color-picker.active {
+    display: flex;
+}
+
+
+
+/*PREVIEW*/
+
+.constructor-preview {
+    background: #fff;
+    overflow: hidden;
+}
+
+.constructor-preview.active {
+     display: flex;
+}
+
+.constructor-preview img {
+    pointer-events: none;
+}
+
+
+
+/*VARIANTS*/
+
+.constr__item-templ.active {
+    border-color: #a4a4a4;
+}
+
