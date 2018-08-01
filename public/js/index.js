@@ -309,7 +309,8 @@ class Tabs {
             base: $('.addition-basis'),
             text: $('.product__editor'),
             print: $('.add-photo'),
-            layer: $('.addition-layer')
+            layer: $('.addition-layer'),
+            panel: $('.editor__right')
         };
 
         this.invis = $('.button__constructor-prew');
@@ -370,7 +371,8 @@ class BaseList {
         this.variants_container.on('click', this.checkVariantsEvent.bind(this));
 
 
-        this.setVariantsList(this.UI.App.Project);
+        //this.setVariantsList(this.UI.App.Project);
+        setTimeout(this.updateVariantImage.bind(this), 10000);
 
         this.setSizeHtml();
         this.setBaseSize(this.UI.App.Project.settings.size || this.sizeContainer.children(":first-child"));
@@ -438,17 +440,40 @@ class BaseList {
 
     }
 
-    setVariantsList(project) {
+    async setVariantsList(project) {
         const variants = project.variants;
+
+        let index = 0;
 
         $('.template__list').html('');
 
-        variants.forEach( (v, index) => {
-            $('.template__list').append(TemplateFactory.getVariantsHtml(v));
+        for (let v of variants) {
+            v.index = index;
+            $('.template__list').append(TemplateFactory.getVariantsHtml());
             $('.template__list').children(':last-child').data('variant', v);
-        });
+            $('.template__list').children(':last-child').data('index', v.index);
+
+            $('.template__list').children(':last-child').find('img').attr('src', await this.UI.App.getVariantPreview(v));
+
+            index++;
+        }
 
         $('.template__list').children(':first-child').addClass('active');
+    }
+
+    async updateVariantImage() {
+        const variant = this.UI.App.currentProjectVariant;
+        let child = null;
+
+        $.each($('.template__list').children(), (index, ch) => {
+            if ($(ch).data('index') == variant.index) {
+                child = ch;
+            }
+        });
+
+        $(child).find('img').attr('src', await this.UI.App.getVariantPreview(this.UI.App.currentProjectVariant));
+
+        setTimeout(this.updateVariantImage.bind(this), 10000);
     }
 
     setBaseSize(size) {
@@ -569,7 +594,10 @@ class FontsList {
                 }).appendTo($list);
 
 
+                console.log(App.Data.Fonts[i])
+
                 li.data('font', App.Data.Fonts[i]);
+                li.css('font-family', App.Data.Fonts[i].name);
             }
 
             // Cache the list items
@@ -981,7 +1009,7 @@ class LightBox {
         this.preview_unpreview.on('click', this.closeBlock.bind(this));
         this.preview.on('click', this.UI.onPreview);
         this.preview_container.on('mousemove', this.movePreviewImage.bind(this));
-        this.preview_container.on('mouseout', this.resetPreviewTranslate.bind(this));
+        //this.preview_container.on('mouseout', this.resetPreviewTranslate.bind(this));
         //this.box.on('click', this.closeBlock.bind(this));
     }
 
@@ -1039,11 +1067,15 @@ class LightBox {
     movePreviewImage(e) {
         const preview_height = this.preview_image.prop('height'),
             container_height = parseInt(this.preview_container.css('height')),
-            _int = (preview_height - container_height)/container_height,
+            _diff = container_height * PREVIEW_OUT,
+            _int = (preview_height - container_height + _diff)/container_height,
             _y = e.offsetY;
 
 
-        this.preview_image.css('transform', `translateY(-${_y * _int}px)`);
+        if (_y - _diff > 0 && _y + _diff < container_height) {
+            this.preview_image.css('transform', `translateY(-${(_y-_diff) * _int}px)`);
+        }
+        
     }
 
     movePreview(e) { //WORKFLOW
@@ -1254,6 +1286,15 @@ class UI {
             this.Tabs.customization.text.removeClass('active');
             this.Tabs.customization.base.removeClass('active');
             this.Tabs.customization.layer.removeClass('active');
+            this.Tabs.customization.panel.removeClass('active');
+        }
+    }
+
+    openPanelTab() {
+        const curr = this.App.GraphCore.currentWidget;
+
+        if (curr) {
+            this.Tabs.customization.panel.addClass('active');
         }
     }
 
@@ -1811,12 +1852,19 @@ class GraphCore {
         this.dragged = false;
         this.resized = false;
         this.previewDragged = false;
+        this.canvasDragged = false;
+
+        this.canvasPosition = new Position(0,0);
+        this.canvasScale = 1;
 
         this.lastX = 0;
         this.lastY = 0;
 
         this.realX = 0;
         this.realY = 0;
+
+        this.clientX = 0;
+        this.clientY = 0;
 
         this.scale = 0.25;
         this.scaleCount = 0;
@@ -1836,6 +1884,8 @@ class GraphCore {
         }
 
         this.Canvas.init();
+
+        //this.canvas_container.on('mousemove', this.moveCanvas.bind(this));
 
         this.defineDimensions();
     }
@@ -1895,10 +1945,11 @@ class GraphCore {
         }
 
         this.Toolkit.reset();
+        this.App.UI.openPanelTab();
     }
 
     mouseDown(e) {
-        if (!this.App.isPreview) {
+        if (!this.App.isPreview && !this.canvasDragged) {
             const curr  = this.findSprite( new Position(e.offsetX, e.offsetY));
             let resizeOpt;
 
@@ -1913,6 +1964,10 @@ class GraphCore {
                 }
 
                 $('body').addClass('_no-select');
+            } else if (window.AdminApp) {
+                this.canvasDragged = true;
+
+                //$(this.canvas).addClass('_no-events');
             }
 
             this.lastX = e.offsetX;
@@ -1920,6 +1975,9 @@ class GraphCore {
 
             this.realX = e.offsetX;
             this.realY = e.offsetY;
+
+            this.clientX = e.clientX;
+            this.clientY = e.clientY;
 
         } else {
             this.previewDragged = true;
@@ -1934,9 +1992,14 @@ class GraphCore {
         this.dragged = false;
         this.resized = false;
         this.previewDragged = false;
+        this.canvasDragged = false;
+        $(this.canvas).removeClass('_no-events');
     }
 
     mouseMove(e) {
+        const curr = this.currentWidget;
+
+        //if (!this.canvasDragged) {
         if (!this.App.isPreview) {
             if (this.resized) {
                 this.resize(e);
@@ -1946,10 +2009,16 @@ class GraphCore {
                 this.onMove(e);
             }
 
+            if(this.canvasDragged) {
+                this.moveCanvas(e);
+            }
+
         } else {
             if (this.previewDragged)
                 this.App.UI.LightBox.movePreview(e);
         }
+        //}
+            
     }
 
     mouseWheel(e) {
@@ -1970,6 +2039,37 @@ class GraphCore {
             this.resetScale();
             this.previewDragged = false;
             this.App.UI.LightBox.resetPreviewPosition();
+        }
+    }
+
+    moveCanvas(e) {
+        const container = $(e.currentTarget),
+            curr = this.currentWidget;
+        
+        let tX = `translateX(${this.canvasPosition.x}px)`,
+            tY = `translateY(${this.canvasPosition.y}px)`;
+
+        if(!curr && this.canvasDragged) {
+            const dx = e.clientX - this.clientX,
+                dy = e.clientY - this.clientY;
+
+            if ( (this.canvasPosition.x + dx*this.canvasScale <= 0 && (this.canvasPosition.x + dx*this.canvasScale + this.canvas.width*this.canvasScale) >= this.canvas.width)) {
+                this.canvasPosition.x += dx*this.canvasScale;
+
+                tX = `translateX(${this.canvasPosition.x}px)`;
+
+            } 
+
+            if ((this.canvasPosition.y + dy*this.canvasScale <= 0 && (this.canvasPosition.y + dy*this.canvasScale + this.canvas.height*this.canvasScale) >= this.canvas.height)){
+                this.canvasPosition.y += dy*this.canvasScale;
+                
+                tY = `translateY(${this.canvasPosition.y}px)`;
+            }
+
+            $(this.canvas).css('transform', tX + ' ' + tY + ' scale(' + this.canvasScale+')');
+
+            this.clientX = e.clientX;
+            this.clientY = e.clientY;
         }
     }
 
@@ -2060,6 +2160,22 @@ class GraphCore {
                 this.lastY = e.offsetY;
             }
         }
+    }
+
+    setCanvasScale(scale) {
+        this.canvasScale = scale;
+
+        if (this.canvasPosition.x + this.canvas.width*this.canvasScale <= this.canvas.width) {
+            this.canvasPosition.x = 0;
+        }
+
+        if (this.canvasPosition.y + this.canvas.height*this.canvasScale <= this.canvas.height) {
+            this.canvasPosition.y = 0;
+        }
+
+        const transform = `translateX(${this.canvasPosition.x}px) translateY(${this.canvasPosition.y}px) scale(${this.canvasScale})`;
+
+        $(this.canvas).css('transform', transform);
     }
 }
 class Data {
@@ -2385,7 +2501,8 @@ class Application {
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
 
-        this.UI.BaseList.setVariantsList(this.Project);
+        await this.UI.BaseList.setVariantsList(this.Project);
+        await this.setCurrentVariant(this.Project.variants[0]);
 
         return this.Project;
     }
@@ -2402,8 +2519,10 @@ class Application {
 
         await this.loadProjectAssets();
 
-        this.UI.BaseList.setVariantsList(this.Project);
+        console.log('hellohu8')
 
+        await this.UI.BaseList.setVariantsList(this.Project);
+        await this.setCurrentVariant(this.Project.variants[0]);
 
         return this.Project;
     }
@@ -2423,7 +2542,8 @@ class Application {
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
 
-        this.UI.BaseList.setVariantsList(this.Project);
+        await this.UI.BaseList.setVariantsList(this.Project);
+        await this.setCurrentVariant(this.Project.variants[0]);
 
         return this.Project;
     }
@@ -2434,11 +2554,17 @@ class Application {
         this.currentProjectVariant = variant;
         this.currentWorkzone = variant.variant.workzone;
 
-        this.GraphCore.defineDimensions();
+        if (this.GraphCore.ctx) {
+            this.GraphCore.defineDimensions();
+        }
+
         await this.loadProjectAssets();
 
-        this.GraphCore.setCurrentWidget(null);
-        this.GraphCore.ctx.translate(0.5, 0.5);
+        //this.GraphCore.setCurrentWidget();
+
+        if (this.GraphCore.ctx) {
+            this.GraphCore.ctx.translate(0.5, 0.5);
+        }
     }
 
     async setParsedProject(project, variant_index) {
@@ -2470,6 +2596,10 @@ class Application {
     async getVariantPreview(variant) {
         await this.setCurrentVariant(variant);
 
+        const ctx = document.createElement('canvas').getContext('2d');
+
+        ctx.canvas.width = this.currentProjectVariant.variant.size.width;
+        ctx.canvas.height = this.currentProjectVariant.variant.size.height;
         // if (isDefault) {
         //     this.GraphCore.Filter.setColorFilterImage(variant.variant.image, color);
 
@@ -2477,10 +2607,10 @@ class Application {
         // }
 
         this.isPreview = true;
-        this.GraphCore.RenderList.render(this.GraphCore.ctx);
+        this.GraphCore.RenderList.render(ctx);
         this.isPreview = false;
 
-        return this.GraphCore.canvas.toDataURL('image/png');
+        return ctx.canvas.toDataURL('image/png');
     }
 
     // TODO rename to verb-based name
@@ -2529,4 +2659,5 @@ class Starter {
 
 new Starter().Start();
 
-const PREVIEW_SCALE = 2;
+const PREVIEW_SCALE = 2,
+    PREVIEW_OUT = 0.20;

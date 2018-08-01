@@ -299,10 +299,10 @@ const TemplateFactory = {
         `
     }
 
-    ,getVariantsHtml(variant) {
+    ,getVariantsHtml() {
         return `
             <div class="constr__item-templ">
-                <img src="${variant.variant.src}">
+                <img src="">
             </div>
         `
     }

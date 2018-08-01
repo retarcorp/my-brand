@@ -47,9 +47,10 @@
 }
 
 .product__preview{
-    width: 400px;
-    height: 400px;
+    min-width: 400px;
+    min-height: 400px;
     margin: 0 10px;
+    overflow: hidden;
 }
 /*.preview_margin{
     margin: 20px auto;
