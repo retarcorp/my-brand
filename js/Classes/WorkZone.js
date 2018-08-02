@@ -10,8 +10,13 @@ class WorkZone {
         this.position = position;
         this.size = size;
 
-        this.verticalLine = new VerticalBaseLine(position, size);
-        this.horizontalLine = new HorizontalBaseLine(position, size);
+        this.position.x = Math.round(this.position.x);
+        this.position.y = Math.round(this.position.y);
+        this.size.width = Math.round(this.size.width);
+        this.size.height = Math.round(this.size.height);
+
+        this.verticalLine = new VerticalBaseLine(this.position, this.size);
+        this.horizontalLine = new HorizontalBaseLine(this.position, this.size);
 
         this.lineOffset = 0;
     }
@@ -22,7 +27,7 @@ class WorkZone {
             return true;
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -42,16 +47,16 @@ class WorkZone {
             this.verticalLine.render(ctx);
             this.horizontalLine.render(ctx);
 
-            ctx.strokeStyle = "#000";
+            // ctx.strokeStyle = "#000";
 
-            if (this.lineOffset < 48) {
-                this.lineOffset++;
-            } else this.lineOffset = 0;
+            // if (this.lineOffset < 48) {
+            //     this.lineOffset++;
+            // } else this.lineOffset = 0;
 
-            ctx.lineDashOffset = this.lineOffset;
-            ctx.setLineDash([12]);
+            // ctx.lineDashOffset = this.lineOffset;
+            // ctx.setLineDash([12]);
 
-            ctx.strokeRect(this.position.x, this.position.y, this.size.width, this.size.height);
+            // ctx.strokeRect(this.position.x, this.position.y, this.size.width, this.size.height);
         }
 
     }

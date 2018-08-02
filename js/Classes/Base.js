@@ -6,13 +6,17 @@
  */
 
 class Base  {
-    constructor(name, price, color, colorArray, size) {
+    constructor(name, price, color, colorArray, size, type, _id, fancywork, print) {
         this.variants = [];
         this.price = price;
         this.name = name;
         this.color = color;
         this.colorArray = colorArray;
         this.size = size;
+        this.type = type;
+        this._id = _id;
+        this.fancywork = fancywork;
+        this.print = print;
     }
 
     /**
@@ -46,7 +50,7 @@ class Base  {
         //console.log(obj.variants);
 
         return (
-            new this(obj.name, obj.price, obj.color, obj.colorArray, obj.size)
+            new this(obj.name, obj.price, obj.color, obj.colorArray, obj.size, obj.type, obj._id, obj.fancywork, obj.print)
             .addVariants(
                 ...obj.variants.map(
                     variant => BaseVariant.fromJSON(variant)

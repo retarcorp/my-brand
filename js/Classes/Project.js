@@ -6,6 +6,7 @@
 
 class Project {
     constructor(base) {
+
         this.base = base;
         this.ordered = new Date();
         this.modified = new Date();
@@ -26,7 +27,8 @@ class Project {
         });
     }
 
-    nextVariant() {
+    // TODO method names must contain verb
+    getNextVariant() {
         if (this.currentVariant < this.variants.length - 1) {
             this.currentVariant++;
             return this.variants[this.currentVariant];
@@ -37,7 +39,8 @@ class Project {
         }
     }
 
-    prevVarinat() {
+    // TODO fix typo error
+    getPrevVariant() {
         if (this.currentVariant > 0) {
             this.currentVariant--;
 
@@ -49,8 +52,11 @@ class Project {
         }
     }
 
-    static NewProject(base, date) {
+    // TODO methods are called from small letter!!!!
+    static newProject(base, date) {
         let project = new this(base);
+
+        project.id = 0;
 
         return project;
     }

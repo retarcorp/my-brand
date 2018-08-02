@@ -5,30 +5,47 @@ var glor = 100;
  * @constant
  */
 const App = {
-    start: async function(){        
+    start: async function(){
+
+        let session = await User.session();
+
+        this.logged = session.status;
+        this.user = session.user;
+        this.saveProject = false;
+        this.isPreview = false;
+
+        this.UI.Profile.init();
+        this.UI.Menu.init();
+
         await this.Data.getBases();
         await this.Data.getFonts();
         await this.Data.getPrints();
-        await this.Data.loadProject();
 
-        this.isPreview = false;
 
-        // this.Project = Project.NewProject(this.Data.Bases[0]);
+        if (this.logged){
+            await this.Data.loadProjects();
+
+            (this.Data.Projects.length) ? this.setProject(this.Data.Projects[0]) : this.Project = Project.newProject(this.Data.Bases[0]);
+        } else  {
+            this.Project = Project.newProject(this.Data.Bases[0]);
+        }
+
+        // this.Project = Project.newProject(this.Data.Bases[0]);
         //
         // console.log(this.Project);
         //
         // this.currentProjectVariant = this.Project.variants[0];
         // this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
-        console.log(this.Data.Bases);
-
-        App.Project = App.getProject() || Project.NewProject(this.Data.Bases[0]);
+        //this.Project = (this.logged) ? this.getProject() || Project.newProject(this.Data.Bases[0]) : Project.newProject(this.Data.Bases[0]);
 
         this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
 
-        this.GraphCore.init();
         this.UI.init();
+        this.GraphCore.init();
+
+        this.UI.Profile.setProjectsList();
 
         //Using for tests
 
@@ -65,8 +82,11 @@ const App = {
             this.Logos.init();
 
             this.Print.init();
-            this.Canvas.init();
+            //this.Canvas.init();
             this.Create.init();
+
+            // this.Profile.init();
+            // this.Menu.init();
         }
 
         ,leftMenu: $('.left-menu')
@@ -100,13 +120,21 @@ const App = {
 
             $('.btn-add-text').addClass('active');
 
-            if (!(curr instanceof TextWidget)) {
-                let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof TextWidget);
+            //if (!(curr instanceof TextWidget)) {
+            //let widget = App.currentProjectVariant.widgets.reverse().find( (w) => w instanceof TextWidget);
 
-                App.currentProjectVariant.widgets.reverse();
+            //App.currentProjectVariant.widgets.reverse();
 
-                App.GraphCore.setCurrentWidget(widget);
-            }
+            if (!(curr instanceof TextWidget))
+                App.UI.Create.createTextWidget('Text');
+
+            // if (widget) {
+            //     App.GraphCore.setCurrentWidget(widget)
+            // } else {
+            //     App.UI.Create.createTextWidget('Text');
+            // }
+
+            //}
         }
 
         /**
@@ -273,9 +301,10 @@ const App = {
         }
 
         ,onSelectPrint(e) {
-            if ($(e.target).hasClass('print-img')) {
-                $('.print-img.selected').removeClass('selected');
-                let data = $(e.target).addClass('selected').data('print');
+            if ($(e.target).hasClass('picture__clone')) {
+                $('.picture-list__picture').removeClass('selected');
+
+                let src = $(e.target).parent().parent().addClass('selected').find('img').attr('src');
 
                 //const curr = App.GraphCore.currentWidget;
 
@@ -286,6 +315,9 @@ const App = {
                 //     curr.setImage(data.src);
                 //     App.UI.Layers.setText(data.text);
                 // }
+
+            } else if ($(e.target).hasClass('picture__remove')) {
+                $(e.target).parent().parent().remove();
             }
         }
 
@@ -298,7 +330,7 @@ const App = {
                     text: file.name,
                     src: ""
                 }
-                let uploads = $( TemplateFactory.getPrintHtml(print) );
+                let uploads = $( TemplateFactory.getPrintHtml(print, true) );
 
                 let reader = new FileReader();
 
@@ -307,13 +339,8 @@ const App = {
                         img.src = e.target.result;
                         print.src = img.src;
 
-                        console.log(uploads);
-
-                        uploads.data('print', print);
-                        App.UI.Print.userPrints.append(uploads);
-
-                        $('.print-img.selected').removeClass('selected');
                         uploads.addClass('selected');
+                        $('.file-upload__picture-list').append(uploads);
 
                         App.UI.Create.createImageWidget();
                     }
@@ -370,7 +397,7 @@ const App = {
 
                 layer.remove();
 
-            } else if (curr && $(e.target).hasClass('.delete')) {
+            } else if ($(e.target).hasClass('delete__layer')) {
                 let layer = $(e.target).parent().parent(),
                     id = layer.data('id'),
                     widget = App.currentProjectVariant.widgets.find( (w) => w.id == id);
@@ -385,20 +412,233 @@ const App = {
             }
         }
 
-        ,onSaveProject(e) {
-            //let data = Object.assign({}, App.Project);
+        ,onSaveProject(e, callback) {
+            if (App.logged) {
+                App.Data.saveProjectData(callback);
+            } else {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 500);
 
-            let data = {
-                variants: App.Project.variants
-                ,base: App.Project.base
-                ,settings: App.Project.settings
+                App.UI.Profile.showLoginForm(e);
+            }
+        }
+
+        ,Profile: {
+
+            init() {
+
+                this.logins = $('.authorization__form');
+                this.profile = $('.profile__menu');
+
+                $('.main-menu__item.profile').on('click', this.showProfileMenu);
+
+                this.logins.on('submit', () => { this.login(); return false;});
+                $('input[type="submit"][value="Вход"]').on('click', () => this.logins.submit());
+                $('body').on('click', this.showLoginForm);
+
+                $('.main-menu__item.registration').on('click', this.showRegistrationForm);
+                $('section.registration').on('click', this.closeRegistration);
+                $('.post-reg__button').on('click', (e) => {
+                    this.closeRegistration(e);
+                    $('.main-menu__item.login').addClass('active');
+                })
+
+                $('.details__link.save').on('click', this.saveProject);
+
+                this.checkLogged();
+
+                if (this.container.length) {
+                    this.container.html('Favorites loading...');
+                }
             }
 
-            console.log(data);
+            ,checkLogged() {
+                if (App.logged) {
+                    $('.main-menu__item.login').remove();
+                    $('.main-menu__item.registration').remove();
+                    $('section.registration').remove();
 
-            App.GraphCore.setCurrentWidget(null);
+                    ///$('.main-menu__list').append(TemplateFactory.getLogoutHtml());
+                    $('.profile__link.link__logout').on('click', this.logout);
 
-            App.Ajax.postJSON('/save', JSON.stringify(data));
+                    $('.main-menu__item.profile').addClass('active');
+                    $('.profile__name').text(App.user);
+                }
+            }
+
+            ,logout(e) {
+                e.preventDefault();
+
+                User.logout( (data) => {
+                    location.reload();
+                });
+            }
+
+            ,showProfileMenu() {
+                App.UI.Profile.profile.toggleClass('active');
+            }
+
+            ,showLoginForm(e) {
+                if (!$('.main-menu__item.login').has($(e.target)).length) {
+                    $('.main-menu__item.login').removeClass('active');
+                } else {
+                    $('.main-menu__item.login').addClass('active');
+                }
+
+                if (!App.logged && ($(e.target).hasClass('save') || $(e.target).hasClass('post-reg__button'))) {
+                    $('.main-menu__item.login').addClass('active');
+                }
+            }
+
+            ,showRegistrationForm(e) {
+                event.preventDefault();
+
+                if ($(e.target).hasClass('button__registration')) {
+                    $('section.registration').addClass('active');
+                }
+            }
+
+            ,closeRegistration(e) {
+                if ($(e.target).hasClass('registration') || $(e.target).hasClass('button__close') || $(e.target).hasClass('post-reg__button')) {
+                    if ($(e.target).hasClass('post-reg__button')) {
+                        $('body, html').animate( {
+                            scrollTop: 0
+                        }, 500);
+
+                        App.UI.Profile.showLoginForm(e);
+                    }
+
+                    $('section.registration').removeClass('active');
+                }
+            }
+
+            ,hideForms(e) {
+
+                $('.main-menu__item.login').removeClass('active');
+                $('.main-menu__item.registration').removeClass('active');
+            }
+
+            ,login() {
+                event.preventDefault();
+                let data = {
+                    name: $('input[name="user"]').val()
+                    ,password: $('input[name="pass"]').val()
+                };
+
+                App.Ajax.postJSON('/login', JSON.stringify(data), (data) => {
+                    data = JSON.parse(data);
+
+                    if (data.status) {
+                        App.logged = true;
+
+                        if (App.saveProject) {
+                            App.UI.onSaveProject();
+                        }
+
+                        location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+
+                });
+            }
+
+            ,saveProject(e) {
+                e.preventDefault();
+                App.saveProject = true;
+
+                $('.details__after').removeClass('pending');
+                $('.details__after').addClass('active');
+
+                App.UI.onSaveProject(e, () => {
+                    $('.details__after').removeClass('active');
+                    $('.details__after').addClass('pending');
+                });
+            }
+
+            ,setProjectsList() {
+                if (this.container.length) {
+                    let projects = App.Data.Projects;
+
+                    if (!projects || !projects.length) {
+                        this.container.html('There is no favorites yet.');
+
+                    } else {
+                        this.container.html(
+                            projects.reduce((acc, project) => acc + TemplateFactory.getProjectsListHtml(project), ``)
+                        );
+
+                        App.UI.LightBox.setPreviewImage();
+
+                        this.setPreviewImage(projects, 0)
+
+                    }
+
+                }
+            }
+
+            ,setPreviewImage(projects, index) {
+
+                App.setProject(projects[index]);
+
+                App.currentProjectVariant.variant.filterImage.addEventListener('load', () => {
+
+                    console.log(App.currentProjectVariant.variant.loaded);
+
+                    let proj = projects[index];
+
+                    //console.log(App.currentProjectVariant.variant.filterImage.src);
+
+                    App.isPreview = true;
+                    App.GraphCore.RenderList.render(App.GraphCore.ctx);
+                    App.isPreview = false;
+
+                    $('.favorites__img')[index].src = App.GraphCore.canvas.toDataURL('image/png');
+
+                    if (projects[index+1] && App.currentProjectVariant.variant.loaded) {
+                        this.setPreviewImage(projects, index+1);
+                    }
+
+                    console.log('loaded');
+                });
+
+                // if (!App.UI.Profile.projectLoaded) {
+                //     setTimeout(this.setPreviewImage.bind(this), 250, projects, index);
+                //     console.log('Ones')
+                // } else {
+                //     App.isPreview = true;
+                //     App.GraphCore.RenderList.render(App.GraphCore.ctx);
+                //     App.isPreview = false;
+                //
+                //     $('.favorites__img')[index].src = App.GraphCore.canvas.toDataURL('image/png');
+                //
+                //     if (projects[index+1]) {
+                //         App.setProject(projects[index+1]);
+                //         setTimeout(this.setPreviewImage.bind(this), 250, projects, index + 1);
+                //         App.UI.Profile.projectLoaded = false;
+                //     }
+                //
+                //     console.log('loaded');
+                // }
+            }
+
+            ,container: $('.favorites__container')
+        }
+
+        ,Menu: {
+            init() {
+                this.adaptive = $('.header__adaptive-menu');
+                this.menu = $('.main-menu');
+
+                this.adaptive.on('click', this.toggleMenu.bind(this));
+            }
+
+            ,toggleMenu() {
+                console.log('toggle');
+                this.menu.toggleClass('active');
+            }
+
         }
 
         /**
@@ -416,15 +656,21 @@ const App = {
             init(){
                 this.customization = {
                     base: $('.addition-basis'),
-                    text: $('.addition-text'),
-                    print: $('.addition-print'),
+                    text: $('.product__editor'),
+                    print: $('.add-photo'),
                     layer: $('.addition-layer')
                 };
 
+                this.customization.print.on('click', (e) => {
+                    if ($(e.target).hasClass('add-photo') || $(e.target).hasClass('button__close')) {
+                        this.customization.print.removeClass('active');
+                    }
+                });
+
                 this.tabs = {
                     base: $('.star-set'),
-                    text: $('.text-set'),
-                    print: $('.print-set'),
+                    text: $('.btns__add-text'),
+                    print: $('.btns__add-print'),
                     layer: $('.basis-set')
                 };
 
@@ -433,7 +679,7 @@ const App = {
                 this.tabs.print.on('click', App.UI.onPrint.bind(App.UI) );
                 this.tabs.layer.on('click', App.UI.onLayer.bind(App.UI) );
 
-                $('.btn-add-text').addClass('active');
+                //$('.btn-add-text').addClass('active');
 
                 // Set toggling tabs on click 'em @DONE
             }
@@ -462,9 +708,9 @@ const App = {
                 //     $(child).data('base', App.Data.Bases[index]);
                 // });
 
-                this.colorContainer.html(
-                    App.Project.base.colorArray.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)
-                );
+                // this.colorContainer.html(
+                //     App.Project.base.colorArray.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)
+                // );
 
                 this.setSizeHtml();
                 this.setBaseSize(App.Project.settings.size);
@@ -525,7 +771,7 @@ const App = {
                 App.GraphCore.resetScale();
 
                 if ($(e.target).hasClass('rotate__btn-right')) {
-                    App.currentProjectVariant = App.Project.nextVariant();
+                    App.currentProjectVariant = App.Project.setNextVariant();
 
                     App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
 
@@ -535,7 +781,7 @@ const App = {
                     App.GraphCore.setDimensions(App.currentProjectVariant.variant.size.width, App.currentProjectVariant.variant.size.height);
 
                 } else if ($(e.target).hasClass('rotate__btn-left')) {
-                    App.currentProjectVariant = App.Project.prevVarinat();
+                    App.currentProjectVariant = App.Project.setPrevVariant();
                     App.currentWorkzone = App.currentProjectVariant.variant.getWorkzone();
 
                     App.currentProjectVariant.variant.setColor();
@@ -545,6 +791,7 @@ const App = {
 
                 }
 
+                App.GraphCore.setCurrentWidget(null);
                 App.UI.LightBox.setPreviewImage();
             	//}
             }
@@ -590,9 +837,7 @@ const App = {
 
                 this.injectFont();
 
-                this.container.html(
-                    App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
-                );
+                this.formFontsList();
 
                 this.container.on('click', this.getFont);
 
@@ -605,6 +850,12 @@ const App = {
              * Загружает шрифты на страницу размещением DOM-объекта style.
              * @function
              */
+
+            ,formFontsList() {
+                this.container.html(
+                    App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
+                );
+            }
 
             ,injectFont() {
                 $('head').append(TemplateFactory.getStyleTag());
@@ -619,7 +870,9 @@ const App = {
                 const curr = App.GraphCore.currentWidget;
 
                 if (curr instanceof TextWidget) {
-                    curr.fontSettings.fontFamily = $(e.target).data('font').name;
+                    //console.log(e.target.selectedIndex);
+
+                    curr.fontSettings.fontFamily = $(e.target.options[e.target.selectedIndex]).data('font').name;
                 }
             }
 
@@ -628,7 +881,7 @@ const App = {
              * @member
              */
 
-            ,container: $('.list-fonts')
+            ,container: $('.editor__fonts-list')
         }
 
         /**
@@ -647,6 +900,8 @@ const App = {
                     color: $('#_color__text')
                 };
 
+                this.colorView = $('.editor__color');
+
                 this.inputs.widgetText.on('input', App.UI.onChangeText);
                 this.inputs.textSize.on('input', App.UI.onSize);
                 this.inputs.color.on('change', App.UI.onColor);
@@ -660,6 +915,7 @@ const App = {
                 const curr = App.GraphCore.currentWidget;
 
                 if (curr instanceof TextWidget) {
+                    this.colorView.css('backgroundColor', curr.color);
                     this.inputs.color.css("backgroundColor", curr.color);
                     this.inputs.color.val(curr.color);
                     this.inputs.textSize.val(curr.fontSettings.fontSize);
@@ -700,9 +956,9 @@ const App = {
             }
 
             ,createImageWidget(e){
-                //const data = $('.print-img.selected').data('print');
+                // const data = $('.picture-list__picture.selected').data('print');
 
-                let data = { src: 'img/1.png', text: 'collage' };
+                let data = { src: $('.picture-list__picture.selected').find('img').attr('src'), text: 'collage' };
 
                 if (data) {
                     let widget = ImageWidget.getDefault(data.src);
@@ -724,8 +980,9 @@ const App = {
         ,Print: {
 
             init(){
-                this.gallery.on('click', App.UI.onSelectPrint);
-                this.userPrints.on('click', App.UI.onSelectPrint);
+                //this.print.on('click', App.UI.onSelectPrint);
+
+                this.userPrints.html('');
 
                 this.gallery.html(
                     App.Data.Prints.reduce( (acc, print) => acc + TemplateFactory.getPrintHtml(print), `` )
@@ -735,32 +992,38 @@ const App = {
                     $(child).data('print', App.Data.Prints[index]);
                 });
 
-                this.file = $('input[type="file"]');
+                //$('.btns__add-print').on('click', App.UI.onPrint.bind(App.UI));
+
+                this.file = $('input[name="upload_print"]');
 
                 this.loadImage = $('.print__send');
                 this.file.on('change', App.UI.onLoadImage);
 
-                (this.btnsOptions = $('.pr-opt')).on('click', this.changeGallery);
+                (this.btnsOptions = $('.file__menu-item')).on('click', this.changeGallery);
+
+                this.userPrints.on('click', App.UI.onSelectPrint);
+                this.gallery.on('click', App.UI.onSelectPrint);
             }
 
             ,changeGallery() {
-                let $active = $('.pr-opt.active');
+                let $active = $('.file__menu-item.active');
 
                 $active.removeClass('active');
 
                 this.classList.add('active');
 
-                if ($(this).hasClass('gallery')) {
-                    $('.file-print').removeClass('active');
-                    $('.gallery-print').addClass('active');
+                if ($(this).hasClass('file-menu__addBtnTab')) {
+                    App.UI.Print.userPrints.removeClass('active');
+                    App.UI.Print.gallery.addClass('active');
                 } else {
-                    $('.file-print').addClass('active');
-                    $('.gallery-print').removeClass('active');
+                    App.UI.Print.userPrints.addClass('active');
+                    App.UI.Print.gallery.removeClass('active');
                 }
             }
             
-            ,userPrints: $('.new-print-container')
-            ,gallery: $('.container-print')
+            ,userPrints: $('.file-upload__picture-list')
+            ,gallery: $('.file__picture-list')
+            //,print: $('.picture__button')
         }
 
         ,Layers: {
@@ -782,6 +1045,8 @@ const App = {
                 let lastId = this.container.data('lastId'),
                     index = widget.index,
                     text = widget.text;
+
+                console.log('addLayer');
 
                 lastId++;
                 this.container.data('lastId', lastId);
@@ -817,8 +1082,6 @@ const App = {
             }
 
             ,layerEvent(e) {
-                console.log(e.target);
-
                 if ($(e.target).hasClass('delete__layer'))
                     App.UI.onDelete(e);
 
@@ -1021,16 +1284,16 @@ const App = {
          * @static
          */
 
-        ,Canvas: {
-
-            init() {
-                App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
-                App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
-                App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
-                App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
-            }
-
-        }
+        // ,Canvas: {
+        //
+        //     init() {
+        //         App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
+        //         App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
+        //         App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
+        //         App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
+        //     }
+        //
+        // }
     }
 
     /**
@@ -1053,9 +1316,8 @@ const App = {
          */
 
         ,getBases: async function(){
-            const data = await App.Ajax.getJSON("server.json");
-            console.log(data);
-            this.Bases = data.map((obj) => Base.fromJSON(obj));
+            const data = await App.Ajax.getJSON("/bases");
+            this.Bases = data.bases.map((obj) => Base.fromJSON(obj));
         }
 
         /**
@@ -1070,9 +1332,12 @@ const App = {
          * @function
          */
 
-        ,getFonts: async function() {
-            const data = await App.Ajax.getJSON('/fonts');
-            this.Fonts = data.map((obj) => Font.fromJSON(obj));
+        ,getFonts: async function(page) {
+
+            if (typeof page != 'number') page = 1;
+
+            const data = await App.Ajax.getJSON(`/fonts?page=${page}`);
+            this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
         }
 
         ,Prints: []
@@ -1082,9 +1347,30 @@ const App = {
             this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
         }
 
-        ,loadProject: async function() {
-            const project = await App.Ajax.getJSON('/load');
-            this.Project = project;
+        ,loadProjects: async function(mod = "") {
+            const projects = (await App.Ajax.getJSON('/load'+mod)).projects;
+            this.Projects = projects;
+        }
+
+        ,getProjectData() {
+            let data = {
+                variants: App.Project.variants
+                ,base: App.Project.base
+                ,settings: App.Project.settings
+                ,id: App.Project.id
+            }
+
+            return data;
+        }
+
+        ,saveProjectData(data, callback) {
+
+            if (typeof data == "function") {
+                callback = data;
+                data = null;
+            }
+
+            App.Ajax.postJSON('/save', JSON.stringify(data || this.getProjectData()), callback);
         }
 
     }
@@ -1120,12 +1406,13 @@ const App = {
          * @param {string} path - путь к серверу.
          */
 
-        ,postJSON(path, data = null){
+        ,postJSON(path, data = null, callback){
             return new Promise((resolve, reject) => {
                 const xhr = new XMLHttpRequest;
                 xhr.open("POST",path, true);
                 xhr.onload = () => {
-                    resolve(JSON.parse(xhr.responseText));
+                    if (callback) callback(xhr.responseText);
+                    resolve(JSON.parse(xhr.responseText))
                 }
                 xhr.send(data);
                 
@@ -1145,10 +1432,39 @@ const App = {
          */
 
         init() {
-            $('.product__preview').html('<canvas width="400" height="400"></canvas>');
+            // $('.product__preview').html('<canvas width="400" height="400"></canvas>');
 
-            this.ctx = (this.canvas = document.querySelector('canvas')).getContext('2d');
+            this.canvas = document.createElement('canvas');
+
+            this.canvas.width = 400;
+            this.canvas.height = 400;
+
+            if (document.querySelector('.product__preview'))
+                $('.product__preview').html(this.canvas);
+
+            this.ctx = this.canvas.getContext('2d');
+            this.ctx.translate(0.5,0.5);
             this.ctx.save();
+
+            if(App.currentProjectVariant.widgets.length) {
+                let widgets = App.currentProjectVariant.widgets,
+                    l = widgets.length;
+
+                this.setCurrentWidget(widgets[l-1]);
+            }
+
+            this.Canvas.init();
+        }
+
+        ,Canvas: {
+
+            init() {
+                App.GraphCore.canvas.addEventListener('mousedown', App.GraphCore.mouseDown.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mouseup', App.GraphCore.mouseUp.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mousemove', App.GraphCore.mouseMove.bind(App.GraphCore));
+                App.GraphCore.canvas.addEventListener('mousewheel', App.GraphCore.mouseWheel.bind(App.GraphCore));
+            }
+
         }
 
         ,findSprite(position) {
@@ -1200,6 +1516,7 @@ const App = {
                     this.currentWidget.isSelected = false;
 
                 this.currentWidget = w;
+                App.currentProjectVariant.upWidget(w.index);
                 this.currentWidget.isSelected = true;
             }
 
@@ -1223,7 +1540,6 @@ const App = {
             ,resetTextToolkit(){
                 const fontSettings = App.GraphCore.currentWidget.getFontSettings();
 
-                if (App.Project)
                 App.UI.TextSettings.setSettings();
 
                 // if (!App.UI.Tabs.customization.layer.hasClass('active'))
@@ -1279,36 +1595,42 @@ const App = {
         ,Filter: {
 
             colorFilter(ctx, image, color) {
-                App.GraphCore.RenderList.clear();
-                ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
+                if (App.Project.settings.startColor) {
+                    App.GraphCore.RenderList.clear();
+                    ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
 
-                var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
-                    currentColor = App.Project.settings.startColor,
-                    before = this.hexToRgb(currentColor),
-                    after = (color instanceof Array) ? {
-                        r: color[0]
-                        ,g: color[1]
-                        ,b: color[2]
-                    } : this.hexToRgb(color);
+                    //console.log(App.Project.settings.startColor)
 
-                for (let i = 0; i<data.data.length; i+=4) {
-                    if (data.data[i+3] != 0) {
-                        data.data[i] = after.r + data.data[i] - before.r;
-                        data.data[i+1] = after.g + data.data[i+1] - before.g;
-                        data.data[i+2] = after.b + data.data[i+2] - before.b;
+                    var data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
+                        currentColor = App.Project.settings.startColor;
+
+                    var before = this.hexToRgb(currentColor),
+                        after = (color instanceof Array) ? {
+                            r: color[0]
+                            ,g: color[1]
+                            ,b: color[2]
+                        } : this.hexToRgb(color || currentColor);
+
+                    for (let i = 0; i<data.data.length; i+=4) {
+                        if (data.data[i+3] != 0) {
+                            data.data[i] = after.r + data.data[i] - before.r;
+                            data.data[i+1] = after.g + data.data[i+1] - before.g;
+                            data.data[i+2] = after.b + data.data[i+2] - before.b;
+                        }
                     }
+
+                    ctx.putImageData(data, 0, 0);
+                    //this.image = ctx.canvas.toDataURL('image/png');
+                    App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
+
+                    App.GraphCore.RenderList.clear();
+                    return data;
+                } else {
+                    this.getImageColor(image.src);
                 }
-
-                ctx.putImageData(data, 0, 0);
-                //this.image = ctx.canvas.toDataURL('image/png');
-                App.currentProjectVariant.variant.filterImage.src = ctx.canvas.toDataURL('image/png');
-
-                App.GraphCore.RenderList.clear();
-                return data;
             }
 
             ,getImageFilterData(ctx, image) {
-                console.log('data');
                 ctx.drawImage(image,0,0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
                 let data = ctx.getImageData(0, 0, App.GraphCore.canvas.width, App.GraphCore.canvas.height);
 
@@ -1316,6 +1638,55 @@ const App = {
 
                 App.GraphCore.RenderList.clear();
                 return data;
+            }
+
+            ,getImageColor(src) {
+                let ctx = document.createElement('canvas').getContext('2d'),
+                    image = new Image();
+
+                ctx.canvas.width = 400;
+                ctx.canvas.height = 400;
+
+                image.src = src;
+                image.onload = () => {
+                    ctx.canvas.height = ctx.canvas.width * (image.height/image.width);
+                    ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+                    let data = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height),
+                        color = [0,0,0],
+                        hex = "",
+                        contrast = 0;
+
+                    for (let i = 0; i <= data.data.length - 1; i+=4) {
+                        if (data.data[i+3] != 1) {
+                            color[0] += data.data[i];
+                            color[1] += data.data[i+1];
+                            color[2] += data.data[i+2];
+                        }
+                    }
+
+                    color[0] = Math.round(color[0] / ((data.data.length - 1)/4)) * 2;
+                    color[1] = Math.round(color[1] / ((data.data.length - 1)/4)) * 2;
+                    color[2] = Math.round(color[2] / ((data.data.length - 1)/4)) * 2;
+
+                    let coloring = color.map((colors) => {
+                        if (colors > 255) return 255;
+                        return colors;
+                    });
+
+                    hex = this.rgbToHex(coloring[0],coloring[1],coloring[2]);
+
+                    App.Project.settings.startColor = hex;
+                };
+            }
+
+            ,componentToHex(c) {
+                var hex = c.toString(16);
+                return hex.length == 1 ? "0" + hex : hex;
+            }
+
+            ,rgbToHex(r, g, b) {
+                return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
             }
 
             ,hexToRgb(hex) {
@@ -1537,15 +1908,13 @@ const App = {
 
     }
 
-    ,getProject() {
-        let data = this.Data.Project[0],
+    ,getProject(proj) {
+        let data = proj,
             project = null;
 
         if (data) {
             project = new Project(Base.fromJSON(data.base));
             App.currentProjectVariant = project.variants[0];
-
-            //console.log(data.variants[0].widgets);
 
             project.settings.color = data.settings.color;
             project.id = data.id;
@@ -1563,17 +1932,19 @@ const App = {
                         w.lines = widget.lines;
                     }
 
-                    console.log(w.layer);
-
                     return w;
                 });
             });
 
             project.settings.size = data.settings.size;
-            App.GraphCore.setCurrentWidget(App.currentProjectVariant.widgets[App.currentProjectVariant.widgets.length-1]);
+            //App.GraphCore.setCurrentWidget(App.currentProjectVariant.widgets[App.currentProjectVariant.widgets.length-1]);
         }
 
         return project;
+    }
+
+    ,setProject(project) {
+        this.Project = this.getProject(project);
     }
 
     ,mechanic() {
@@ -1608,7 +1979,9 @@ requirejs(['Base','BaseVariant','Position','Size','WorkZone','Project','VariantP
     () => {
         requirejs(['TxtWidget','ImageWidget','ComplexWidget', 'Path', 'Font','Print', 'BaseLine',],
             () => {
-                requirejs(['VerticalBaseLine', 'HorizontalBaseLine'], () => App.start());
+                requirejs(['VerticalBaseLine', 'HorizontalBaseLine'], () => {
+                    App.start();
+                });
             });
     });
 

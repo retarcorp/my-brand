@@ -14,15 +14,34 @@ class ImageWidget extends Widget {
 
         this.src = src;
         this.image = new Image();
-        this.image.src = this.src;
+
+        // this.image.src = this.src;
 
 
-        this.index = App.currentProjectVariant.widgets.length;
+        this.index = 0;
         this.path = new Path(this.position, this.size);
 
-        this.image.onload = () => {
-            this.download = true;
-        }
+        this.download = false;
+        // this.image.onload = () => {
+        //     this.download = true;
+        //     console.log('ImageWidget download');
+        // }
+    }
+
+    loadLazy() {
+        return new Promise( (resolve, reject) => {
+            this.image.src = this.src;
+
+            this.image.onload = () => {
+                this.download = true;
+                resolve(true);
+            }
+
+            this.image.onerror = () => {
+                this.download = false;
+                resolve(true);
+            }
+        });
     }
 
     setImage(src) {
@@ -43,7 +62,7 @@ class ImageWidget extends Widget {
         return out;
     }
 
-    inWorkzone(dx = 0, dy = 0) {
+    isInWorkzone(dx = 0, dy = 0) {
         const workzone = App.currentWorkzone;
         let int = this.size.height/this.size.width;
 
@@ -54,32 +73,32 @@ class ImageWidget extends Widget {
                 y: true
             };
 
-        if (_x < 0) {
-            this.position.x = 0;
-            out.x = false;
-        }
+        // if (_x < 0) {
+        //     this.position.x = 0;
+        //     out.x = false;
+        // }
 
-        if (_x + this.size.width > workzone.size.width) {
+        // if (_x + this.size.width > workzone.size.width) {
 
-            if (this.size.width > workzone.size.width) {
-                this.size.width = workzone.size.width;
-                this.size.height = this.size.width*int;
-                this.position.x = 0;
+        //     if (this.size.width > workzone.size.width) {
+        //         this.size.width = workzone.size.width;
+        //         this.size.height = this.size.width*int;
+        //         this.position.x = 0;
 
-            } else this.position.x = workzone.size.width - this.size.width;
+        //     } else this.position.x = workzone.size.width - this.size.width;
 
-            out.x = false;
-        }
+        //     out.x = false;
+        // }
 
-        if (_y < 0) {
-            this.position.y = 0;
-            out.y = false;
-        }
+        // if (_y < 0) {
+        //     this.position.y = 0;
+        //     out.y = false;
+        // }
 
-        if (_y + this.size.height > workzone.size.height) {
-            this.position.y = workzone.size.height - this.size.height;
-            out.y = false;
-        }
+        // if (_y + this.size.height > workzone.size.height) {
+        //     this.position.y = workzone.size.height - this.size.height;
+        //     out.y = false;
+        // }
 
         return out;
     }
@@ -88,8 +107,8 @@ class ImageWidget extends Widget {
         let out = {};
 
         out = {
-            resize: !!(this.checkConor(position))
-            ,direction: this.checkConor(position)
+            resize: !!(this.checkCorner(position))
+            ,direction: this.checkCorner(position)
         };
 
         return out;
@@ -104,119 +123,70 @@ class ImageWidget extends Widget {
             _h = this.size.height;
 
         if (App.currentWorkzone.underMouse(position)) {
+            const limit_width = 30;
 
-                switch (direction) {
-                    case 'upLeft':
+            switch (direction) {
+                case 'upLeft':
 
-                        if (_w - dx > 30 || dx < 0) {
-                            _w -= dx;
-                            this.position.x += dx;
-                            this.position.y += (_h - Math.round(_w*int));
-                            _h = Math.round(_w*int);
+                    if (_w - dx > limit_width || dx < 0) {
+                        _w -= dx;
+                        this.position.x += dx;
+                        this.position.y += (_h - Math.round(_w*int));
+                        _h = Math.round(_w*int);
 
-                            this.size.width = _w;
-                            this.size.height = _h;
-                        }
+                        this.size.width = _w;
+                        this.size.height = _h;
+                    }
 
-                        break;
+                    break;
 
-                    case 'upRight':
+                case 'upRight':
 
-                        if (_w + dx > 30 || dx > 0) {
-                            _w += dx;
-                            this.position.y += (_h - Math.round(_w*int));
-                            _h = Math.round(_w*int);
+                    if (_w + dx > limit_width || dx > 0) {
+                        _w += dx;
+                        this.position.y += (_h - Math.round(_w*int));
+                        _h = Math.round(_w*int);
 
-                            this.size.width = _w;
-                            this.size.height = _h;
-                        }
+                        this.size.width = _w;
+                        this.size.height = _h;
+                    }
 
-                        break;
+                    break;
 
-                    case 'bottomLeft':
+                case 'bottomLeft':
 
-                        if (_w - dx > 30 || dx < 0) {
-                            _w -= dx;
-                            this.position.x += dx;
-                            _h = Math.round(_w*int);
+                    if (_w - dx > limit_width || dx < 0) {
+                        _w -= dx;
+                        this.position.x += dx;
+                        _h = Math.round(_w*int);
 
-                            this.size.width = _w;
-                            this.size.height = _h;
-                        }
+                        this.size.width = _w;
+                        this.size.height = _h;
+                    }
 
-                        break;
+                    break;
 
-                    case 'bottomRight':
-                        if (_w + dx > 30 || dx > 0) {
-                            _w += dx;
-                            _h = Math.round(_w*int);
+                case 'bottomRight':
+                    if (_w + dx > limit_width || dx > 0) {
+                        _w += dx;
+                        _h = Math.round(_w*int);
 
-                            this.size.width = _w;
-                            this.size.height = _h;
-                        }
+                        this.size.width = _w;
+                        this.size.height = _h;
+                    }
 
-                        break;
+                    break;
 
-                    default:
-                        return 0;
-                }
+                default:
+                    return 0;
+            }
 
         }
 
-        this.inWorkzone();
+        this.isInWorkzone();
     }
 
-    // resizeBy(position, direction){
-    //
-    //     let int = this.size.height/this.size.width,
-    //         _x = this.position.x + App.currentWorkzone.position.x,
-    //         _y = this.position.y + App.currentWorkzone.position.y;
-    //
-    //     if (App.currentWorkzone.underMouse(position))
-    //
-    //         if (this.size.width > 25) {
-    //             switch (direction) {
-    //                 case 'upLeft':
-    //                     this.size.width += (_x - position.x);
-    //                     this.position.y -= (_x - position.x);
-    //                     this.position.x = position.x - App.currentWorkzone.position.x;
-    //
-    //                     break;
-    //
-    //                 case 'upRight':
-    //                     this.position.y -= (position.x - _x - this.size.width);
-    //                     this.size.width = position.x - _x;
-    //
-    //                     break;
-    //
-    //                 case 'bottomLeft':
-    //                     this.size.width += (_x - position.x);
-    //                     this.position.x = position.x - App.currentWorkzone.position.x;
-    //
-    //                     break;
-    //
-    //                 case 'bottomRight':
-    //                     this.size.width = position.x - _x;
-    //
-    //                     break;
-    //
-    //                 default:
-    //                     return 0;
-    //             }
-    //
-    //             this.size.height = this.size.width;
-    //
-    //         } else {
-    //             this.size.width = 26;
-    //             this.size.height = 26;
-    //         }
-    //
-    //     this.inWorkzone();
-    //
-    //     return this.size.height;
-    // }
-
-    checkConor(position) {
+    checkCorner(position) {
 
         let _x = this.position.x + App.currentWorkzone.position.x,
             _y = this.position.y + App.currentWorkzone.position.y;
@@ -242,7 +212,7 @@ class ImageWidget extends Widget {
     }
 
     moveBy(dx, dy) {
-        let out = this.inWorkzone(dx, dy);
+        let out = this.isInWorkzone(dx, dy);
 
         if (out.x) {
             this.position.x += dx;
@@ -263,30 +233,17 @@ class ImageWidget extends Widget {
         return this.position;
     }
 
-    render(ctx) {
-        if (this.download) {
+    renderPath(ctx) { //INNER
+        if (this.isSelected && !App.isPreview && this.download)
+            this.path.render(ctx);
+    }
 
+    render(ctx) { //INNER
+        if (this.download) {
             let _x = this.position.x + App.currentWorkzone.position.x,
                 _y = this.position.y + App.currentWorkzone.position.y;
 
             ctx.drawImage(this.image, _x, _y, this.size.width, this.size.height);
-
-            if (this.isSelected && !App.isPreview)
-                this.path.render(ctx);
-
-            // let distance = Widget.Path.distance;
-            //
-            // ctx.strokeStyle = Widget.Path.color;
-            //
-            // ctx.setLineDash(Widget.Path.lineDash);
-            // ctx.strokeRect(_x - distance, _y - distance, this.size.width + distance, this.size.height + distance);
-            //
-            // ctx.fillStyle = Widget.Path.polColor;
-            //
-            // ctx.fillRect(_x - 5, _y - 5, 10, 10);
-            // ctx.fillRect(_x - 5 + this.size.width, _y - 5 + this.size.height, 10, 10);
-            // ctx.fillRect(_x - 5 + this.size.width, _y - 5, 10, 10);
-            // ctx.fillRect(_x - 5, _y - 5 + this.size.height, 10, 10);
         }
     }
 
