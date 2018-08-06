@@ -313,4 +313,19 @@ const TemplateFactory = {
         `
     }
 
+    ,getAdminPanelTagHtml(tag) {
+        return ``;
+    }
+
+    ,getAdminPanelPrintItemHtml(print) {
+        return `<div class="prints__item" name="printItem">
+                    <img src="${print.src}" alt="">
+                    <h4 class="prints__item-name">${print.name}</h4>
+                    <p class="prints__item-tags">
+                        кот, просто, кот, шерсть, глаза, усы
+                    </p>
+                    <button class="btn__print-remove"></button>
+                </div>`
+    }
+
 }

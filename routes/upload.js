@@ -165,4 +165,57 @@ router.post('/upload/redact', (req, res, next) => {
     })
 });
 
+router.post('/upload/print', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: null,
+            errors: [],
+            log: {
+                type: 'POST',
+                path: '/upload/prints',
+                headers: req.headers
+            }
+        },
+        print = {};
+
+    const form = new multiparty.Form();
+
+    form.parse(req, (err, fields, files) => {
+        if (err) {
+            response.status = false;
+            response.message = "Form data parse error";
+            response.errors.push(err);
+            console.log(err);
+        }
+
+        for (let file in files) {
+            file = file[0];
+
+            if (file['content-type'].indexOf('image/png')) {
+                const file_name = (query.redact) ? file.originalFilename : md5(User.genSalt(12));
+
+                fs.createReadStream(file.path).pipe(fs.createWriteStream(`public/img/basis/${file_name}.png`));
+            }
+        }
+
+        response.data = {
+            fields: fields,
+            files: files
+        };
+
+        print.name = fields.name[0];
+        print.src = `public/img/basis/${file_name}.png`;
+
+        Mongo.update( { _id: query._id }, 'prints', (response_db) => {
+            response.status = true;
+            response.message = "Data uploaded";
+
+            res.send(response);
+        });
+
+    });
+});
+
 module.exports = router;

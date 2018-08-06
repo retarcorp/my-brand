@@ -2658,4 +2658,5 @@ class Starter {
 new Starter().Start();
 
 const PREVIEW_SCALE = 2,
+    PREVIEW_OUT = 0.2,
     CANVAS_WIDTH = 400;

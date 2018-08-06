@@ -65,6 +65,7 @@ app.get('/delete_project', deleteProject);
 
 app.get('/load', loadProject);
 app.get('/load/templates', loadProject);
+app.get('/load/prints', loadProject);
 app.post('/save', saveProject);
 app.post('/save/template', saveProject);
 

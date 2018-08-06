@@ -1185,6 +1185,110 @@ AdminApp = {
         //,new_template: $('[name="templateAdd"]')
         ,base: null
     }
+
+    ,PrintsList: {
+        init() {
+            this.list.on('click', this.checkEvent.bind(this));
+        }
+
+        ,checkEvent(e) {
+            e.preventDefault();
+
+            const currentTarget = $(e.currentTarget);
+            let target = $(e.target);
+
+            while (!target.is(currentTarget)) {
+                if (target.attr('name') == "printItem") {
+                    this.openPrintEditor();
+
+                    break;
+                }
+
+                target = target.parent();
+            }
+
+        }
+
+        ,loadPrintsAll(cb) {
+
+        }
+
+        ,loadPrintsPage(page = 1, cb) {
+            if (typeof page == 'function') {
+                cb = page;
+                page = 1;
+            }
+
+            App.Ajax.get('/load/prints?page='+page, cb);
+        }
+
+        ,formPrintsList(prints) {
+            this.list.html('');
+
+            prints.forEach( print => {
+                this.list.append(TemplateFactory.getAdminPanelPrintItemHtml(print));
+                this.list.children(':last-child').data('print', print);
+            });
+        }
+
+        ,formPrintsPages(pages, selected = 1) {
+            this.pages.html('');
+
+            for (let page = 1; page <= pages; page++) {
+                this.pages.append(TemplateFactory.getAdminPanelPages(page));
+                this.pages.children(':last-child').data('page', page);
+            }
+
+            this.pages.children(`:nth-child(${selected})`).addClass('selected');
+        }
+
+        ,createNewPrint() {
+            // this.closePanel();
+
+            console.log('Need layout of prints add');
+        }
+
+        ,openPrintEditor() {
+            console.log('Need prints panel redactor');
+        }
+
+        ,setAwaitLoading() {
+            this.list.addClass('loading');
+            this.uploadButton.addClass('_no-events');
+        }
+
+        ,unsetAwaitLoading() {
+            this.list.removeClass('loading');
+            this.uploadButton.removeClass('_no-events');
+        }
+
+        ,loadPanel() {
+            this.openPanel();
+            this.setAwaitLoading();
+
+            this.loadPrintsPage((response) => {
+                response = JSON.parse(response);
+
+                this.formPrintsList(response.data);
+                this.formPrintsPages(response.pages);
+
+                this.unsetAwaitLoading();
+            });
+        }
+
+        ,openPanel() {
+            this.panel.addClass('active');
+        }
+
+        ,closePanel() {
+            this.panel.removeClass('active');
+        }
+
+        ,panel: $('[name="panelPrints"]')
+        ,list: $('[name="printsContainer"]')
+        ,pages: $('[name="pritnsPages"]')
+        ,uploadButton: $('[name="uploadPrint"]')
+    }
 }
 
 //AdminApp.init();

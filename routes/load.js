@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Mongo = require('../modules/Mongo');
+var ErrorHandler = require('../modules/ErrorHandler');
 
 var URL = require('url');
 var qrs = require('querystring');
@@ -77,6 +78,55 @@ router.get('/load/templates', (req, res, next) => {
         response.messasge = 'Templates loaded';
 
         res.send(response);
+    });
+});
+
+router.get('/load/prints', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: "Unexpected error",
+            data: null,
+            query: query,
+            errors: [],
+            logs: {
+                type: 'GET',
+                path: '/load/prints',
+                headers: req.headers
+            }
+        };
+
+    Mongo.select( {}, 'prints', (response_db) => {
+        const prints = response_db;
+
+        if (prints.length) {
+
+            if (query.page && query.page != 'all') {
+                query.page = parseInt(query.page);
+
+                response.data = prints.filter((print, index) => {
+                    if (index >= (query.page - 1) * 32 && index < query.page * 32) {
+                        return print;
+                    }
+                });
+            } else {
+                response.data = prints;
+            }
+
+            response.data.reverse();
+
+            response.status = true;
+            response.message = 'Data loaded';
+            response.pages = Math.ceil(prints.length/32);
+
+            res.send(response);
+
+        } else {
+            response.message = "No data found";
+            response.errors.push(ErrorHandler.generateError('noData', { options: null }));
+
+            res.send(response);
+        }
     });
 });
 

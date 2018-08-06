@@ -50,7 +50,7 @@ canvas {
     transform-origin: 0 0 0;
 }
 
-canvas._no-events {
+._no-events {
     pointer-events: none;
 }
 
