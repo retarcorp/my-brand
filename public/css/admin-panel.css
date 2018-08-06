@@ -174,7 +174,7 @@ h1 {
 .panel__card {
     margin-bottom: 20px;
     background: #fff;
-     display: none; 
+    display: none;
 }
 
 .panel__card.active {
@@ -1336,7 +1336,7 @@ button.button__add-prints{
 }
 
 .panel__turn-container img{
-    width: 200px;
+    width: 20%;
     margin-right: 20px;
 }
 
@@ -1375,8 +1375,13 @@ button.button__add-prints{
 
 .panel .create__btns{
     flex-direction: column;
+    align-items: center;
 }
 
 .panel .btns__add-text{
     margin-bottom: 20px;
+}
+
+.panel .panel__column-item_width{
+    width: 100%;
 }

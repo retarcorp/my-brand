@@ -856,6 +856,7 @@ AdminApp = {
         ,loadUI(base) {
             this.openPanel();
             this.list.addClass('loading');
+            this.addNew = false;
 
             this.base = Base.fromJSON(base);
 
@@ -870,6 +871,7 @@ AdminApp = {
         ,loadUIPage(page) {
             this.openPanel();
             this.list.addClass('loading');
+            this.addNew = false;
 
             this.loadTemplatesPage(page, this.base._id, (response) => {
                 response = JSON.parse(response);
@@ -891,7 +893,10 @@ AdminApp = {
             const target = $(e.target),
                 currentTarget = $(e.currentTarget);
 
-            this.openBaseConstructor();
+            if (this.addNew) {
+                this.openBaseConstructor();
+            }
+
         }
 
         ,openTemplateConstructor(template) {
@@ -959,6 +964,7 @@ AdminApp = {
             }
 
             this.list.removeClass('loading');
+            this.addNew = true;
         }
 
         ,formPages(pages, selected) {
@@ -1008,6 +1014,7 @@ AdminApp = {
         init() {
             this.save.on('click', this.formData.bind(this));
             this.back.on('click', this.goBackToTemplates.bind(this));
+            this.zoom.on('input', this.changeGraphOption.bind(this));
         }
 
         ,sendData(data, cb) {
@@ -1068,11 +1075,21 @@ AdminApp = {
             this.panel.removeClass('active');
         }
 
+        ,changeGraphOption(e) { 
+            const target = $(e.target),
+                value = target.val();
+
+            if (App.GraphCore.canvasScale) {
+                App.GraphCore.setCanvasScale(parseFloat(value));
+            }
+        }
+
         ,panel: $('.templates-add')
         ,template_save: $('.save-template')
         ,name: $('[name="template_name"]')
         ,save: $('[name="saveTemplate"]')
         ,back: $('[name="goBackToTemplates"]')
+        ,zoom: $('.zoom-input')
         ,template: null
     }
 

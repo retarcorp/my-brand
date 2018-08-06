@@ -47,6 +47,11 @@
 
 canvas {
     border: 1px solid #ececec;
+    transform-origin: 0 0 0;
+}
+
+canvas._no-events {
+    pointer-events: none;
 }
 
 .info-basis.active {
@@ -97,3 +102,12 @@ canvas {
     border-color: #a4a4a4;
 }
 
+.editor__right {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.editor__right.active {
+    opacity: 1;
+    pointer-events: all;
+}

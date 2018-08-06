@@ -1,5 +1,6 @@
 .base__edit .editor{
     flex-wrap: nowrap;
+    background: #777;
 }
 @media screen and (max-width: 1024px){
     .products__menu{
