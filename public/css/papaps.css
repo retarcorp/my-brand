@@ -521,11 +521,7 @@ input[type=number]::-webkit-outer-spin-button {
     width: 40px;
     position: absolute;
     top: 6.5px;
-<<<<<<< HEAD
     right: 1px;
-=======
-    right: 0;
->>>>>>> 06e95180c7db006b7ac0cf270f7d8f50b952b769
 }
 .button__unpreview{
     background-image: url(../img/icon/preview-true.png);

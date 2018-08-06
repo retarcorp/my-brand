@@ -5,6 +5,7 @@ body,
 #wrapper{
     min-height: 100%;
     background-image: url(../img/pattern.png);
+    background-color: #fff;
     background-size: 274px 274px;
     font-family: 'Lato', sans-serif;
     font-weight: 700;

@@ -218,23 +218,23 @@ const TemplateFactory = {
 
     ,getProjectsListHtml(project, main_variant) {
         return `
-            <div class="favorites__item">
-                <img class="favorites__img" src="img/1.png" alt="">
-                <div class="info">
-                    <p class="favorites__type">${project.base.type}</p>
-                    <p class="favorites__name">${project.base.name}</p>
-                    <p class="favorites__price">${project.base.price} P</p>
-                </div>
-                <div class="favorites__buttons">
-                    <button class="button favorites__edit">
-                        Изменить
-                        <img src="img/icon/paintbrush.png" alt="">
-                    </button>
-                    <div class="favorites__hover">
-                        <button class="button favorites__buy">В корзину</button>
-                        <button class="button favorites__remove">Убрать из избранного</button>        
+            <div class="slider__item">
+                <a href="#" class="slider__link">
+                    <img class="slider__item-img" src="${project.base.variants[0].src}" alt="">
+                    <p class="slider__item-type">${project.base.type}</p>
+                    <span class="slider__item-name">
+                        ${project.base.name}
+                        <div class="type__basis">
+                            ${ (project.base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
+                            ${ (project.base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
+                        </div>
+                    </span>
+                    <p class="slider__item-price">${project.base.price} P</p>
+                    <div class="slider__buttons">
+                        <button class="button slider__btn-edit button_gradient_yellow"></button>
+                        <button class="button slider__btn-add button_gradient_blue">В корзину</button>
                     </div>
-                </div>
+                </a>
             </div>
         `
     }
