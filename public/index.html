@@ -54,13 +54,13 @@
                         <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
                     </li>
                     <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                        <a href="/deliveryPayment.html" class="main-menu__link text_color_main">Доставка и оплата</a>
                     </li>
                     <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                        <a href="/aboutProject.html" class="main-menu__link text_color_main">О проекте</a>
                     </li>
                     <li class="main-menu__item main-menu__item_margin">
-                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                        <a href="/contactUs.html" class="main-menu__link text_color_main">Связаться с нами</a>
                     </li>
                     <li class="main-menu__item main-menu__item_margin login">
                         <a href="#" class="main-menu__link text_color_main">Войти</a>
@@ -94,7 +94,7 @@
                         </section>
                     </li>
                     <li class="main-menu__item main-menu__item_margin cart-li">
-                        <a href="#" class="cart"></a>
+                        <a href="/cart.html" class="cart"></a>
                         <span class="cart__count">12</span>
                     </li>
                 </ul>
@@ -471,8 +471,17 @@
         <form class="new-brand__form">
             <h1 class="new-brand__header">Создать бренд</h1>
             <button class="close__tab"></button>
-            <input id="new-brand__text" class="new-brand__input" type="text" placeholder="Надпись">
-            <input id="new-brand__tags" class="new-brand__input" type="text" placeholder="Теги для поиска">
+            <input id="new-brand__text" name="newBrand_text" class="new-brand__input" type="text" placeholder="Надпись">
+            <input id="new-brand__tags" neme="newBrand_tag" class="new-brand__input"  type="text" placeholder="Теги для поиска">
+            <div class="brand__tag">
+                <p>Чика</p>
+                <button class="brand__tag-close" name="brandTag_close"></button>
+            </div>
+            <ul class="brand__hint-list">
+                <li class="hint-list__item">Чикачикачика</li>
+                <li class="hint-list__item">Чикачиafadsfdsfadfadsfadsкачика</li>
+                <li class="hint-list__item">Чикачикачика</li>
+            </ul>
             <div class="form__button-background">
                 <input type="submit" class="send__new-brand" value="Создать бренд">
             </div>

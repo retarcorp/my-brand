@@ -964,20 +964,3 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 14px;
     text-decoration: underline;
 }
-
-.new-brand__create{
-    display: flex;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.6);
-    top: 0;
-    left: 0;
-}
-
-.new-brand__form{
-    max-width: 632px;
-    width: 100%;
-    padding: 20px 45px;
-    background-color: #fff;
-}
