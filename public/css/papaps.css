@@ -737,7 +737,7 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex;
 }
 .authorization__form{
-    /* display: none; */
+    display: none;
 }
 .authorization__form.active{
     display: flex;
