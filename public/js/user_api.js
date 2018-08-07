@@ -25,8 +25,8 @@ User = {
         location.reload();
     }
 
-    ,register: async function() {
-        event.preventDefault();
+    ,register: async function(e) {
+        e.preventDefault();
 
         let data = {},
             email = $('#email').val(),
