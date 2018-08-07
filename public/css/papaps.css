@@ -180,14 +180,6 @@
     position: absolute;
 }
 
-.editor__item_margin{
-    /*margin-left: 20px;*/
-}
-
-.editor-padding{
-    /*padding: 0 20px;*/
-}
-
 .editor_margin{
     margin: 10px auto;
 }

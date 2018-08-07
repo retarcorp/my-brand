@@ -117,24 +117,12 @@
         </section>
         <section class="main__product-details product-details product-details_padding">
             <div class="product-details__product product">
-<!--                 <div class="product__rotate rotate_margin">
-                    <button class="rotate__btn-left"></button>
-                    <p class="rotate__text">Просмотр <span class="rotate__value">360</span></p>
-                    <button class="rotate__btn-right"></button>
-                </div> -->
                 <div class="product-work-zone">
                     <div class="template__list">
                         <div class="constr__item-templ">
-                            <img src="img/basis/3.jpg">
-                        </div>
-                        <div class="constr__item-templ">
-                            <img src="img/basis/3.jpg">
-                        </div>
-                        <div class="constr__item-templ">
-                            <img src="img/basis/3.jpg">
-                        </div>
-                        <div class="constr__item-templ">
-                            <img src="img/basis/3.jpg">
+                            <div class="loader-container">
+                                <div class="loader"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="product__preview preview preview_margin">
@@ -201,17 +189,6 @@
                                 <option value="ooh">Ooh</option>
                                 <option value="whoop">Whoop</option>
                             </select>
-
-                            <!--<label for="fonts" class="button fonts-list__button">-->
-
-                                <!--<select class="editor__fonts-list" name="fonts" id="fonts">-->
-                                    <!--<option value="">Lato</option>-->
-                                    <!--<option value="">Lato</option>-->
-                                    <!--<option value="">Lato</option>-->
-                                    <!--<option value="">Lato</option>-->
-                                    <!--<option value="">Lato</option>-->
-                                <!--</select>-->
-                            <!--</label>-->
                         </div>
                         <div class="editor__size editor__item_margin">
                             <input class="size__input" type="number" value="11">
@@ -274,30 +251,7 @@
                     <h4 class="details__header">Выберите размер</h4>
 
                     <div class="size__container size__container_margin">
-                        <!-- <label class="size__block size__block_margin">
-                            <input class="size__radio" type="radio" name="size">
-                            <span class="size__radio-custom">S (48)</span>
-                        </label>
-                        <label class="size__block size__block_margin">
-                            <input class="size__radio" type="radio" name="size">
-                            <span class="size__radio-custom">M (50)</span>
-                        </label>
-                        <label class="size__block size__block_margin">
-                            <input class="size__radio" type="radio" name="size">
-                            <span class="size__radio-custom">L (52)</span>
-                        </label>
-                        <label class="size__block size__block_margin">
-                            <input class="size__radio" type="radio" name="size">
-                            <span class="size__radio-custom">XL (54)</span>
-                        </label>
-                        <label class="size__block size__block_margin">
-                            <input class="size__radio" type="radio" name="size">
-                            <span class="size__radio-custom">XXL (56)</span>
-                        </label>
-                        <label class="size__block size__block_margin">
-                            <input class="size__radio" type="radio" name="size">
-                            <span class="size__radio-custom">XXXL (60)</span>
-                        </label> -->
+
                     </div>
                 </div>
                 <div class="details__colors details__block_margin">
@@ -335,7 +289,9 @@
         <section class="main__products-similar products-similar products-similar_padding">
             <h1 class="products-similar__header products-similar__header_margin">Популярные товары</h1>
             <div class="slider__container">
-
+                <div class="loader-container">
+                    <div class="loader"></div>
+                </div>
             </div>
         </section>
     </main>
