@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="css/constructor.css">
-    <link rel="stylesheet" type="text/css" href="css/slick.css"/>   
+    <link rel="stylesheet" type="text/css" href="css/slick.css"/>
     <link rel="stylesheet" href="css/main-page.css">
+    <link rel="stylesheet" href="css/papaps.css">
+    <link rel="stylesheet" type="text/css"  href="css/auth-admin.css">
     <link rel="stylesheet" href="css/adaptive.css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700" rel="stylesheet">
     <title>Home</title>
@@ -37,6 +39,24 @@
                         </li>
                         <li class="head__item head__item_margin">
                             <a href="#" class="head__link text_color_white">ВОЙТИ</a>
+                            <form class="authorization__form form form_shadow form_radius form_padding">
+                                <header class="form__header">Вход пользователя</header>
+                                <div class="form__data">
+                                    <input id="login" class="input_margin form__input input_padding input_border input_text" required name="user" type="text" placeholder="Ваш логин">
+                                    <input id="password" class="form__input input_padding input_border input_text" type="password" required name="pass" placeholder="Пароль">
+                                </div>
+                                <div class="form__btns">
+                                    <input type="submit" class="form__button button button_gradient_blue button_text_color" value="Вход">
+                                    <a href="#" class="form__link">Восстановить пароль</a>
+                                </div>
+                                <div class="form__socials">
+                                    <a href="#" class="social__link vk"></a>
+                                    <a href="#" class="social__link odnoklas"></a>
+                                    <a href="#" class="social__link facebook"></a>
+                                    <a href="#" class="social__link google"></a>
+                                    <a href="#" class="social__link twitter"></a>
+                                </div>
+                            </form>
                         </li>
                         <li class="main-menu__item main-menu__item_margin cart-li">
                             <a href="/cart.html" class="cart"></a>
