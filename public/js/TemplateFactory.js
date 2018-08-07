@@ -314,7 +314,10 @@ const TemplateFactory = {
     }
 
     ,getAdminPanelTagHtml(tag) {
-        return ``;
+        return `<div class="tags-container__item">
+                    <span class="tags-container__value">${tag}</span>
+                    <button class="tags-container__close"></button>
+                </div>`;
     }
 
     ,getAdminPanelPrintItemHtml(print) {
@@ -322,7 +325,7 @@ const TemplateFactory = {
                     <img src="${print.src}" alt="">
                     <h4 class="prints__item-name">${print.name}</h4>
                     <p class="prints__item-tags">
-                        кот, просто, кот, шерсть, глаза, усы
+                        ${print.tags.join(', ')}
                     </p>
                     <button class="btn__print-remove"></button>
                 </div>`

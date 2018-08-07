@@ -61,6 +61,8 @@ let Users = {
 	,createSession(req, res, next, user, callback) {
 		//console.log(req.session)
 
+		user.password = null;
+
 	    let session = req.session;
 
 		session.logged = true;

@@ -30,6 +30,8 @@ AdminApp = {
         this.TemplatePanel.init();
         //this.TemplatesList.init();
         this.TemplatesUI.init();
+        this.PrintsList.init();
+        this.PrintRedactor.init();
 
         console.log('AdminPanel init');
     }
@@ -191,6 +193,11 @@ AdminApp = {
                 $('.panel__card').removeClass('active');
                 AdminApp.TemplatesList.loadTemplates();
                 AdminApp.TemplatesList.panel.addClass('active');
+            }
+
+            if ($(e.target).hasClass('printUI')) {
+                $('.panel__card').removeClass('active');
+                AdminApp.PrintsList.loadPanel();
             }
 
             AdminApp.UI.menu_point.removeClass('active');
@@ -1189,6 +1196,9 @@ AdminApp = {
     ,PrintsList: {
         init() {
             this.list.on('click', this.checkEvent.bind(this));
+            this.uploadButton.on('click', this.createNewPrint.bind(this));
+
+            // this.loadPanel();
         }
 
         ,checkEvent(e) {
@@ -1199,7 +1209,16 @@ AdminApp = {
 
             while (!target.is(currentTarget)) {
                 if (target.attr('name') == "printItem") {
-                    this.openPrintEditor();
+                    const print = target.data('print');
+                    this.openPrintEditor(print);
+
+                    break;
+                }
+
+                if (target.hasClass('btn__print-remove')) {
+                    const child = target.parent(),
+                        print = child.data('print');
+                    this.removePrint(print, child);
 
                     break;
                 }
@@ -1210,7 +1229,7 @@ AdminApp = {
         }
 
         ,loadPrintsAll(cb) {
-
+            App.Ajax.get('/load/prints?page=all', cb);
         }
 
         ,loadPrintsPage(page = 1, cb) {
@@ -1243,13 +1262,24 @@ AdminApp = {
         }
 
         ,createNewPrint() {
-            // this.closePanel();
-
-            console.log('Need layout of prints add');
+            this.closePanel();
+            AdminApp.PrintRedactor.createPrint();
         }
 
-        ,openPrintEditor() {
-            console.log('Need prints panel redactor');
+        ,openPrintEditor(print) {
+            this.closePanel();
+            AdminApp.PrintRedactor.usePrint(print);
+        }
+
+        ,removePrint(print, child) {
+            App.Ajax.get('/delete/print?_id='+print._id+'&src='+print.src, (response) => {
+                response = JSON.parse(response);
+
+                console.log(response);
+
+                child.remove();
+                this.loadPanel();
+            });
         }
 
         ,setAwaitLoading() {
@@ -1288,6 +1318,228 @@ AdminApp = {
         ,list: $('[name="printsContainer"]')
         ,pages: $('[name="pritnsPages"]')
         ,uploadButton: $('[name="uploadPrint"]')
+    }
+
+    ,PrintRedactor: {
+        init() {
+            //this.loadPanel();
+
+            this.options = {
+                print: $('[name="print_print"]'),
+                fancywork: $('[name="fancywork_print"]')
+            }
+
+            this.file.on('change', this.onFileInput.bind(this));
+            this.remove.on('click', this.clearFile.bind(this));
+            this.add_tag.on('click', this.createTag.bind(this));
+            this.tag_container.on('click', this.checkTagEvent.bind(this));
+
+            this.options.print.on('click', this.setOption.bind(this));
+            this.options.fancywork.on('click', this.setOption.bind(this));
+
+            this.upload.on('click', this.uploadPrint.bind(this));
+            this.back.on('click', this.goBack.bind(this));
+        }
+
+        ,sendData(data, query) {
+            App.Ajax.post('/upload/print'+query, data, (response) => {
+                response = JSON.parse(response);
+
+                console.log(response);
+
+                this.closePanel();
+                AdminApp.PrintsList.loadPanel();
+            });
+        }
+
+        ,formData() {
+            if (this.name.val().length && (this.file[0].files.length || this.file_storage)) {
+                const data = new FormData(),
+                    tags = [];
+
+                data.append('name', this.name.val());
+                data.append('print', this.options.print.prop('checked'));
+                data.append('fancywork', this.options.fancywork.prop('checked'));
+
+                $.each(this.tag_container.children(), (index, child) => {
+                    tags.push($(child).data('tag'));
+                });
+
+                data.append('tags', JSON.stringify(tags));
+                data.append('file_name', this.file_name);
+                data.append('file', this.file[0].files[0] || this.file_storage);
+
+                const _id = (this.print) ? this.print._id : 0;
+                data.append('_id', _id);
+
+                return data;
+            }
+        }
+
+        ,uploadPrint() {
+            const data = this.formData()
+            this.sendData(data, '?_id=' + data.get('_id'));
+        }
+
+        ,checkTagEvent(e) {
+            const currentTarget = $(e.currentTarget);
+            let target = $(e.target);
+
+            while (!target.is(currentTarget)) {
+                if (target.hasClass('tags-container__close')) {
+                    const tag = target.parent();
+
+                    this.removeTag(tag);
+                    break;
+                }
+
+                target = target.parent();
+            }
+        }
+
+        ,onFileInput(e) {
+            const target = $(e.target),
+                currentTarget = $(e.currentTarget),
+                file = currentTarget[0].files[0];
+
+            if (file.type.indexOf('image/png') >= 0) {
+                this.file_storage = file;
+                this.previewImageFile(file);
+            } else {
+                alert('Need png file');
+                this.file.val('');
+            }
+        }
+
+        ,previewImageFile(file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                this.preview.attr('src', e.target.result);
+                this.openPreview();
+            }
+
+            reader.readAsDataURL(file);
+        }
+
+        ,clearFile(e) {
+            this.file.val('');
+            this.file_storage = null;
+            this.closePreview();
+        }
+
+        ,clearInputs() {
+            this.name.val('');
+            this.tag_container.html('');
+            this.file.val('');
+
+            this.preview.attr('src', '');
+            this.print = null;
+            this.file_storage = null;
+
+            this.closePreview();
+        }
+
+        ,setOption(e) {
+            const currentTarget = $(e.currentTarget);
+
+            if (currentTarget.attr('name') == "print_print") {
+                if (!this.options.print.prop('checked')) {
+                    this.options.fancywork.prop('checked', true);
+                }
+            }
+
+            if (currentTarget.attr('name') == "fancywork_print") {
+                if (!this.options.fancywork.prop('checked')) {
+                    this.options.print.prop('checked', true);
+                }
+            }
+        }
+
+        ,usePrint(print) {
+            this.loadPanel();
+            this.print = print;
+
+            App.Ajax.getBlob(print.src, (response) => {
+                const file = new File([response], print.src.replace(/[a-zA-Z0-9\.\-\_\\]+\//g, ""), {type: response.type });
+
+                this.file_name = file.name;
+                this.file_storage = file;
+                this.formPanel();
+            }, 'blob');
+        }
+
+        ,createPrint() {
+            this.clearInputs();
+            this.loadPanel();
+        }
+
+        ,formPanel() {
+            this.name.val(this.print.name);
+            this.print.tags.forEach( tag => this.addTag(tag));
+
+            this.options.print.prop('checked', (this.print.print == 'true') ? true : false);
+            this.options.fancywork.prop('checked', (this.print.fancywork == 'true') ? true : false);
+
+            this.preview.attr('src', this.print.src);
+            this.openPreview();
+1        }
+
+        ,createTag() {
+            const tag = this.tag_input.val();
+            this.addTag(tag);
+        }
+
+        ,addTag(tag) {
+            if (tag.length) {
+                this.tag_container.prepend(TemplateFactory.getAdminPanelTagHtml(tag));
+                this.tag_container.children(':first-child').data('tag', tag);
+            }
+        }
+
+        ,removeTag(tag) {
+            tag.remove();
+        }
+
+        ,openPreview() {
+            this.preview.addClass('active');
+        }
+
+        ,closePreview() {
+            this.preview.removeClass('active');
+        }
+
+        ,loadPanel() {
+            this.clearInputs();
+            this.openPanel();
+        }
+
+        ,openPanel() {
+            this.panel.addClass('active');
+        }
+
+        ,closePanel() {
+            this.panel.removeClass('active');
+        }
+
+        ,goBack() {
+            this.closePanel();
+            AdminApp.PrintsList.loadPanel();
+        }
+
+        ,panel: $('[name="printRedactor"]')
+        ,file: $('[name="addFile_print"]')
+        ,preview: $('[name="printPreview_print"]')
+        ,remove: $('[name="printRemove_print"]')
+        ,tag_input: $('[name="printTags_print"]')
+        ,add_tag: $('[name="addTag_print"]')
+        ,tag_container: $('[name="tagContainer_print"]')
+        ,name: $('[name="printName_print"]')
+        ,upload: $('[name="printUpload_print"]')
+        ,print: null
+        ,file_storage: null
+        ,file_name: ""
+        ,back: $('[name="backToPrintsList_print"]')
     }
 }
 

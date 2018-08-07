@@ -32,7 +32,7 @@ class Ajax {
     }
 
 
-    get(path, callback) {
+    get(path, callback, responseType = "") {
         return new Promise( (resolve, reject) => {
             let xhr = new XMLHttpRequest();
 
@@ -72,5 +72,21 @@ class Ajax {
             xhr.send(data);
 
         });
+    }
+
+    getBlob(path, cb) {
+        const xhr = new XMLHttpRequest();
+
+        xhr.onload = () => {
+            if (cb) cb(xhr.response);
+        }
+
+        xhr.onerror = () => {
+            if (cb) cb(xhr.response);
+        }
+
+        xhr.open('GET', path);
+        xhr.responseType = 'blob';
+        xhr.send();
     }
 }

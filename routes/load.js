@@ -86,7 +86,7 @@ router.get('/load/prints', (req, res, next) => {
         response = {
             status: false,
             message: "Unexpected error",
-            data: null,
+            data: [],
             query: query,
             errors: [],
             logs: {

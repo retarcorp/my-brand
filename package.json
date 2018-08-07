@@ -4,7 +4,8 @@
   "description": "Web visit-csrd",
   "main": "main.js",
   "scripts": {
-    "test": "npm build"
+    "test": "npm build",
+    "server": "node server"
   },
   "repository": {
     "type": "git",

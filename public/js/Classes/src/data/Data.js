@@ -14,8 +14,8 @@ class Data {
     }
 
     async getPrints() {
-        const data = await App.Ajax.getJSON('prints.json');
-        this.Prints = data.map( (obj) =>  Print.fromJSON(obj));
+        const data = await App.Ajax.getJSON('/load/prints?page=all');
+        this.Prints = data.data.map( (obj) =>  Print.fromJSON(obj));
     }
 
     async getFonts(page) {

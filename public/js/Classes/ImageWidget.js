@@ -8,12 +8,14 @@
  */
 
 class ImageWidget extends Widget {
-    constructor(position, size, src){
+    constructor(position, size, src, tags, _id){
         super(position,size);
         this.type = "ImageWidget";
 
         this.src = src;
+        this.tags = tags;
         this.image = new Image();
+        this._id = _id;
 
         // this.image.src = this.src;
 
@@ -247,11 +249,13 @@ class ImageWidget extends Widget {
         }
     }
 
-    static getDefault(src){
+    static getDefault(src, tags, _id){
         return new this(
             new Position(20,20)
             ,new Size(100,100)
             ,src
+            ,tags
+            ,_id
         )
     }
 }

@@ -28,33 +28,10 @@ router.post('/find/template/by/tag', (req, res, next) => {
 
             response.status = true;
 
-            Mongo.select({}, 'admin', (db) => {
-                const templates = db;
+            Mongo.select({}, 'admin', (response_db) => {
+                let templates = response_db;
 
-                response.data = templates.filter( (template) => {
-                    return tags.some( (tag) => {
-                        return template.tags.find( (t) => t == tag);
-                    });
-                });
-
-                response.data.sort( (templateA, templateB) => {
-                    let tagA = 0,
-                        tagB = 0;
-
-                    templateA.tags.map( (tag) => {
-                        tagA = tags.filter( (t) => t == tag).length;
-                    });
-
-                    templateB.tags.map( (tag) => {
-                        tagB = tags.filter( (t) => t == tag).length;
-                    });
-
-                    return tagA - tagB;
-                });
-
-                response.message = (response.data.length) ? "Find some templates" : "There is no templates matched by tags";
-
-                res.send(response);
+                templates.variants
             });
 
         } else {

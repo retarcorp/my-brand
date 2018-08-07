@@ -28,8 +28,8 @@
 
     <script>
 
-		document.querySelector('form').addEventListener('submit', function (){
-			event.preventDefault();
+		document.querySelector('form').addEventListener('submit', function (e){
+			e.preventDefault();
 
 			let xhr = new XMLHttpRequest(),
 				form = document.querySelector('form');

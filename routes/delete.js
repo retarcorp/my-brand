@@ -88,4 +88,36 @@ router.get('/delete/template', (req, res, next) => {
 
 });
 
+router.get('/delete/print', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                headers: req.headers,
+                type: 'GET',
+                path: '/delete/print'
+            }
+        };
+
+    if (query._id) {
+        fs.unlink('public/'+query.src, (err) => {
+            if (err) {
+                console.log(err);
+                response.errors.push(err);
+            }
+        });
+
+        Mongo.delete({ _id: query._id }, 'prints', (response_db) => {
+            response.status = true;
+            response.message = "Print deleted";
+
+            res.send(response);
+        });
+    }
+});
+
 module.exports = router;

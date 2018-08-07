@@ -3,6 +3,9 @@ var multiparty = require('multiparty');
 var path = require('path');
 var fs = require('fs');
 var md5 = require('md5');
+var qrs = require('querystring');
+var URL = require('url');
+var ErrorHandler = require('../modules/ErrorHandler');
 
 var Mongo = require('../modules/Mongo');
 var Bases = require('../modules/Bases');
@@ -166,6 +169,9 @@ router.post('/upload/redact', (req, res, next) => {
 });
 
 router.post('/upload/print', (req, res, next) => {
+    console.log(1123)
+    console.log(22233)
+
     const query = qrs.parse(URL.parse(req.url).query),
         response = {
             status: false,
@@ -174,15 +180,22 @@ router.post('/upload/print', (req, res, next) => {
             errors: [],
             log: {
                 type: 'POST',
-                path: '/upload/prints',
+                path: '/upload/print',
                 headers: req.headers
             }
         },
         print = {};
 
-    const form = new multiparty.Form();
+
+
+    let form = new multiparty.Form(),
+        file_name = "",
+        fileUp = false,
+        fle = null;
+
 
     form.parse(req, (err, fields, files) => {
+
         if (err) {
             response.status = false;
             response.message = "Form data parse error";
@@ -191,29 +204,65 @@ router.post('/upload/print', (req, res, next) => {
         }
 
         for (let file in files) {
-            file = file[0];
+            file = files[file][0];
+            fle = file;
 
-            if (file['content-type'].indexOf('image/png')) {
-                const file_name = (query.redact) ? file.originalFilename : md5(User.genSalt(12));
+            if (file.headers['content-type'].indexOf('image/png') >= 0) {
+                file_name = (query._id && query._id != '0') ? fields.file_name[0] : md5(User.genSalt(12))+'.png';
 
-                fs.createReadStream(file.path).pipe(fs.createWriteStream(`public/img/basis/${file_name}.png`));
+                fs.createReadStream(file.path).pipe(fs.createWriteStream(`public/img/prints/${file_name}`));
+                fileUp = true;
             }
         }
 
-        response.data = {
-            fields: fields,
-            files: files
-        };
+        if (fileUp) {
+            response.data = {
+                fields: fields,
+                files: files
+            };
 
-        print.name = fields.name[0];
-        print.src = `public/img/basis/${file_name}.png`;
+            console.log(fields.tags)
 
-        Mongo.update( { _id: query._id }, 'prints', (response_db) => {
-            response.status = true;
-            response.message = "Data uploaded";
+            print.name = fields.name[0];
+            print.tags = JSON.parse(fields.tags[0]);
+            print.fancywork = fields.fancywork[0];
+            print.print = fields.print[0];
+            print.src = `img/prints/${file_name}`;
+
+            query._id = (query._id && query._id != '0') ? query._id : md5(User.genSalt(12));
+
+            let tags = print.tags,
+                data = { _id: 'globalTagIDArray', tags: [] };
+
+            Mongo.select({}, 'tags', (response_db) => {
+                data = response_db[0] || data;
+
+                console.log(data.tags, tags);
+
+                console.log(...tags.filter( tag => !data.tags.find( t => tag == t )));
+                data.tags.push(...tags.filter( tag => !data.tags.find( t => tag == t )));
+
+                data._id = 'globalTagIDArray';
+
+                Mongo.update({ _id: data._id }, data, 'tags', (response_db) => {
+                    console.log('Tags inserted');
+                });
+            });
+
+            Mongo.update( { _id: query._id }, print, 'prints', (response_db) => {
+                response.status = true;
+                response.message = "Data uploaded";
+
+                res.send(response);
+            });
+        } else {
+            response.message = 'Unknown file type';
+            response.status = false;
+
+            response.error.push(ErrorHandler.generateError('fileType', { file: fle.originalFilename, options: req.headers }));
 
             res.send(response);
-        });
+        }
 
     });
 });
