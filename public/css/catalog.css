@@ -1,0 +1,13 @@
+.header{
+    background: none;
+    background-color:#fff;
+    max-width: 100% !important;
+}
+
+.main_margin{
+    margin: 32px auto !important;
+}
+
+.header::after{
+    content: none;
+}
