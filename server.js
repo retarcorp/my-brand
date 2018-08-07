@@ -61,6 +61,7 @@ app.get('/bases', loadBases);
 app.get('/fonts', loadFonts);
 app.get('/delete', deleteFile);
 app.get('/delete/template', deleteFile);
+app.get('/delete/print', deleteFile);
 app.get('/delete_project', deleteProject);
 
 app.get('/load', loadProject);
@@ -76,6 +77,7 @@ app.post('/register', register);
 
 app.post('/upload', uploadFile);
 app.post('/upload/redact', uploadFile);
+app.post('/upload/print', uploadFile);
 app.post('/test_blob', testBlob);
 
 app.get('/admin', adminPanel);

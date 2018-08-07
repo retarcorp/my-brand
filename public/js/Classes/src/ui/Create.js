@@ -32,11 +32,11 @@ class Create {
     }
 
     createImageWidget(e){
-        let print = $(e.target).parent().parent().children('img'),
-            data = { src: print.attr('src'), text: 'collage' };
+        let print = $(e.target).parent().parent(),
+            data = print.data('print');
 
         if (data.src) {
-            let widget = ImageWidget.getDefault(data.src);
+            let widget = ImageWidget.getDefault(data.src, data.tags, data._id);
 
             widget.text = data.text;
             widget.id = App.UI.Layers.addLayer(widget, 'space');

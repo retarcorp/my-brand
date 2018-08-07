@@ -149,6 +149,8 @@ class Application {
             v.layers[index].id = ID;
             w.layer.id = ID;
             w.id = ID;
+            w.tags = widget.tags || [];
+            w._id = widget._id || 0;
             ID++;
 
             if (w instanceof TextWidget) {
