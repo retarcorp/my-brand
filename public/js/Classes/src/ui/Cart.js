@@ -23,7 +23,7 @@ class Cart {
                  const item = target.parent(),
                      cart_id = item.data('item').cart_id;
 
-                 this.removeFromCart(cart_id);
+                 this.removeFromCart(cart_id, item);
                  break;
              }
 
@@ -90,8 +90,14 @@ class Cart {
         this.recountPrice();
     }
 
-    removeFromCart(cart_id) {
-         App.Ajax.get('/delete/cart?cart_id='+cart_id);
+    removeFromCart(cart_id, card) {
+         App.Ajax.get('/delete/cart?cart_id='+cart_id, (response) => {
+             response = JSON.parse(response);
+
+             console.log(response);
+
+             card.remove();
+         });
     }
 
     recountPrice() {
