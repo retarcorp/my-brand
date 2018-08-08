@@ -29,7 +29,7 @@ router.post('/cart/add', (req, res, next) => {
             },
             user = req.cookies.user.name || req.session.user.name;
 
-        Mongo.select({ id: data.id }, 'uniq', (response_db) => {
+        Mongo.select({ id: data.id, user: user }, 'uniq', (response_db) => {
             if (response_db.length) {
                 const project = response_db[0];
 
