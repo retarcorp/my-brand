@@ -29,6 +29,8 @@ class Profile {
 
         this.page_list = $('.panel__page-list.favorites');
 
+        this.cart_button = $('.details__add-basket');
+
 
         this.profile_item.on('click', this.showProfileMenu);
 
@@ -53,6 +55,9 @@ class Profile {
         this.favorites.on('click', this.checkFavoritesEvent);
 
         this.page_list.on('click', this.checkFavoritesEvent);
+
+        this.cart_button.on('click', this.addToCartProject.bind(this));
+
 
         //$('body').on('click', this.showLoginForm);
 
@@ -109,6 +114,11 @@ class Profile {
         }
     }
 
+    addToCartProject(e) {
+        this.UI.App.isToCart = true;
+        this.saveProject(e);
+    }
+
     addToCart(id, card) {
         const data = JSON.stringify({ id: id });
         this.UI.App.Ajax.post('/cart/add', data, (response) => {
@@ -116,7 +126,9 @@ class Profile {
 
             console.log(response);
 
-            this.changeToLink(card);
+            if (card) {
+                this.changeToLink(card);
+            }
         });
     }
 
@@ -228,6 +240,12 @@ class Profile {
                 App.UI.Profile.save_project.removeClass('active');
                 App.UI.Profile.save_project.addClass('pending');
                 App.Project.id = response.id;
+
+                if (App.isToCart) {
+                    const id = App.Project.id;
+
+                    App.UI.Profile.addToCart(id);
+                }
             }
         });
     }
