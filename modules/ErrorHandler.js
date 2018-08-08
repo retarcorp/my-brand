@@ -30,6 +30,16 @@ ErrorHandler = {
 
         return error;
     }
+
+    ,dataExpected() {
+        const error = {
+            errorType: 'dataExpected',
+            data: {},
+            message: "Not valid request"
+        }
+
+        return error;
+    }
 }
 
 ErrorHandler.init();

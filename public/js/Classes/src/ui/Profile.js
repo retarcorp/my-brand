@@ -93,12 +93,31 @@ class Profile {
             App.UI.Profile.removeProject(id, card);
         }
 
+        if (target.hasClass('favorites__buy')) {
+            const card = target.parent().parent().parent(),
+                id = card.data('project_id');
+
+            App.UI.Profile.addToCart(id);
+            // console.log('Need addToCart functionality');
+        }
+
         if (target.hasClass('panel__page-point')) {
             const page = target.data('page');
             App.UI.Profile.page_list.addClass('loading');
 
             App.UI.Profile.formProjectsList(e, page);
         }
+    }
+
+    addToCart(id) {
+        const data = JSON.stringify({ id: id });
+        this.UI.App.Ajax.post('/cart/add', data, (response) => {
+            response = JSON.parse(response);
+
+            console.log(response);
+
+            location.href = "/cart.html";
+        });
     }
 
     openProjectInConstructor(project_id){
@@ -197,10 +216,14 @@ class Profile {
             App.UI.Profile.save_project.addClass('active');
         }
 
-        App.UI.onSaveProject(e, () => {
+        App.UI.onSaveProject(e, (response) => {
             if (App.logged) {
+                console.log(response);
+                response = JSON.parse(response);
+
                 App.UI.Profile.save_project.removeClass('active');
                 App.UI.Profile.save_project.addClass('pending');
+                App.Project.id = response.id;
             }
         });
     }
@@ -278,6 +301,7 @@ class Profile {
         app.isPreview = false;
 
         $(card).data('project_id', app.Project.id);
+        $(card).data('project', app.Project);
         const dataURL = app.GraphCore.canvas.toDataURL('image/png');
 
         img.src = dataURL;

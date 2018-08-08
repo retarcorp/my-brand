@@ -92,6 +92,7 @@ class BaseList {
 
     async setVariantsList(project) {
         const variants = project.variants;
+        this.UI.App.inProcess = true;
 
         let index = 0;
 
@@ -109,6 +110,8 @@ class BaseList {
         }
 
         $('.template__list').children(':first-child').addClass('active');
+        await this.UI.App.setCurrentVariant(this.UI.App.Project.variants[0]);
+        this.UI.App.inProcess = false;
     }
 
     async updateVariantImage() {

@@ -32,8 +32,15 @@ class Create {
     }
 
     createImageWidget(e){
-        let print = $(e.target).parent().parent(),
-            data = print.data('print');
+        let data = {},
+            prn = {};
+
+        if (e.target) {
+            prn = $(e.target).parent().parent();
+            data = prn.data('print');
+        } else {
+            data = e;
+        }
 
         if (data.src) {
             let widget = ImageWidget.getDefault(data.src, data.tags, data._id);

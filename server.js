@@ -30,6 +30,8 @@ var loadUser = require('./routes/login');
 var onsession = require('./routes/onsession');
 var userLogout = require('./routes/logout');
 
+var cart = require('./routes/cart');
+
 var app = express();
 
 var session = require('express-session');
@@ -62,6 +64,7 @@ app.get('/fonts', loadFonts);
 app.get('/delete', deleteFile);
 app.get('/delete/template', deleteFile);
 app.get('/delete/print', deleteFile);
+app.get('/delete/cart', deleteFile);
 app.get('/delete_project', deleteProject);
 
 app.get('/load', loadProject);
@@ -82,6 +85,9 @@ app.post('/test_blob', testBlob);
 
 app.get('/admin', adminPanel);
 app.get('/profile', profile);
+
+app.post('/cart/add', cart);
+app.get('/cart/load', cart);
 
 app.get('/constructor', constructor);
 

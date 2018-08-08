@@ -39,7 +39,7 @@ router.post('/save', function(req, res, next) {
 			}
 
             Mongo.update( { user: parse.user, id: parse.id }, parse, collection, (data) => {
-                res.send(JSON.stringify({ status: true }));
+                res.send(JSON.stringify({ status: true, id: parse.id }));
             });
 		});
 

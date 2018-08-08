@@ -6,6 +6,7 @@ var qrs = require('querystring');
 var fs = require('fs');
 
 var Mongo = require('../modules/Mongo');
+var ErrorHandler = require('../modules/ErrorHandler');
 
 router.get('/delete', (req, res, next) => {
 
@@ -118,6 +119,37 @@ router.get('/delete/print', (req, res, next) => {
             res.send(response);
         });
     }
+});
+
+router.get('/delete/cart', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/delete/cart',
+                headers: req.headers
+            }
+        }
+
+        if (query.cart_id) {
+            Mongo.delete({ cart_id : query.cart_id }, 'cart', (response_db) => {
+                response.status = true;
+                response.message = "Item deleted";
+
+                res.send(response);
+            });
+        } else {
+            response.status = false;
+            response.message = "No cart_id specified";
+            response.errors.push(ErrorHandler.generateError('dataExpected'));
+
+            res.send(response);
+        }
 });
 
 module.exports = router;

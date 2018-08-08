@@ -61,7 +61,8 @@ let Users = {
 	,createSession(req, res, next, user, callback) {
 		//console.log(req.session)
 
-		user.password = null;
+        user.password = null;
+        user.salt = null;
 
 	    let session = req.session;
 
@@ -81,6 +82,23 @@ let Users = {
 	,checkCredentials(check, User) {
 		//console.log(md5(check.salt + User.password + check.salt));
 		return check.password == md5(check.salt + User.password + check.salt);
+	}
+
+	,checkSession(req, res, next) {
+        if (!req.cookies.user) {
+            if (!req.session.user) {
+
+                return false
+            } else {
+                this.createSession(req, res, next, req.session.user);
+                return req.session.user;
+            }
+        } else {
+            if (!req.session.user) {
+            	this.createSession(req, res, next, req.cookies.user);
+            }
+            return req.cookies.user;
+        }
 	}
 
 	,genSalt() {

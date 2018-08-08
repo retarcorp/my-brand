@@ -19,6 +19,7 @@ class Application {
             this.user = session.user;
             this.saveProject = false;
             this.isPreview = false;
+            this.inProcess = false;
 
             this.UI.Profile.init();
             this.UI.Menu.init();
@@ -81,6 +82,16 @@ class Application {
         });
 
         return qBody;
+    }
+
+    makeid(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < length; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 
     getProject(data) {
@@ -210,7 +221,6 @@ class Application {
         console.log('hellohu8')
 
         await this.UI.BaseList.setVariantsList(this.Project);
-        await this.setCurrentVariant(this.Project.variants[0]);
 
         return this.Project;
     }
@@ -282,7 +292,7 @@ class Application {
     // }
 
     async getVariantPreview(variant) {
-        await this.setCurrentVariant(variant);
+        await this.setCurrentVariant(variant || App.currentProjectVariant);
 
         const ctx = document.createElement('canvas').getContext('2d');
 
@@ -303,10 +313,12 @@ class Application {
 
     // TODO rename to verb-based name
     startRender() {
-        if (!App.isPreview)
-            App.GraphCore.RenderList.render(App.GraphCore.ctx);
-        else
-            App.GraphCore.RenderList.renderPreview(App.GraphCore.ctx);
+        if (!App.inProcess) {
+            if (!App.isPreview)
+                App.GraphCore.RenderList.render(App.GraphCore.ctx);
+            else
+                App.GraphCore.RenderList.renderPreview(App.GraphCore.ctx);
+        }
 
         requestAnimationFrame(this.startRender.bind(this));
     }

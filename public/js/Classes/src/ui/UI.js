@@ -31,6 +31,7 @@ class UI {
         this.Tabs = new Tabs(this);
         this.TextSettings = new TextSettings(this);
         this.Slider = new Slider(this);
+        this.Cart = new Cart(this);
 
         this.leftMenu = $('.left-menu');
 
@@ -57,6 +58,7 @@ class UI {
         this.Create.init();
 
         this.Slider.init();
+        this.Cart.init();
 
         //this.Profile.init();
         //this.Menu.init();
@@ -203,7 +205,7 @@ class UI {
         }
     }
 
-    onBaseColor(e) {
+    async onBaseColor(e) {
         if (!App.isPreview) {
 
             if ($(this).attr('id') == 'base_color') {
@@ -233,6 +235,7 @@ class UI {
                 if (data) {
                     App.GraphCore.Filter.setColorFilterImage(image, data);
                     App.Project.settings.color = data;
+                    await App.UI.BaseList.setVariantsList(App.Project);
                 }
             }
 
@@ -293,11 +296,13 @@ class UI {
                 return function(e) {
                     img.src = e.target.result;
                     print.src = img.src;
+                    print.id = App.makeid(32);
 
                     uploads.addClass('selected');
+                    uploads.data('print', print);
                     $('.file-upload__picture-list').append(uploads);
 
-                    App.UI.Create.createImageWidget();
+                    App.UI.Create.createImageWidget(print);
                 }
             })(uploads.children()[0]);
 

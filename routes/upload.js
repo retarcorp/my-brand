@@ -169,9 +169,6 @@ router.post('/upload/redact', (req, res, next) => {
 });
 
 router.post('/upload/print', (req, res, next) => {
-    console.log(1123)
-    console.log(22233)
-
     const query = qrs.parse(URL.parse(req.url).query),
         response = {
             status: false,
@@ -195,7 +192,6 @@ router.post('/upload/print', (req, res, next) => {
 
 
     form.parse(req, (err, fields, files) => {
-
         if (err) {
             response.status = false;
             response.message = "Form data parse error";
@@ -221,8 +217,6 @@ router.post('/upload/print', (req, res, next) => {
                 files: files
             };
 
-            console.log(fields.tags)
-
             print.name = fields.name[0];
             print.tags = JSON.parse(fields.tags[0]);
             print.fancywork = fields.fancywork[0];
@@ -237,9 +231,6 @@ router.post('/upload/print', (req, res, next) => {
             Mongo.select({}, 'tags', (response_db) => {
                 data = response_db[0] || data;
 
-                console.log(data.tags, tags);
-
-                console.log(...tags.filter( tag => !data.tags.find( t => tag == t )));
                 data.tags.push(...tags.filter( tag => !data.tags.find( t => tag == t )));
 
                 data._id = 'globalTagIDArray';

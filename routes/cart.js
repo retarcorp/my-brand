@@ -6,6 +6,8 @@ var ObjectId = require('mongodb').ObjectID;
 var User = require('../modules/Users');
 
 var md5 = require('md5');
+var URL = require('url');
+var qrs = require('querystring');
 
 router.post('/cart/add', (req, res, next) => {
     let parse = "";
@@ -33,7 +35,8 @@ router.post('/cart/add', (req, res, next) => {
 
                 project.cart_id = (project.cart_id) ? project.cart_id :  md5(User.genSalt(12));
 
-                Mongo.update( { cart_id: project.cart_id }, data, 'cart', (response_db) => {
+                Mongo.update( { id: project.id }, project, 'uniq');
+                Mongo.update( { cart_id: project.cart_id }, project, 'cart', (response_db) => {
                     console.log('Cart updated');
 
                     response.status = true;
@@ -53,6 +56,55 @@ router.post('/cart/add', (req, res, next) => {
 
 
     })
+});
+
+router.get('/cart/load', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            query: query,
+            data: [],
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/cart/load',
+                headers: req.headers
+            }
+        };
+
+    let user = User.checkSession(req, res, next);
+
+    if (user) {
+        Mongo.select({ user: user.name }, 'cart', (response_db) => {
+            const cart = response_db;
+
+            if (query.page && query.page != 'all') {
+                query.page = parseInt(query.page);
+
+                response.data = cart.filter( (item, index) => {
+                    if (index >= (query.page - 1) * 10 && index < query.page * 10) {
+                        return item;
+                    }
+                });
+            } else {
+                response.data = cart;
+                console.log(cart, user);
+            }
+            response.status = true;
+            response.message = "Cart loaded";
+            response.pages = Math.ceil(cart/10);
+
+            res.send(response);
+        });
+
+    } else {
+        response.status = false;
+        response.message = "User didn't logged";
+        res.send(response);
+    }
+
+
 });
 
 module.exports = router;

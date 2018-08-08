@@ -354,4 +354,36 @@ const TemplateFactory = {
                 </div>`
     }
 
+    ,getCartItemSizeHtml(size) {
+        return `
+            <div class="item__size">${size}</div>
+        `
+    }
+
+    ,getCartItemHtml(item) {
+        return `
+            <div class="cart__item">
+                <img src="" alt="">
+                <div class="cart__description">
+                    <p class="cart__name">${item.base.name}</p>
+                    <div class="cart__size">
+                        <p>Размеры: </p>
+                        <div class="item__size">${ this.getCartItemSizeHtml(item.settings.size || item.base.size[0])}</div>
+                    </div>
+                    <div class="cart__color">
+                        <p>Цвет:</p>
+                        <div class="item__color" style="background-color: ${ (typeof item.settings.color === 'object') ? "rgb("+item.settings.color.join(',')+")" : (typeof item.settings.color === 'string') ? item.settings.color : item.settings.startColor};"></div>
+                    </div>
+                </div>
+                <div class="quantity-block">
+                    <button class="quantity-arrow-minus"> - </button>
+                    <input class="quantity-num" type="number" value="1">
+                    <button class="quantity-arrow-plus"> + </button>
+                </div>
+                <p class="cart__price">${item.base.price} <span>P</span></p>
+                <button class="cart__remove-btn" name="removeFromCart"></button>
+            </div>
+        `
+    }
+
 }
