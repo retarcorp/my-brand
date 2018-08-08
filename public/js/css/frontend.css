@@ -130,3 +130,16 @@ canvas {
 .panel__new-print > img.active {
     display: block;
 }
+
+
+/*CART*/
+
+.order__section {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.order__section.active {
+    opacity: 1;
+    pointer-events: none;
+}

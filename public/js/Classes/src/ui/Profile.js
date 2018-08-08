@@ -254,7 +254,7 @@ class Profile {
             this.container.html('There is no favorites yet.');
         } else {
             this.container.html(
-                projects.reduce((acc, project) => acc + TemplateFactory.getProjectsListHtml(project), ``)
+                projects.reduce((acc, project) => acc + TemplateFactory.getFavoritesListHtml(project), ``)
             );
 
             this.formPageList(pages);
