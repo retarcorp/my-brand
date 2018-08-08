@@ -97,7 +97,7 @@ class Profile {
             const card = target.parent().parent().parent(),
                 id = card.data('project_id');
 
-            App.UI.Profile.addToCart(id);
+            App.UI.Profile.addToCart(id, card);
             // console.log('Need addToCart functionality');
         }
 
@@ -109,15 +109,19 @@ class Profile {
         }
     }
 
-    addToCart(id) {
+    addToCart(id, card) {
         const data = JSON.stringify({ id: id });
         this.UI.App.Ajax.post('/cart/add', data, (response) => {
             response = JSON.parse(response);
 
             console.log(response);
 
-            location.href = "/cart.html";
+            this.changeToLink(card);
         });
+    }
+
+    changeToLink(card) {
+        card.addClass('in-cart');
     }
 
     openProjectInConstructor(project_id){

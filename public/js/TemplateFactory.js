@@ -232,6 +232,10 @@ const TemplateFactory = {
                     </button>
                     <div class="favorites__hover">
                         <button class="button favorites__buy">В корзину</button>
+                        <div class="favorites__cart-page">
+                            Товар добавлен
+                            <a href="/cart.html" class="button favorites__to-cart">Перейти в корзину</a>
+                        </div>
                         <button class="button favorites__remove">Убрать из избранного</button>
                     </div>
                 </div>
