@@ -174,7 +174,7 @@ h1 {
 .panel__card {
     margin-bottom: 20px;
     background: #fff;
-    display: none;
+    /* display: none; */
 }
 
 .panel__card.active {
@@ -1152,7 +1152,6 @@ button.window-button__add-print{
 }
 .order__ticket{
     position: relative;
-    padding: 30px;
     padding-right: 10px;
     margin: auto;
     background-color: #fff;
@@ -1162,9 +1161,9 @@ button.window-button__add-print{
 }
 
 .ticket__container{
-    height: 500px;
-    overflow-y: scroll;
-    padding-right: 20px;
+    /* height: 500px; */
+    /* overflow-y: scroll; */
+    /* padding-right: 20px; */
 }
 
 .header__ticket{
@@ -1401,4 +1400,225 @@ button.button__add-prints{
     height: 35px;
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
+}
+
+.cart__size p,
+.cart__color p{
+    font-size: 16px;
+    margin-right: 7px;
+}
+
+.order__status{
+    display: flex;
+    align-items: center;
+}
+
+.order__status p{
+    font-size: 16px;
+    font-weight: 400;
+    margin-right: 7px;
+}
+.cart__size,
+.cart__color{
+    margin-bottom: 10px;
+}
+
+.cart__name{
+    font-size: 18px;
+}
+
+.order__status p:first-child,
+.cart__size p:first-child,
+.cart__color p:first-child{
+    font-weight: 700;
+}
+
+.order__status .font__radio{
+    margin: 0;
+}
+
+.order__tab-status{
+    /* display: none; */
+}
+
+.order__info-btn{
+    width: 100%;
+}
+
+.cart__item{
+    flex-wrap: wrap;
+}
+
+.btn__open-close{
+    display: block;
+    width: 134px;
+    height: 30px;
+    border-radius: 5px;
+    background-color: #3d71f5;
+    color: #fff;
+    font-size: 14px;
+    margin: 0 0 0 auto;
+}
+
+.cmyk{
+    margin-left: 7px;
+}
+.item__color{
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.constr__item-templ img{
+    width: 100%;
+}
+
+.order__main-img{
+    width: 342px;
+    min-width: 342px;
+    height: 313px;
+}
+
+.order__main-img canvas{
+    width: 342px !important;
+    height: 313px !important;
+}
+
+.order__description{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+}
+.order__description .product-work-zone{
+    width: 420px;
+}
+.order__layer-item{
+    padding: 10px 8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 392px;
+    border-radius: 5px;
+    background-color: #ececec;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.layer__text{
+    width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.application__type{
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.application__type.needle{
+    background-image: url(../img/icon/needle.png);
+    background-size: 24px;
+}
+.application__type.paint{
+    background-image: url(../img/icon/paint.png);
+    background-size: 12px;
+}
+
+.layer__text-size{
+    margin-left: 10px;
+}
+
+.layer__color{
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 1px solid #c7c7c7;
+    margin-left: 10px;
+}
+
+.color__cmyk{
+    margin-left: 10px;
+}
+
+.button__layer-info{
+    margin: 0 0 0 auto;
+    cursor: pointer;
+    outline: none;
+    width: 16px;
+    height: 8px;
+    background-image: url(../img/icon/backward-layer.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px 8px;
+}
+
+.layer__info{
+    display: none;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.layer__info span:first-child{
+    color: #939393;
+    font-size: 14px;
+}
+
+.layer__img{
+    width: 130px;
+    object-fit: contain;
+}
+.layer__img img{
+    width: 63px;
+    height: 32px;
+}
+
+.layer__img-link{
+    font-size: 15px;
+    color: inherit;
+    padding-bottom: 2px;
+    border-bottom: 1px dotted #393939;
+    margin-left: 10px;
+}
+
+.cart__price{
+    margin: 0;
+}
+
+.count{
+    margin: 0 15px 0 auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.cart__item{
+    opacity: 0.4;
+}
+
+.cart__item.active{
+    opacity: 1;
+}
+
+
+.order__layer-item.active .layer__info{
+    display: block;
+}
+
+.order__layer-item.active .button__layer-info{
+    transform: rotate(180deg);
+    margin: 0 0 0 auto;
 }
