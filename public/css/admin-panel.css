@@ -1570,7 +1570,7 @@ button.button__add-prints{
 
 .layer__img{
     width: 130px;
-    object-fit: contain;
+    object-fit: cover;
 }
 .layer__img img{
     width: 63px;
