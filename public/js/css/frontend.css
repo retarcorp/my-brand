@@ -134,12 +134,12 @@ canvas {
 
 /*CART*/
 
-.order__section {
-    opacity: 0;
-    pointer-events: none;
-}
+/*.order__section {*/
+    /*opacity: 0;*/
+    /*pointer-events: none;*/
+/*}*/
 
 .order__section.active {
     opacity: 1;
-    pointer-events: none;
+    pointer-events: all;
 }

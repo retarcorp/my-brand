@@ -32,6 +32,7 @@ class UI {
         this.TextSettings = new TextSettings(this);
         this.Slider = new Slider(this);
         this.Cart = new Cart(this);
+        this.Order = new Order(this);
 
         this.leftMenu = $('.left-menu');
 
@@ -58,7 +59,9 @@ class UI {
         this.Create.init();
 
         this.Slider.init();
+
         this.Cart.init();
+        this.Order.init();
 
         //this.Profile.init();
         //this.Menu.init();

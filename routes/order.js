@@ -4,7 +4,11 @@ var router = express.Router();
 var Mongo = require('../modules/Mongo');
 var User = require('../modules/Users');
 
+var URL = require('url');
+var qrs = require('querystring');
+
 router.post('/order/set', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query);
     let parse = "";
 
     req.on('data', (data) => {
@@ -18,39 +22,46 @@ router.post('/order/set', (req, res, next) => {
             response = {
                 status: false,
                 message: "Unexpected error",
-                data: data
+                data: data,
+                query: query
             },
-            user = req.cookies.user.name || req.session.user.name;
+            user = User.checkSession(req, res, next);
 
-        Mongo.select({ user: user }, 'cart', (response_db) => {
-            const cart = response_db,
-                order = {};
+        if (user) {
+            Mongo.select({ user: user }, 'cart', (response_db) => {
+                const cart = response_db,
+                    order = {};
 
-            if (cart.length) {
-                order.cart = cart;
-                order.order_id = data.cart_id;
-                order.user = user;
+                if (cart.length) {
+                    order.cart = cart;
+                    order.order_id = data.cart_id;
+                    order.user = user;
 
-                Mongo.delete( { user: user }, 'cart', (response_db) => {
-                    console.log('Cart emptied');
-                });
+                    Mongo.delete( { user: user }, 'cart', (response_db) => {
+                        console.log('Cart emptied');
+                    });
 
-                Mongo.insert( order, 'order', (response_db) => {
-                    response.status = true;
-                    response.message = "Ordered";
+                    Mongo.insert( order, 'order', (response_db) => {
+                        response.status = true;
+                        response.message = "Order created";
+
+                        res.send(response);
+                    });
+
+                } else {
+                    response.status = false;
+                    response.message = "No user products cart found"
 
                     res.send(response);
-                });
+                }
 
-            } else {
-                response.status = false;
-                response.message = "No user products cart found"
+            });
+        } else {
+            response.status = false;
+            response.message = "User didn't logged"
 
-                res.send(response);
-            }
-
-
-        });
+            res.send(response);
+        }
 
     });
 
