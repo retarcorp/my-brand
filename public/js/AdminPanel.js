@@ -1197,8 +1197,19 @@ AdminApp = {
         init() {
             this.list.on('click', this.checkEvent.bind(this));
             this.uploadButton.on('click', this.createNewPrint.bind(this));
+            this.pages.on('click', this.checkPagesEvent.bind(this));
 
             // this.loadPanel();
+        }
+
+        ,checkPagesEvent(e) {
+            const target = $(e.target);
+
+            if (target.hasClass('panel__page-point')) {
+                const page = target.data('page');
+
+                this.loadPanelPage(page);
+            }
         }
 
         ,checkEvent(e) {
@@ -1301,6 +1312,20 @@ AdminApp = {
 
                 this.formPrintsList(response.data);
                 this.formPrintsPages(response.pages);
+
+                this.unsetAwaitLoading();
+            });
+        }
+
+        ,loadPanelPage(page) {
+            this.openPanel();
+            this.setAwaitLoading();
+
+            this.loadPrintsPage(page, (response) => {
+                response = JSON.parse(response);
+
+                this.formPrintsList(response.data);
+                this.formPrintsPages(response.pages, page);
 
                 this.unsetAwaitLoading();
             });
@@ -1540,6 +1565,129 @@ AdminApp = {
         ,file_storage: null
         ,file_name: ""
         ,back: $('[name="backToPrintsList_print"]')
+    }
+
+    ,OrdersList: {
+        init() {
+            this.table.on('click', this.checkEvent.bind(this));
+            this.pages.on('click', this.checkPagesEvent.bind(this));
+        }
+
+        ,checkPagesEvent(e) {
+            const target = $(e.target);
+
+            if (target.hasClass('panel__page-point')) {
+                const page = target.data('page');
+
+                this.loadPanelPage(page);
+            }
+        }
+
+        ,checkEvent(e) {
+            const currentTarget = $(e.current.target);
+            let target = $(e.target);
+
+            while (!target.is(currentTarget)) {
+                if (target.hasClass('link__table')) {
+                    const row = target.parent(),
+                        order = row.data('order');
+
+                    this.openOrderUI();
+
+                    return;
+                }
+
+                target = target.parent()
+            }
+        }
+
+        ,loadOrdersPage(page = 1, cb) {
+            if (typeof page === 'function') {
+                cb = page;
+                page = 1;
+            }
+
+            App.Ajax.get('/order/load?page='+page, cb);
+        }
+
+        ,loadOrdersAll(cb) {
+            App.Ajax.get('/order/load', cb);
+        }
+
+        ,formOrdersTable(orders) {
+            this.table.html('');
+            this.table.append(TemplateFactory.getAdminPanelOrderHeadHtml());
+
+            orders.forEach( (order) => {
+                this.table.append(TemplateFactory.getAdminPanelOrderItemHtml(order));
+                this.table.children(':last-child').data('order', order);
+            });
+        }
+
+        ,formOrdersPages(pages, selected = 1) {
+            this.pages.html('');
+
+            for (let page = 1; page <= pages; page++) {
+                this.pages.append(TemplateFactory.getAdminPanelPages(page));
+                this.pages.children(':last-child').data('page', page);
+            }
+
+            this.pages.children(`:nth-child(${selected})`).addClass('selected');
+        }
+
+        ,openOrderUI() {
+            console.log('Need orderUI layout');
+        }
+
+        ,loadPanelPage(page = 1) {
+            this.openPanel();
+            this.setAwaitLoading();
+
+            this.loadOrdersPage( (response) => {
+                response = JSON.parse(response);
+
+                this.unsetAwaitLoading();
+                this.formOrdersTable(response.data);
+                this.formOrdersPages(response.pages, page);
+
+                console.log(response);
+            });
+        }
+
+        ,loadPanel() {
+            this.openPanel();
+            this.setAwaitLoading();
+
+            this.loadOrdersPage( (response) => {
+                response = JSON.parse(response);
+
+                this.unsetAwaitLoading();
+                this.formOrdersTable(response.data);
+                this.formOrdersPages(response.pages);
+
+                console.log(response);
+            });
+        }
+
+        ,openPanel() {
+            this.panel.addClass('active');
+        }
+
+        ,closePanel() {
+            this.panel.removeClass('active');
+        }
+
+        ,unsetAwaitLoading() {
+            this.table.removeClass('loading');
+        }
+
+        ,setAwaitLoading() {
+            this.table.addClass('loading');
+        }
+
+        ,panel: $('[name="orderPanel_order"]')
+        ,table: $('[name="orderTable_order"]')
+        ,pages: $('[name="ordersPages_order"]')
     }
 }
 

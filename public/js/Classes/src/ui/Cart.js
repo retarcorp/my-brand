@@ -90,6 +90,10 @@ class Cart {
         this.recountPrice();
     }
 
+    emptyCartList() {
+         this.container.html('');
+    }
+
     removeFromCart(cart_id, card) {
          App.Ajax.get('/delete/cart?cart_id='+cart_id, (response) => {
              response = JSON.parse(response);

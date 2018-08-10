@@ -3,6 +3,7 @@ module.exports = {
 	init: function() {
 
 		this.Client = require('mongodb').MongoClient;
+		this.ObjectId = require('mongodb').ObjectID;
 		this.Assert = require('assert');
 
 		this.URL = 'mongodb://localhost:27017/MyBrand';
@@ -77,7 +78,7 @@ module.exports = {
 			if (!(typeof key == 'object')) key = {};
 			if (!(typeof change == 'object')) change = {};
 
-			coll.updateMany(key, { $set: change }, { upsert: true }, (err, data) => {
+			coll.update(key, { $set: change }, { upsert: true }, (err, data) => {
 				this.Assert.equal(err, null);
 				
 				if (callback) callback(data);
@@ -86,13 +87,23 @@ module.exports = {
 		});
 	}
 
+	,count: function(key, collection, callback) {
+		this.connect( (db) => {
+			let coll = db.collection(collection);
+
+			if (typeof key !== 'object') key = {};
+
+			coll.countDocuments(key)
+				.then( (count) => (callback) ? callback(count) : 0 )
+				.catch(err => console.log(err));
+		})
+	}
+
 	,delete: function(key, collection, callback) {
 		this.connect( (db) => {
 			let coll = db.collection(collection);
 
 			if (!(typeof key == 'object')) key = { nothingToDelete: Infinity };
-
-			console.log(key);
 
 			coll.removeMany(key, (err, data) => {
 				this.Assert.equal(err, null);
@@ -118,5 +129,10 @@ module.exports = {
 				console.log('Collection deleted');
 			});
 		});
+	}
+
+	,toObjectId: function(str) {
+		console.log(this.ObjectId(str));
+		return new this.ObjectId(str);
 	}
 }

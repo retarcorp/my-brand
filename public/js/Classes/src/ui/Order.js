@@ -6,9 +6,24 @@ class Order {
     init() {
         this.form_section = $('[name="userCredsForOrder"]');
         this.create_order = $('[name="createOrder"]');
+        this.order_price = $('[name="orderPrice"] > span');
+
+        this.inputs = {
+            credentials: this.form_section.find('#fio'),
+            phone: this.form_section.find('#phone'),
+            email: this.form_section.find('#email'),
+            town: this.form_section.find('#town'),
+            location: this.form_section.find('#address'),
+            payOnPlace: this.form_section.find('[name="orderPayOnPlace"]'),
+            payOnline: this.form_section.find('[name="orderPayOnline"]')
+        }
 
         this.create_order.on('click', this.openOrderForm.bind(this));
         this.form_section.on('click', this.checkEvent.bind(this));
+    }
+
+    sendData(data, cb) {
+        this.UI.App.Ajax.post('/order/set', data, cb);
     }
 
     checkEvent(e) {
@@ -32,6 +47,7 @@ class Order {
             }
 
             if (target.attr('name') == 'acceptOrder') {
+                e.preventDefault();
                 this.acceptOrder();
 
                 return;
@@ -42,11 +58,40 @@ class Order {
     }
 
     acceptOrder() {
-        console.log('Need orderAccept functionality');
+        const data = {};
+        let querystring = "";
+
+        data.credentials = this.inputs.credentials.val();
+        data.phone = this.inputs.phone.val();
+        data.email = this.inputs.email.val();
+        data.town = this.inputs.town.val();
+        data.location = this.inputs.location.val();
+        data.price = this.order_price.text();
+        data.ordered = new Date().getTime();
+        data.paytype = (this.inputs.payOnPlace.prop('checked')) ? 'onPlace' : 'online';
+
+        querystring = this.UI.App.Data.serialize(data);
+
+        this.sendData(querystring, (response) => {
+            response = JSON.parse(response);
+            this.updateOrderForm();
+            this.UI.Cart.emptyCartList();
+
+            console.log(response);
+        });
     }
 
     openOrderForm() {
+        this.updateOrderPrice();
         this.form_section.addClass('active');
+    }
+
+    updateOrderForm() {
+        console.log('Need form changes');
+    }
+
+    updateOrderPrice() {
+        this.order_price.text(this.UI.Cart.total.text());
     }
 
     closeOrderForm() {
