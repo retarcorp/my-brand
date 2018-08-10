@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var serverRouter = require('./routes/server');
@@ -31,6 +32,15 @@ var onsession = require('./routes/onsession');
 var userLogout = require('./routes/logout');
 
 var cart = require('./routes/cart');
+var order = require('./routes/order');
+
+
+/*TEST*/
+
+var formData = require('./routes/form_data');
+
+/*TEST*/
+
 
 var app = express();
 
@@ -53,6 +63,10 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat', cookie: {} }));
 
@@ -89,10 +103,23 @@ app.get('/profile', profile);
 app.post('/cart/add', cart);
 app.get('/cart/load', cart);
 
+app.get('/order/load', order);
+app.post('/order/set', order);
+app.post('/order/update', order);
+
 app.get('/constructor', constructor);
+
+
+/* TEST */
+
+app.post('/form_data', formData);
+
+/*TEST*/
+
 
 app.get('/', indexRouter);
 app.get('/*', serverRouter);
+
 
 //app.get('/', indexRouter);
 

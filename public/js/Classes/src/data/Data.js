@@ -8,6 +8,14 @@ class Data {
         this.Projects = [];
     }
 
+    serialize(object) {
+        if (typeof object === 'object') {
+            return Object.keys(object).reduce( (acc, key, index) => `${acc}&${key}=${Object.values(object)[index]}`, ``).slice(1).replace(/ /g, '+');
+        } else {
+            return "";
+        }
+    }
+
     async getBases(){
         const data = await this.App.Ajax.getJSON("/bases");
         this.Bases = data.bases.map((obj) => Base.fromJSON(obj));

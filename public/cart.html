@@ -190,7 +190,7 @@
             <div class="order-papap">
                 <h1 class="header__order">ОФОРМЛЕНИЕ ЗАКАЗА</h1>
                 <div class="button button__close"></div>
-                <form class="order__form">
+                <form class="order__form" name="orderForm">
                     <div class="info__field">
                         <label class="field__label" for="fio">Ф.И.О: </label>
                         <input class="field__input" type="text" id="fio">
@@ -214,16 +214,16 @@
                     <div class="panel__column-item-radio font__radio">
                         <p class="panel__column-item-radio-header">Оплата: </p>
                         <label class="panel__type-picture">
-                            <input class="style-ratio" type="checkbox" name="font_print">
+                            <input class="style-ratio" type="checkbox" name="orderPayOnPlace">
                             При получении
                         </label>
                         <label class="panel__type-picture">
-                            <input class="style-ratio" type="checkbox" name="font_fancywork">
+                            <input class="style-ratio" type="checkbox" name="orderPayOnline">
                             Онлайн
                         </label>
                     </div>
                     <div class="order__form_bot">
-                        <p class="total">Итог: <span>4550 P</span> </p>
+                        <p class="total" name="orderPrice">Итог: <span>4550 P</span> </p>
                         <input type="submit" class="order__button" name="acceptOrder" value="Подтвердить">
                     </div>
                 </form>

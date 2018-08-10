@@ -35,16 +35,24 @@ router.post('/cart/add', (req, res, next) => {
 
                 project.cart_id = (project.cart_id) ? project.cart_id :  md5(User.genSalt(12));
 
-                Mongo.update( { id: project.id }, project, 'uniq');
-                Mongo.update( { cart_id: project.cart_id }, project, 'cart', (response_db) => {
-                    console.log('Cart updated');
+                //delete project._id;
 
-                    response.status = true;
-                    response.message = "Cart updated";
-                    response.data = project;
+                Mongo.update( { id: project.id, user: project.user }, project, 'uniq', () => {
+                    console.log(project.cart_id, project._id);
 
-                    res.send(response);
+                    Mongo.update( { cart_id: project.cart_id }, project, 'cart', (response_db) => {
+                        console.log('Cart updated');
+
+                        response.status = true;
+                        response.message = "Cart updated";
+                        response.data = project;
+
+                        res.send(response);
+                    });
                 });
+
+
+
             } else {
                 response.status = true;
                 response.message = "No projects found";

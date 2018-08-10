@@ -87,7 +87,6 @@ let Users = {
 	,checkSession(req, res, next) {
         if (!req.cookies.user) {
             if (!req.session.user) {
-
                 return false
             } else {
                 this.createSession(req, res, next, req.session.user);

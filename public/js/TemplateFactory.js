@@ -390,4 +390,32 @@ const TemplateFactory = {
         `
     }
 
+    ,getAdminPanelOrderHeadHtml() {
+        return `
+            <tr class="o_tr-head">
+                <th class="o_th th_number">№</th>
+                <th class="o_th th_date">Дата заказа</th>
+                <th class="o_th th_status">Статус</th>
+                <th class="o_th th_price">Сумма</th>
+                <th class="o_th th_link"></th>
+            </tr>
+        `
+    }
+
+    ,getAdminPanelOrderItemHtml(order) {
+        const time = parseInt(order.info.ordered);
+
+        return `
+            <tr class="o_tr">
+                <td class="o_td td_number">${order.number}</td>
+                <td class="o_td td_date">${new Date(time).toLocaleDateString()} ${new Date(time).toLocaleTimeString()}</td>
+                <td class="o_td td_status">${order.status}</td>
+                <td class="o_td td_price">${order.info.price} руб</td>
+                <td class="o_td td_link">
+                    <a href="#" class="link__table">Просмотреть</a>
+                </td>
+            </tr>
+        `
+    }
+
 }

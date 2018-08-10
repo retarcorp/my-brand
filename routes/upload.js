@@ -169,6 +169,7 @@ router.post('/upload/redact', (req, res, next) => {
 });
 
 router.post('/upload/print', (req, res, next) => {
+    let parse = "";
     const query = qrs.parse(URL.parse(req.url).query),
         response = {
             status: false,
@@ -182,8 +183,6 @@ router.post('/upload/print', (req, res, next) => {
             }
         },
         print = {};
-
-
 
     let form = new multiparty.Form(),
         file_name = "",
