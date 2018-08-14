@@ -29,7 +29,7 @@ class Data {
     async getFonts(page) {
         if (typeof page != 'number') page = 1;
 
-        const data = await this.App.Ajax.getJSON(`/fonts?page=${page}`);
+        const data = await this.App.Ajax.getJSON(`/fonts?page=`+page);
         this.Fonts = data.fonts.map((obj) => Font.fromJSON(obj));
 
         this.App.UI.FontsList.injectFont();
@@ -37,7 +37,7 @@ class Data {
             document.fonts.load('12px ' + font.name);
         });
 
-        Promise.all(promises);
+        await Promise.all(promises);
     }
 
     async loadProjects(page = 1) {

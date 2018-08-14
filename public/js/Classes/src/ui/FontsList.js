@@ -98,25 +98,56 @@ class FontsList {
                 $list.hide();
             });
 
+            this.list = $list;
+
         });
     }
 
     injectFont() {
         $('head').append(TemplateFactory.getStyleTag());
+        this.UI.App.fontStyle = $('[name="FONTS_FACES"]')
     }
 
     setFont(font) {
         const curr = App.GraphCore.currentWidget;
 
-
         if (curr instanceof TextWidget) {
-            curr.fontSettings.fontFamily = font.name;
+            if (this.UI.App.fontStyle.text().indexOf(font.name) >= 0) {
+                curr.fontSettings.fontFamily = font.name;
+                console.log(font.name);
+            } else {
+                this.loadFont(font.name, (response) => {
+                    response = JSON.stringify(response);
+                    this.UI.App.fontStyle.append(TemplateFactory.getFontStyle(response.data));
+                    curr.fontSettings.fontFamily = response.data.name;
+                });
+            }
         }
+    }
+
+    addFont(font) {
+        this.UI.App.fontStyle.append(TemplateFactory.getFontStyle(font));
+    }
+
+    checkFont(font) {
+        if (!(App.fontStyle.text().indexOf(font.font) >= 0)) {
+            this.loadFont(font.font, (response) => {
+                response = JSON.parse(response);
+                font = response.data;
+
+                if(!(font instanceof Array)) {
+                    this.addFont(font);
+                }
+            });
+        }
+    }
+
+    loadFont(font, cb) {
+        App.Ajax.get('/find/font/by/name?font='+font, cb);
     }
 
     getFont(e) {
         const curr = App.GraphCore.currentWidget;
-
 
         if (curr instanceof TextWidget) {
             curr.fontSettings.fontFamily = $(e.target.options[e.target.selectedIndex]).data('font').name;

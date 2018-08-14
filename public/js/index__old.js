@@ -1943,7 +1943,7 @@ const App = {
         return project;
     }
 
-    ,setProject(project) {
+    ,async setProject(project) {
         this.Project = this.getProject(project);
     }
 

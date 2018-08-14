@@ -4,7 +4,7 @@ class Cart {
      }
 
      init() {
-         this.container = $('.cart__container');
+         this.container = $('[name="userCart"]');
          this.total = $('.total__price').children(':first-child');
 
          if (this.container.length) {

@@ -15,7 +15,7 @@ AdminApp = {
 
         this.fontPage = 1;
 
-        this.style = $('<style></style>');
+        this.style = $('[name="FONTS_FACES"]');
 
 
         this.font_print.on('click', this.checkPrint.bind(this));
@@ -32,6 +32,8 @@ AdminApp = {
         this.TemplatesUI.init();
         this.PrintsList.init();
         this.PrintRedactor.init();
+        this.OrdersList.init();
+        this.OrderUI.init();
 
         console.log('AdminPanel init');
     }
@@ -139,11 +141,17 @@ AdminApp = {
             fonts.reduce(  (acc, font) => acc + TemplateFactory.getAdminPanelFontshtml(font), `` )
         );
 
-        this.style.html(
-            fonts.reduce( (acc, font) => acc + TemplateFactory.getFontStyle(font), ``)
-        );
+        fonts.forEach( (f) => {
+            App.UI.FontsList.checkFont(f);
+        });
 
-        $('head').append(this.style);
+        // this.style.html(
+        //     fonts.reduce( (acc, font) => acc + TemplateFactory.getFontStyle(font), ``)
+        // );
+
+        //$('head').append(this.style);
+
+        // console.log('styled')
 
         if (callback) callback(fonts);
     }
@@ -1571,6 +1579,7 @@ AdminApp = {
         init() {
             this.table.on('click', this.checkEvent.bind(this));
             this.pages.on('click', this.checkPagesEvent.bind(this));
+            this.category.on('click', this.checkCategoryEvent.bind(this));
         }
 
         ,checkPagesEvent(e) {
@@ -1584,15 +1593,17 @@ AdminApp = {
         }
 
         ,checkEvent(e) {
-            const currentTarget = $(e.current.target);
+            const currentTarget = $(e.currentTarget);
             let target = $(e.target);
 
             while (!target.is(currentTarget)) {
                 if (target.hasClass('link__table')) {
-                    const row = target.parent(),
+                    e.preventDefault();
+
+                    const row = target.parent().parent(),
                         order = row.data('order');
 
-                    this.openOrderUI();
+                    this.openOrderUI(order);
 
                     return;
                 }
@@ -1601,13 +1612,28 @@ AdminApp = {
             }
         }
 
+        ,checkCategoryEvent(e) {
+            const target = $(e.target);
+
+            if (target.hasClass('onen__order')) {
+                target.addClass('active');
+                this.openInProgressOrders();
+            }
+
+            if (target.hasClass('close__order')) {
+                target.addClass('active');
+                this.openClosedOrders();
+            }
+        }
+
         ,loadOrdersPage(page = 1, cb) {
             if (typeof page === 'function') {
                 cb = page;
                 page = 1;
             }
+            const type = this.type.replace(' ', '+');
 
-            App.Ajax.get('/order/load?page='+page, cb);
+            App.Ajax.get(`/order/load?page=${page}&type=${type}`, cb);
         }
 
         ,loadOrdersAll(cb) {
@@ -1616,15 +1642,23 @@ AdminApp = {
 
         ,formOrdersTable(orders) {
             this.table.html('');
+            this.closed.html('');
+
             this.table.append(TemplateFactory.getAdminPanelOrderHeadHtml());
+            // this.closed.append(TemplateFactory.getAdminPanelOrderHeadHtml());
 
             orders.forEach( (order) => {
-                this.table.append(TemplateFactory.getAdminPanelOrderItemHtml(order));
-                this.table.children(':last-child').data('order', order);
+                // if (order.status != 'Закрыт') {
+                    this.table.append(TemplateFactory.getAdminPanelOrderItemHtml(order));
+                    this.table.children(':last-child').data('order', order);
+                // } else {
+                //     this.closed.append(TemplateFactory.getAdminPanelOrderItemHtml(order));
+                //     this.closed.children(':last-child').data('order', order);
+                // }
             });
         }
 
-        ,formOrdersPages(pages, selected = 1) {
+        ,formOrdersPages(pages = 1, selected = 1) {
             this.pages.html('');
 
             for (let page = 1; page <= pages; page++) {
@@ -1635,8 +1669,13 @@ AdminApp = {
             this.pages.children(`:nth-child(${selected})`).addClass('selected');
         }
 
-        ,openOrderUI() {
-            console.log('Need orderUI layout');
+        ,openOrderUI(order) {
+            this.closePanel();
+
+            console.log(order);
+
+            AdminApp.OrderUI.loadPanel(order);
+            // console.log('Need orderUI layout');
         }
 
         ,loadPanelPage(page = 1) {
@@ -1650,8 +1689,25 @@ AdminApp = {
                 this.formOrdersTable(response.data);
                 this.formOrdersPages(response.pages, page);
 
+                this.orders = response.data;
                 console.log(response);
             });
+        }
+
+        ,openClosedOrders() {
+            // this.table.removeClass('active');
+            // this.closed.addClass('active');
+            this.type = 'Закрыт';
+            this.loadPanel();
+            $('.onen__order').removeClass('active');
+        }
+
+        ,openInProgressOrders() {
+            // this.table.addClass('active');
+            // this.closed.removeClass('active');
+            this.type = 'В обработке';
+            this.loadPanel();
+            $('.close__order').removeClass('active');
         }
 
         ,loadPanel() {
@@ -1686,8 +1742,270 @@ AdminApp = {
         }
 
         ,panel: $('[name="orderPanel_order"]')
-        ,table: $('[name="orderTable_order"]')
+        ,table: $('[name="orderTableInProgress_order"]')
+        ,closed: $('[name="orderTableClosed_order"]')
         ,pages: $('[name="ordersPages_order"]')
+        ,category: $('[name="orderSelectCategory_order"]')
+        ,type: 'В обработке'
+        ,orders: null
+    }
+
+    ,OrderUI: {
+        init() {
+            this.list.on('click', this.checkEvent.bind(this));
+            this.order_status.on('click', this.checkOrderStatusEvent.bind(this));
+            this.comment.on('input', this.checkCommentEvent.bind(this));
+            this.update.on('click', this.updateOrder.bind(this));
+        }
+
+        ,checkEvent(e) {
+            const currentTarget = $(e.currentTarget);
+            let target = $(e.target);
+
+            while (!target.is(currentTarget)) {
+                if (target.hasClass('product_status')) {
+                    const child = target.parent().parent().parent().parent().parent(),
+                        item = child.data('item'),
+                        status = target.val();
+
+                    this.setCartItemStatus(child, item, status);
+
+                    return;
+                }
+
+                if (target.hasClass('constr__item-templ')) {
+                    const child = target.parent().parent().parent().parent(),
+                        item = child.data('item'),
+                        variant = target.data('variant');
+
+
+                    this.showVariantPreview(child, target, variant);
+
+                    return;
+                }
+
+                if (target.hasClass('button__layer-info')) {
+                    const child = target.parent().parent().parent().parent(),
+                        item = child.data('item'),
+                        layer = target.parent();
+
+                    this.toggleDetailedLayer(layer);
+
+                    return;
+                }
+
+                if (target.hasClass('order__btn-show')) {
+                    const child = target.parent().parent(),
+                        item = child.data('item');
+
+                    this.showOrderItem(child, target);
+                    return;
+                }
+
+                if (target.hasClass('order__btn-hide')) {
+                    const child = target.parent().parent(),
+                        item = child.data('item');
+
+                    this.hideOrderItem(child, target);
+                    return;
+                }
+
+                target = target.parent();
+            }
+        }
+
+        ,checkOrderStatusEvent(e) {
+            const currentTarget = $(e.currentTarget);
+            let target = $(e.target);
+
+            while (!target.is(currentTarget)) {
+                if (target.attr('name') == 'status__all-order') {
+                    const status = target.val();
+                    this.setOrderStatus(status);
+
+                    return;
+                }
+
+                target = target.parent();
+            }
+        }
+
+        ,checkCommentEvent(e) {
+            const currentTarget = $(e.currentTarget),
+                target = $(e.target),
+                comment = target.val();
+
+            this.setOrderComment(comment);
+        }
+
+        ,sendData(data, cb) {
+            App.Ajax.postJSON('/order/update?_id='+this.order._id, data, cb);
+        }
+
+        ,updateOrder(e) {
+            console.log(this.order);
+            this.sendData(JSON.stringify(this.order), (response) => {
+                response = JSON.parse(response);
+
+                console.log(response);
+                this.openOrdersList();
+            });
+        }
+
+        ,async formOrderList(cart) {
+            this.cart = cart;
+
+            this.setListLoading();
+            this.setOrderNumber(this.order.number);
+            this.setComment(this.order.comment);
+            this.setOrderStatus(this.order.status);
+            this.formCustomerInfo();
+
+            let previews = [];
+            let children = [];
+
+            for (let p of cart) {
+                const Project = await App.setProject(p, false);
+                const ch = $(TemplateFactory.getAdminPanelOrderPreviewHtml(this.order, p));
+                children.push(ch);
+
+                for (let v of Project.variants) {
+                    previews.push(await App.getVariantPreview(v));
+                }
+
+                //this.list.append(TemplateFactory.getAdminPanelOrderPreviewHtml(this.order, p));
+                ch.find('> img').attr('src', previews[0]);
+
+                ch.data('item', p);
+
+                ch.find('.order__main-img > img').attr('src', previews[0]);
+
+                previews.forEach( (src, index) => {
+                    ch.find('[name="orderImagePreview_order"]').children().eq(index).find('img').attr('src', src)
+                    ch.find('[name="orderImagePreview_order"]').children().eq(index).data('variant', p.variants[index]);
+                });
+
+                //const child = this.list.children(':last-child');
+                    // find('[name="orderItemLayers_order"]');
+                this.loadLayers(ch, ch.data('item').variants[0].widgets);
+
+                previews = [];
+            }
+
+            this.list.html('');
+
+            children.forEach(ch => {
+                this.list.append(ch);
+            });
+        }
+
+        ,formCustomerInfo() {
+            this.customer.html(TemplateFactory.getAdminPanelCustomerInfoHtml(this.order.info));
+        }
+
+        ,setCartItemStatus(child, item, status) {
+            item.status = status;
+            child.find('[name="orderCartStatus_order"]').text(status);
+        }
+
+        ,setOrderStatus(status) {
+            if (status == "Закрыт") {
+                this.order.status = 'Закрыт';
+                this.order_status.find('[data-status="closed"]').prop('checked', true);
+            } else {
+                this.order.status = 'В обработке';
+                this.order_status.find('[data-status="inProgress"]').prop('checked', true);
+            }
+        }
+
+        ,setOrderComment(comment) {
+            this.order.comment = comment;
+        }
+
+        ,setComment(comment) {
+            this.comment.val(comment);
+        }
+
+        ,setOrderNumber(number) {
+            this.head.find('.order__number').text(number);
+        }
+
+        ,setListLoading() {
+            this.list.html('');
+            this.list.append(TemplateFactory.getPreloader());
+        }
+
+        ,showVariantPreview(child, target, variant) {
+            const main = child.find('.order__main-img');
+            main.find('img').attr('src', target.find('img').attr('src'));
+
+            child.find('[name="orderImagePreview_order"]').children().removeClass('active');
+            target.addClass('active');
+
+            this.loadLayers(child, variant.widgets);
+        }
+
+        ,showOrderItem(item_node, btn) {
+            this.list.children().removeClass('active');
+            this.list.children().addClass('in_pending');
+
+            item_node.removeClass('in_pending');
+            item_node.addClass('active');
+        }
+
+        ,hideOrderItem(item_node, btn) {
+            item_node.removeClass('active');
+            this.list.children().removeClass('in_pending')
+        }
+
+        ,toggleDetailedLayer(layer) {
+            layer.toggleClass('active');
+        }
+
+        ,loadLayers(child, widgets) {
+            const layerContainer = child.find('[name="orderItemLayers_order"]');
+            layerContainer.html('');
+
+            widgets.forEach( (w) => {
+                if (w.type == 'ImageWidget') {
+                    layerContainer.append(TemplateFactory.getImageLayerHtml(w));
+                }
+
+                if (w.type == 'TextWidget') {
+                    layerContainer.append(TemplateFactory.getTextLayerHtml(w));
+                }
+            });
+        }
+
+        ,loadPanel(order) {
+            this.openPanel();
+            this.order = order;
+
+            this.formOrderList(order.cart);
+        }
+
+        ,openOrdersList() {
+            this.closePanel();
+            AdminApp.OrdersList.loadPanel();
+        }
+
+        ,openPanel() {
+            this.panel.addClass('active');
+        }
+
+        ,closePanel() {
+            this.panel.removeClass('active');
+        }
+
+        ,panel: $('[name="orderShowPanel_order"]')
+        ,list: $('[name="orderShowCart_order"]')
+        ,customer: $('[name="orderCustomerInfo_order"]')
+        ,order_status: $('[name="orderSetStatus_order"]')
+        ,comment: $('[name="orderComments_order"]')
+        ,update: $('[name="orderUpdateOrder_order"]')
+        ,head: $('.order-head')
+        ,order: null
+        ,cart: null
     }
 }
 

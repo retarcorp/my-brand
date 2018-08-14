@@ -367,7 +367,8 @@
     margin-left: 20px;
 }
 
-.template__list{
+.template__list,
+.order__image-list{
     display: flex;
     flex-direction: column;
 }

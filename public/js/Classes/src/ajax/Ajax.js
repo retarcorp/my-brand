@@ -12,6 +12,7 @@ class Ajax {
                 resolve(JSON.parse(xhr.responseText));
             }
 
+            xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(null);
 
         });
@@ -27,6 +28,7 @@ class Ajax {
                 resolve(JSON.parse(xhr.responseText))
             }
 
+            xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(data);
         });
     }

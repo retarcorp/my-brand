@@ -115,18 +115,23 @@ class BaseList {
     }
 
     async updateVariantImage() {
-        const variant = this.UI.App.currentProjectVariant;
-        let child = null;
+        if (!this.UI.App.inSettingProject){
+            const variant = this.UI.App.currentProjectVariant;
+            let child = null;
 
-        $.each($('.template__list').children(), (index, ch) => {
-            if ($(ch).data('index') == variant.index) {
-                child = ch;
-            }
-        });
+            $.each($('.template__list').children(), (index, ch) => {
+                if ($(ch).data('index') == variant.index) {
+                    child = ch;
+                }
+            });
 
-        $(child).find('img').attr('src', await this.UI.App.getVariantPreview(this.UI.App.currentProjectVariant));
+            $(child).find('img').attr('src', await this.UI.App.getVariantPreview(this.UI.App.currentProjectVariant));
 
-        setTimeout(this.updateVariantImage.bind(this), 10000);
+            setTimeout(this.updateVariantImage.bind(this), 10000);
+        } else {
+            setTimeout(this.updateVariantImage.bind(this), 20000);
+        }
+
     }
 
     setBaseSize(size) {

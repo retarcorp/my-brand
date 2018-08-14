@@ -18,7 +18,7 @@ router.post('/order/set', (req, res, next) => {
     req.on('end', (err) => {
         if (err) console.log(err);
 
-        const data = qrs.parse(parse),
+        const data = JSON.parse(parse),
             response = {
                 status: false,
                 message: "Unexpected error",
@@ -28,17 +28,16 @@ router.post('/order/set', (req, res, next) => {
             user = User.checkSession(req, res, next);
 
         if (user) {
-            Mongo.select({ user: user.name }, 'cart', (response_db) => {
-                const cart = response_db,
-                    order = {};
+            // Mongo.select({ user: user.name }, 'cart', (response_db) => {
+                const order = {};
 
-                if (cart.length) {
-                    order.cart = cart;
+                if (data.cart.length) {
+                    order.cart = data.cart;
                     order.user = user.name;
                     order.info = data;
-                    order.staus = 'В обработке';
+                    order.status = 'В обработке';
 
-                    Mongo.count({ user: user.name }, 'order', (response_db) => {
+                    Mongo.count({}, 'order', (response_db) => {
                         order.number = response_db;
 
                         Mongo.delete( { user: user.name }, 'cart', (response_db) => {
@@ -60,7 +59,7 @@ router.post('/order/set', (req, res, next) => {
                     res.send(response);
                 }
 
-            });
+            // });
         } else {
             response.status = false;
             response.message = "User didn't logged"
@@ -88,14 +87,14 @@ router.get('/order/load', (req, res, next) => {
         user = User.checkSession(req, res, next);
 
     if (user && user.admin) {
-        Mongo.select({}, 'order', (response_db) => {
+        Mongo.select({ status: query.type }, 'order', (response_db) => {
             const orders = response_db;
 
             if (query.page && !query.page != 'all') {
                 query.page = parseInt(query.page);
 
                 response.data = orders.filter( (o, index) => {
-                    if (index >= (query.page - 1) * 20 && index < query.page * 20) {
+                    if (index >= (query.page - 1) * 40 && index < query.page * 40) {
                         return o;
                     }
                 });
@@ -106,6 +105,7 @@ router.get('/order/load', (req, res, next) => {
 
             response.status = true;
             response.message = 'Orders loaded';
+            response.pages = Math.ceil(orders.length/40);
 
             res.send(response);
         });
@@ -135,8 +135,12 @@ router.post('/order/update', (req, res, next) => {
         },
         user = User.checkSession(req, res, next);
 
+    console.log(request);
+
     if (user && user.admin) {
-        Mongo.update({ _id: Mongo.toObjectId(query._id) }, { info: request }, 'order', (response_db) => {
+        delete request._id;
+
+        Mongo.update({ number: request.number }, request, 'order', (response_db) => {
             response.status = true;
             response.message = 'Order updated';
 

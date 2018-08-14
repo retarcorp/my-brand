@@ -174,7 +174,7 @@ h1 {
 .panel__card {
     margin-bottom: 20px;
     background: #fff;
-    /* display: none; */
+     display: none;
 }
 
 .panel__card.active {
@@ -1059,6 +1059,7 @@ button.window-button__add-print{
 .order__table{
     width: 100%;
     border-spacing: 0;
+    display: none;
 }
 
 .o_th{
@@ -1391,6 +1392,10 @@ button.button__add-prints{
     height: 100%;
 }
 
+.constr__item-templ img {
+    pointer-events: none;
+}
+
 .constr__item-templ .loader{
     margin: auto;
     border: 8px solid #ececec;;
@@ -1438,7 +1443,7 @@ button.button__add-prints{
 }
 
 .order__tab-status{
-    /* display: none; */
+     display: none;
 }
 
 .order__info-btn{
@@ -1450,7 +1455,7 @@ button.button__add-prints{
 }
 
 .btn__open-close{
-    display: block;
+    display: none;
     width: 134px;
     height: 30px;
     border-radius: 5px;
@@ -1458,6 +1463,10 @@ button.button__add-prints{
     color: #fff;
     font-size: 14px;
     margin: 0 0 0 auto;
+}
+
+.order__btn-show {
+    display: block;
 }
 
 .cmyk{
@@ -1477,6 +1486,11 @@ button.button__add-prints{
     width: 342px;
     min-width: 342px;
     height: 313px;
+    position: relative;
+}
+
+.order__main-img img {
+    width: 100%;
 }
 
 .order__main-img canvas{
@@ -1487,10 +1501,12 @@ button.button__add-prints{
 .order__description{
     margin-top: 20px;
     width: 100%;
-    display: flex;
+    display: none;
 }
 .order__description .product-work-zone{
     width: 420px;
+    justify-content: flex-start;
+    margin-left: 35px;
 }
 .order__layer-item{
     padding: 10px 8px;
@@ -1573,8 +1589,8 @@ button.button__add-prints{
     object-fit: cover;
 }
 .layer__img img{
-    width: 63px;
-    height: 32px;
+    width: 40%;
+    /*height: 32px;*/
 }
 
 .layer__img-link{
@@ -1605,9 +1621,9 @@ button.button__add-prints{
 
 
 
-.cart__item{
-    opacity: 0.4;
-}
+/*.cart__item{*/
+    /*opacity: 0.4;*/
+/*}*/
 
 .cart__item.active{
     opacity: 1;

@@ -139,7 +139,35 @@ canvas {
     /*pointer-events: none;*/
 /*}*/
 
-.order__section.active {
+.cart__item.active {
     opacity: 1;
     pointer-events: all;
+}
+
+.cart__item.active .order__description {
+    display: flex;
+}
+
+.cart__item.in_pending {
+    opacity: 0.7;
+    pointer-events: none;
+    user-select: none;
+}
+
+.cart__item.in_pending .order__btn-show {
+    display: block;
+}
+
+.cart__item.active .order__btn-hide ,
+.cart__item.active .order__tab-status {
+    display: block;
+}
+
+.cart__item.active .order__btn-show {
+    display: none;
+}
+
+
+.order__table.active {
+    display: inline-table;
 }

@@ -14,11 +14,15 @@ class VariantProject {
     async loadLazy() {
         this.static_loaded = false;
 
-        const promises = this.widgets
-            .filter(w => w instanceof ImageWidget)
-            .map( (widget) => {
-                return widget.loadLazy();
-            });
+        const promises = this.widgets.map( w => {
+            return w.loadLazy();
+        });
+
+        // const promises = this.widgets
+        //     .filter(w => w instanceof ImageWidget)
+        //     .map( (widget) => {
+        //         return widget.loadLazy();
+        //     });
 
         await this.variant.loadLazy();
         await Promise.all(promises);

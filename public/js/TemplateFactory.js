@@ -35,9 +35,17 @@ const TemplateFactory = {
         `
     }
 
+    ,getPreloader() {
+        return `
+            <div class="loader-container">
+                <div class="loader"></div>
+            </div>
+        `
+    }
+
     ,getStyleTag() {
         return (`
-            <style rel="stylesheet" type="text/css">
+            <style rel="stylesheet" type="text/css" name="FONTS_FACES">
                 ${App.Data.Fonts.reduce((acc, font)=> acc + TemplateFactory.getFontStyle(font), ``)}
             </style>
             `);
@@ -415,6 +423,201 @@ const TemplateFactory = {
                     <a href="#" class="link__table">Просмотреть</a>
                 </td>
             </tr>
+        `
+    }
+
+    ,getAdminPanelProductPreviewInfoHtml(order, product) {
+        const prodColor = product.settings.color || product.settings.startColor;
+        let color = [];
+
+        if (prodColor.indexOf('#') >= 0) {
+            color = App.GraphCore.Filter.hexToRgb(prodColor);
+            color = Object.assign([], Object.values(color)).join(',');
+        } else {
+            if (prodColor instanceof Array) {
+                color = prodColor.join(',');
+            }
+        }
+
+        const rgb = color.replace(/[^0-9,]/gm, '').split(',').map(c => parseInt(c));
+
+        return `
+            <div class="cart__item">
+                <img src="img/basis/2.jpg" alt="">
+                <div class="cart__description">
+                    <p class="cart__name">
+                        ${product.base.name} Заказ (№<span class="order__number">${order.number}</span>)
+                    </p>
+                    <div class="cart__size">
+                        <p>Размеры: </p>
+                        <p>${product.settings.size || product.base.size[0]}</p>
+                    </div>
+                    <div class="cart__color">
+                        <p>Цвет: </p>
+                        <div class="item__color" style="background-color: rgb(${rgb.join(',')})"></div>
+                        <p class="cmyk">CMYK (${ App.GraphCore.Filter.RgbToCmyk(rgb[0], rgb[1], rgb[2]).map( cmyk => Math.ceil(cmyk*100)).join(' ') })</p>
+                    </div>
+                    <div class="order__status">
+                        <p>Статус: </p>
+                        <p name="orderCartStatus_order">${product.status || 'В обработке'}</p>
+                        <div class="panel__column-item-radio font__radio order__tab-status">
+                            <label class="panel__type-picture">
+                                <input class="style-ratio product_status" type="radio" value="Готово" name="${product.cart_id}" ${(product.status == 'Готово') ? 'checked' : ""}>
+                                Готово
+                            </label>
+                            <label class="panel__type-picture">
+                                <input class="style-ratio product_status" type="radio" value="Ожидает" name="${product.cart_id}" ${(product.status == 'Ожидает') ? 'checked' : ""}>
+                                Ожидает
+                            </label>
+                            <label class="panel__type-picture">
+                                <input class="style-ratio product_status" type="radio" value="В обработке" name="${product.cart_id}" ${(product.status == 'В оработке' || !product.status) ? 'checked' : ""}>
+                                В обработке
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="count">
+                    <p>${product.amount} <span>шт.</span> </p>
+                </div>
+                <p class="cart__price">${product.amount * parseInt(product.base.price)} <span>P</span></p>
+        `
+    }
+
+    ,getTextLayerHtml(widget) {
+        let color = [];
+
+        if (widget.color.indexOf('#') >= 0) {
+            let hexRgb = App.GraphCore.Filter.hexToRgb(widget.color);
+            Object.assign(color, Object.values(hexRgb));
+            color = color.join(',');
+        } else {
+            color = widget.color;
+        }
+
+        const rgb = color.replace(/[^0-9,]/gm, '').split(',').map( c => parseInt(c));
+
+        const font = App.Data.Fonts.find( f => f.name = widget.fontSettings.fontFamily);
+
+        return `
+            <div class="order__layer-item">
+                <p class="layer__text">${widget.layer.text}</p>
+                ${(font.fancywork == "true" || !(font.print == 'true')) ?`<div class="application__type needle"></div>` : ""}
+                ${(font.print == "true")? `<div class="application__type paint"></div>` : ""}
+                    <p class="layer__text-size">${widget.fontSettings.fontSize}</p>
+                <div class="layer__color" style="background-color: ${widget.color};"></div>
+                <p class="color__cmyk">CMYK (${App.GraphCore.Filter.RgbToCmyk(rgb[0], rgb[1], rgb[2]).map( c => Math.ceil(c*100)).join(' ')})</p>
+                <button class="button button__layer-info"></button>
+                <div class="layer__info">
+                    <div class="layer__info-item">
+                        <span>Полный текст:</span>
+                        <span class="layer__full-text">${widget.layer.text}</span>
+                    </div>
+                    <div class="layer__info-item">
+                        <span>Шрифт:</span>
+                        <span class="layer__font-family">${widget.fontSettings.fontFamily}</span>
+                    </div>
+                </div>
+            </div>
+        `
+    }
+
+    ,getImageLayerHtml(widget) {
+        const print = App.Data.Prints.find( p => p.text == widget.layer.text) || {};
+        return `
+            <div class="order__layer-item layer__img-item">
+                <div class="layer__img">
+                    <img src="${widget.src}" alt="">
+                </div>
+                ${(print.fancywork == "true" || !(print.print == 'true')) ?`<div class="application__type needle"></div>` : ""}
+                ${(print.print == "true") ? `<div class="application__type paint"></div>` : ""}
+                    <a href="${widget.src}" download class="layer__img-link">Скачать</a>
+                <button class="button button__layer-info"></button>
+                <div class="layer__info">
+                    <div class="layer__info-item">
+                        <span>Полный текст:</span>
+                        <span class="layer__full-text">${widget.layer.text}</span>
+                    </div>
+                    <div class="layer__info-item">
+                        <span>Шрифт:</span>
+                        <span class="layer__font-family">Lato</span>
+                    </div>
+                </div>
+            </div>
+        `
+    }
+
+    ,getAdminPanelVariantsPreview() {
+        return `
+            <div class="constr__item-templ">
+                ${this.getImageHtml()}
+            </div>
+        `
+    }
+
+    ,getAdminPanelOrderPreviewHtml(order, product) {
+        return `
+                ${this.getAdminPanelProductPreviewInfoHtml(order, product)}
+                <div class="order__description">
+                        <div class="product-work-zone">
+                            <div class="order__image-list" name="orderImagePreview_order">
+                                ${ product.variants.reduce((acc) => acc + this.getAdminPanelVariantsPreview(), `` ) }
+                                </div>
+                                <div class="order__main-img">
+                                    ${this.getImageHtml()}
+                                    <!--<div class="loader-container">-->
+                                        <!--<div class="loader"></div>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                                
+                                <div class="panel__right-side-create order__layers" name="orderItemLayers_order">
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        <div class="order__info-btn">
+                            <button class="button btn__open-close order__btn-show">Подробнее</button>
+                            <button class="button btn__open-close order__btn-hide">Свернуть</button>
+                        </div>
+                    </div>
+`
+    }
+
+    ,getAdminPanelCustomerInfoHtml(info) {
+        return `
+            <div class="field__customer">
+                <span>Ф.И.О: </span>
+                <span>${ (info.credentials) ? info.credentials : ""}</span>
+            </div>
+            <div class="field__customer">
+                <span>Email: </span>
+                <span>${ (info.email) ? info.email : ""}</span>
+            </div>
+            <div class="field__customer">
+                <span>Телефон: </span>
+                <span>${ (info.phone) ? info.phone : ""}</span>
+            </div>
+            <div class="field__customer">
+                <span>Город: </span>
+                <span>${ (info.town) ? info.town : ""}</span>
+            </div>
+            <div class="field__customer">
+                <span>Адрес: </span>
+                <span>${ (info.location) ? info.location : ""}</span>
+            </div>
+            <div class="field__customer">
+                <span>Оплата: </span>
+                <span>${ (info.paytype) ? info.paytype : ""}</span>
+            </div>
+            <div class="field__customer">
+                <span>Доставка: </span>
+                <span>${ (info.delivery) ? info.delivery : "Почтой"}</span>
+            </div>
+            <div class="field__customer">
+                <span>Итог: </span>
+                <span>${ (info.price) ? info.price : "0"} Р</span>
+            </div>
         `
     }
 

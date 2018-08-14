@@ -411,13 +411,31 @@
                 <div class="panel__card orders" name="orderPanel_order">
                     <div class="panel__card-title order-head">
                         Заказы
-                        <ul class="select__order">
+                        <ul class="select__order" name="orderSelectCategory_order">
                             <li class="onen__order select__type active">Открытые</li>
                             <li class="close__order select__type">Закрытые</li>
                         </ul>
                     </div>
                     <div class="panel__content">
-                        <table class="order__table" name="orderTable_order">
+                        <table class="order__table active" name="orderTableInProgress_order">
+                            <tr class="o_tr-head">
+                                <th class="o_th th_number">№</th>
+                                <th class="o_th th_date">Дата заказа</th>
+                                <th class="o_th th_status">Статус</th>
+                                <th class="o_th th_price">Сумма</th>
+                                <th class="o_th th_link"></th>
+                            </tr>
+                            <tr class="o_tr">
+                                <td class="o_td td_number">1236</td>
+                                <td class="o_td td_date" >12.12.2018 20:30</td>
+                                <td class="o_td td_status">О бработке</td>
+                                <td class="o_td td_price">3400 руб</td>
+                                <td class="o_td td_link">
+                                    <a href="" class="link__table">Просмотреть</a>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="order__table" name="orderTableClosed_order">
                             <tr class="o_tr-head">
                                 <th class="o_th th_number">№</th>
                                 <th class="o_th th_date">Дата заказа</th>
@@ -446,7 +464,8 @@
 
                     </div>
                 </div>
-                <div class="panel__card orders">
+
+                <div class="panel__card orders" name="orderShowPanel_order">
                     <div class="panel__card-title order-head">
                         <button class="order__prev-page"></button>
                         Заказ № <span class="order__number">23534</span>
@@ -454,232 +473,12 @@
                     <div class="panel__content">
                         <div class="order__ticket">
                             <div class="ticket__container">
-                                <div class="card__container">
-                                    <div class="cart__item">
-                                        <img src="img/basis/2.jpg" alt="">
-                                        <div class="cart__description">
-                                            <p class="cart__name">
-                                                Мужской свитшот STAR Заказ (№<span class="order__number">23534-1</span>)
-                                            </p>
-                                            <div class="cart__size">
-                                                <p>Размеры: </p>
-                                                <p>L (52)</p>
-                                            </div>
-                                            <div class="cart__color">
-                                                <p>Цвет: </p>
-                                                <div class="item__color" style="background-color: red"></div>
-                                                <p class="cmyk">CMYK (100 100 20)</p>
-                                            </div>
-                                            <div class="order__status">
-                                                <p>Статус: </p>
-                                                <p>В обработке</p>
-                                                <div class="panel__column-item-radio font__radio order__tab-status">
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        Готово
-                                                    </label>
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        Ожидает
-                                                    </label>
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        В обработке
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="count">
-                                            <p>2 <span>шт.</span> </p>
-                                        </div>
-                                        <p class="cart__price">1700 <span>P</span></p>
-                                        <div class="order__description">
-                                        </div>
-                                        <div class="order__info-btn">
-                                            <button class="button btn__open-close order__btn-show">Подробнее</button>
-                                            <button class="button btn__open-close order__btn-hide">Свернуть</button>
-                                        </div>
-                                    </div>
-                                    <div class="cart__item active">
-                                        <img src="img/basis/2.jpg" alt="">
-                                        <div class="cart__description">
-                                            <p class="cart__name">
-                                                Мужской свитшот STAR Заказ (№<span class="order__number">23534-2</span>)
-                                            </p>
-                                            <div class="cart__size">
-                                                <p>Размеры: </p>
-                                                <p>L (52)</p>
-                                            </div>
-                                            <div class="cart__color">
-                                                <p>Цвет: </p>
-                                                <div class="item__color" style="background-color: red"></div>
-                                                <p class="cmyk">CMYK (100 100 20)</p>
-                                            </div>
-                                            <div class="order__status">
-                                                <p>Статус: </p>
-                                                <p>В обработке</p>
-                                                <div class="panel__column-item-radio font__radio order__tab-status">
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        Готово
-                                                    </label>
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        Ожидает
-                                                    </label>
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        В обработке
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="count">
-                                            <p>2 <span>шт.</span> </p>
-                                        </div>
-                                        <p class="cart__price">1700 <span>P</span></p>
-                                        <div class="order__description">
-                                                <div class="product-work-zone">
-                                                    <div class="template__list">
-                                                        <div class="constr__item-templ">
-                                                            <div class="loader-container">
-                                                                <div class="loader"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product__preview preview preview_margin order__main-img">
-                                                        <div class="loader-container">
-                                                            <div class="loader"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="panel__right-side-create order__layers">
-                                                    <div class="order__layer-item">
-                                                        <p class="layer__text">dasfadsfadsfasdfsadsfadsf</p>
-                                                        <div class="application__type paint"></div>
-                                                        <p class="layer__text-size">11</p>
-                                                        <div class="layer__color" style="background-color: #fff"></div>
-                                                        <p class="color__cmyk">CMYK(00 00 30 40)</p>
-                                                        <button class="button button__layer-info"></button>
-                                                        <div class="layer__info">
-                                                            <div class="layer__info-item">
-                                                                <span>Полный текст:</span>
-                                                                <span class="layer__full-text">dasfadsfadsfasdfsadsfadsf</span>
-                                                            </div>
-                                                            <div class="layer__info-item">
-                                                                <span>Шрифт:</span>
-                                                                <span class="layer__font-family">Lato</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="order__layer-item active">
-                                                        <p class="layer__text">dasfadsfadsfasdfsadsfadsf</p>
-                                                        <div class="application__type needle"></div>
-                                                        <p class="layer__text-size">11</p>
-                                                        <div class="layer__color" style="background-color: #fff"></div>
-                                                        <p class="color__cmyk">CMYK(00 00 30 40)</p>
-                                                        <button class="button button__layer-info"></button>
-                                                        <div class="layer__info">
-                                                            <div class="layer__info-item">
-                                                                <span>Полный текст:</span>
-                                                                <span class="layer__full-text">dasfadsfadsfasdfsadsfadsf</span>
-                                                            </div>
-                                                            <div class="layer__info-item">
-                                                                <span>Шрифт:</span>
-                                                                <span class="layer__font-family">Lato</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="order__layer-item">
-                                                        <p class="layer__text">dasfadsfadsfasdfsadsfadsf</p>
-                                                        <div class="application__type paint"></div>
-                                                        <p class="layer__text-size">11</p>
-                                                        <div class="layer__color" style="background-color: #fff"></div>
-                                                        <p class="color__cmyk">CMYK(00 00 30 40)</p>
-                                                        <button class="button button__layer-info"></button>
-                                                        <div class="layer__info">
-                                                            <div class="layer__info-item">
-                                                                <span>Полный текст:</span>
-                                                                <span class="layer__full-text">dasfadsfadsfasdfsadsfadsf</span>
-                                                            </div>
-                                                            <div class="layer__info-item">
-                                                                <span>Шрифт:</span>
-                                                                <span class="layer__font-family">Lato</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="order__layer-item layer__img-item">
-                                                        <div class="layer__img">
-                                                            <img src="img/prints/doggy.png" alt="">
-                                                        </div>
-                                                        <div class="application__type paint"></div>
-                                                        <a href="#" class="layer__img-link">Скачать</a>
-                                                        <button class="button button__layer-info"></button>
-                                                        <div class="layer__info">
-                                                            <div class="layer__info-item">
-                                                                <span>Полный текст:</span>
-                                                                <span class="layer__full-text">dasfadsfadsfasdfsadsfadsf</span>
-                                                            </div>
-                                                            <div class="layer__info-item">
-                                                                <span>Шрифт:</span>
-                                                                <span class="layer__font-family">Lato</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <div class="order__info-btn">
-                                            <button class="button btn__open-close order__btn-show">Подробнее</button>
-                                            <button class="button btn__open-close order__btn-hide">Свернуть</button>
-                                        </div>
-                                    </div>
-                                    <div class="cart__item">
-                                        <img src="img/basis/2.jpg" alt="">
-                                        <div class="cart__description">
-                                            <p class="cart__name">
-                                                Мужской свитшот STAR Заказ (№<span class="order__number">23534-3</span>)
-                                            </p>
-                                            <div class="cart__size">
-                                                <p>Размеры: </p>
-                                                <p>L (52)</p>
-                                            </div>
-                                            <div class="cart__color">
-                                                <p>Цвет: </p>
-                                                <div class="item__color" style="background-color: red"></div>
-                                                <p class="cmyk">CMYK (100 100 20)</p>
-                                            </div>
-                                            <div class="order__status">
-                                                <p>Статус: </p>
-                                                <p>В обработке</p>
-                                                <div class="panel__column-item-radio font__radio order__tab-status">
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        Готово
-                                                    </label>
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        Ожидает
-                                                    </label>
-                                                    <label class="panel__type-picture">
-                                                        <input class="style-ratio" type="radio" name="order__status">
-                                                        В обработке
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="count">
-                                            <p>2 <span>шт.</span> </p>
-                                        </div>
-                                        <p class="cart__price">1700 <span>P</span></p>
-                                        <div class="order__description">
-                                        </div>
-                                        <div class="order__info-btn">
-                                            <button class="button btn__open-close order__btn-show">Подробнее</button>
-                                            <button class="button btn__open-close order__btn-hide">Свернуть</button>
-                                        </div>
+                                <div class="card__container" name="orderShowCart_order">
+                                    <div class="loader-container">
+                                        <div class="loader"></div>
                                     </div>
                                 </div>
-                                <div class="customer__info">
+                                <div class="customer__info" name="orderCustomerInfo_order">
                                     <div class="field__customer">
                                         <span>Ф.И.О: </span>
                                         <span>Иванов Иван Иванович</span>
@@ -715,22 +514,20 @@
                                 </div>
                                 <div class="field__comment">
                                     <label for="comment">Оставить комментарий (виден только администратору): </label>
-                                    <textarea id="comment">
-        
-                                    </textarea>
+                                    <textarea id="comment" name="orderComments_order"></textarea>
                                 </div>
-                                <div class="panel__column-item-radio font__radio">
+                                <div class="panel__column-item-radio font__radio" name="orderSetStatus_order">
                                     <p class="panel__column-item-radio-header">Статус: </p>
                                     <label class="panel__type-picture">
-                                        <input class="style-ratio" type="radio" name="status__all-order">
+                                        <input class="style-ratio" type="radio" name="status__all-order" data-status="inProgress" value="В обработке">
                                         В обработке
                                     </label>
                                     <label class="panel__type-picture">
-                                        <input class="style-ratio" type="radio" name="status__all-order">
+                                        <input class="style-ratio" type="radio" name="status__all-order" data-status="closed" value="Закрыт">
                                         Закрыт
                                     </label>
                                 </div>
-                                <button class="save__customer-info">Сохранить</button>
+                                <button class="save__customer-info" name="orderUpdateOrder_order">Сохранить</button>
                             </div>
                             
                         </div>
@@ -928,9 +725,7 @@
                             </div>
                             <div class="field__comment">
                                 <label for="comment">Оставить комментарий (виден только администратору): </label>
-                                <textarea id="comment">
-    
-                                </textarea>
+                                <textarea id="comment"></textarea>
                             </div>
                             <div class="panel__column-item-radio font__radio">
                                 <p class="panel__column-item-radio-header">Статус: </p>

@@ -32,14 +32,14 @@ module.exports = {
 			this.Assert.equal(null, error);
 			db = client.db(this.DB);
 
-			callback(db);			
+			callback(db, client);
 
-			client.close();
+			// client.close();
 		});
 	}
 
 	,insert: function(data, collection, callback) {
-		this.connect( (db) => {
+		this.connect( (db, client) => {
 			let coll = db.collection(collection);
 
 			//console.log(data, collection, coll);
@@ -52,12 +52,14 @@ module.exports = {
 				if (callback) callback({ status: true });
 
 				console.log('Data inserted');
+
+                client.close();
 			});
 		});
 	}
 
 	,select: function(key, collection, callback) {
-		this.connect( (db) => {
+		this.connect( (db, client) => {
 			let coll = db.collection(collection);
 
 			if (!(typeof key == 'object')) key = {};
@@ -67,12 +69,14 @@ module.exports = {
 
 				if (callback) callback(data);
 				console.log('Data ejected');
+
+                client.close();
 			});
 		});
 	}
 
 	,update: function(key, change, collection, callback) {
-		this.connect( (db) => {
+		this.connect( (db, client) => {
 			let coll = db.collection(collection);
 
 			if (!(typeof key == 'object')) key = {};
@@ -83,24 +87,30 @@ module.exports = {
 				
 				if (callback) callback(data);
 				console.log('Data updated');
+
+                client.close();
 			});
 		});
 	}
 
 	,count: function(key, collection, callback) {
-		this.connect( (db) => {
+		this.connect( (db, client) => {
 			let coll = db.collection(collection);
 
 			if (typeof key !== 'object') key = {};
 
 			coll.countDocuments(key)
-				.then( (count) => (callback) ? callback(count) : 0 )
+				.then( (count) => {
+					(callback) ? callback(count) : 0
+
+                    client.close();
+                })
 				.catch(err => console.log(err));
 		})
 	}
 
 	,delete: function(key, collection, callback) {
-		this.connect( (db) => {
+		this.connect( (db, client) => {
 			let coll = db.collection(collection);
 
 			if (!(typeof key == 'object')) key = { nothingToDelete: Infinity };
@@ -111,6 +121,8 @@ module.exports = {
 				if (callback) callback(data);
 
 				console.log('Data deleted');
+
+                client.close();
 			});
 		});
 	}

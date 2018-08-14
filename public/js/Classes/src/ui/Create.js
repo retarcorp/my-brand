@@ -43,7 +43,7 @@ class Create {
         }
 
         if (data.src) {
-            let widget = ImageWidget.getDefault(data.src, data.tags, data._id);
+            let widget = ImageWidget.getDefault(data.src, data.tags, data._id, data.fancywork, data.print);
 
             widget.text = data.text;
             widget.id = App.UI.Layers.addLayer(widget, 'space');

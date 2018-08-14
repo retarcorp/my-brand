@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 
 var Mongo = require('../modules/Mongo');
+var User = require('../modules/Users');
+
+var qrs = require('querystring');
+var URL = require('url');
 
 router.post('/find/template/by/tag', (req, res, next) => {
     let parse = "";
@@ -42,6 +46,40 @@ router.post('/find/template/by/tag', (req, res, next) => {
             res.send(response);
         }
     })
+});
+
+router.get('/find/font/by/name', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/find/font/by/name',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next);
+
+    Mongo.select({ font: query.font }, 'fonts', (response_db) => {
+        const font = response_db[0];
+
+        if (font){
+            response.status = true;
+            response.message = 'Font loaded';
+            response.data = font;
+
+            res.send(response);
+        } else {
+            response.status = false;
+            response.message = "Font didn't found";
+
+            res.send(response);
+        }
+    });
 });
 
 module.exports = router;

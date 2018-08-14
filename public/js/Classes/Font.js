@@ -6,9 +6,11 @@
  */
 
 class Font {
-    constructor(name, src) {
+    constructor(name, src, fancywork, print) {
         this.name = name;
         this.src = src;
+        this.fancywork = fancywork;
+        this.print = print;
     }
 
     /**
@@ -18,7 +20,7 @@ class Font {
      */
 
     static fromJSON(obj) {
-        return (new this(obj.font, obj.src));
+        return (new this(obj.font, obj.src, obj.fancywork, obj.print));
     }
 
 }

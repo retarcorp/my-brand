@@ -20,6 +20,7 @@ class Application {
             this.saveProject = false;
             this.isPreview = false;
             this.inProcess = false;
+            this.inSettingProject = false;
 
             this.UI.Profile.init();
             this.UI.Menu.init();
@@ -181,9 +182,10 @@ class Application {
         return v;
     }
 
-    async getNewProject() {
+    async getNewProject(preview = true) {
         const id = (this.parseURL()).id;
         const base = this.Data.Bases.find( (base) => base._id == id);
+        this.inSettingProject = true;
 
 
         this.Project = Project.newProject(base || this.Data.Bases[0]);
@@ -200,15 +202,18 @@ class Application {
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
 
-        await this.UI.BaseList.setVariantsList(this.Project);
-        await this.setCurrentVariant(this.Project.variants[0]);
+        if (preview) {
+            await this.UI.BaseList.setVariantsList(this.Project);
+        }
 
+        this.inSettingProject = false;
         return this.Project;
     }
 
-    async setProject(project) {
+    async setProject(project, preview = true) {
         this.Project = this.getProject(project);
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
+        this.inSettingProject = true;
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
         if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
@@ -218,17 +223,19 @@ class Application {
 
         await this.loadProjectAssets();
 
-        console.log('hellohu8')
+        if (preview) {
+            await this.UI.BaseList.setVariantsList(this.Project);
+        }
 
-        await this.UI.BaseList.setVariantsList(this.Project);
-
+        this.inSettingProject = false;
         return this.Project;
     }
 
-    async setProjectOnBase(base) {
+    async setProjectOnBase(base, preview = true) {
         this.Project = Project.newProject(base || this.Data.Bases[0]);
         this.currentProjectVariant = this.Project.variants[0];
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
+        this.inSettingProject = true;
 
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
@@ -240,13 +247,16 @@ class Application {
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
 
-        await this.UI.BaseList.setVariantsList(this.Project);
-        await this.setCurrentVariant(this.Project.variants[0]);
+        if (preview) {
+            await this.UI.BaseList.setVariantsList(this.Project);
+        }
 
+        this.inSettingProject = false;
         return this.Project;
     }
 
     async setCurrentVariant(variant) {
+        this.inSettingProject = true;
         // debugger;
 
         this.currentProjectVariant = variant;
@@ -263,6 +273,8 @@ class Application {
         if (this.GraphCore.ctx) {
             this.GraphCore.ctx.translate(0.5, 0.5);
         }
+
+        this.inSettingProject = false;
     }
 
     async setParsedProject(project, variant_index) {
@@ -292,6 +304,7 @@ class Application {
     // }
 
     async getVariantPreview(variant) {
+        this.inSettingProject = true;
         await this.setCurrentVariant(variant || App.currentProjectVariant);
 
         const ctx = document.createElement('canvas').getContext('2d');
@@ -308,6 +321,7 @@ class Application {
         this.GraphCore.RenderList.render(ctx);
         this.isPreview = false;
 
+        this.inSettingProject = false;
         return ctx.canvas.toDataURL('image/png');
     }
 

@@ -34,7 +34,6 @@ class TextWidget extends Widget {
             Object.assign(this.fontSettings, fontSettings);
         }
 
-
         this.size.height = fontSettings.fontSize || 16;
 
         this.resizeDirection = 'upLeft';
@@ -44,6 +43,32 @@ class TextWidget extends Widget {
         this.path = new Path(this.position, this.size);
 
         this.download = true;
+    }
+
+    loadLazy() {
+        return new Promise( (rsv, rjk) => {
+            if (App.fontStyle.text().indexOf(this.fontSettings.fontFamily) >= 0) {
+                rsv();
+            } else {
+                App.UI.FontsList.loadFont(this.fontSettings.fontFamily, (response) => {
+                    response = JSON.parse(response);
+
+                    if (!(response.data instanceof Array)) {
+                        App.UI.FontsList.addFont(response.data);
+
+                        document.fonts.load('12px '+response.data.font)
+                            .then( d => rsv() )
+                            .catch(err =>  {
+                                console.log(err);
+                                rsv();
+                            });
+                    } else {
+                        rsv();
+                    }
+
+                });
+            }
+        });
     }
 
     getFontSettings() {

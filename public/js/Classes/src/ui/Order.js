@@ -7,6 +7,7 @@ class Order {
         this.form_section = $('[name="userCredsForOrder"]');
         this.create_order = $('[name="createOrder"]');
         this.order_price = $('[name="orderPrice"] > span');
+        this.cart = $('[name="userCart"]');
 
         this.inputs = {
             credentials: this.form_section.find('#fio'),
@@ -70,9 +71,18 @@ class Order {
         data.ordered = new Date().getTime();
         data.paytype = (this.inputs.payOnPlace.prop('checked')) ? 'onPlace' : 'online';
 
-        querystring = this.UI.App.Data.serialize(data);
+        data.cart = ([].map.bind(this.cart.children()))( (item, index) => {
+            const project = $(item).data('item');
+            project.amount = parseInt($(item).find('.quantity-num').val());
 
-        this.sendData(querystring, (response) => {
+            return project;
+        });
+
+        //querystring = this.UI.App.Data.serialize(data);
+
+        console.log(data);
+
+        this.sendData(JSON.stringify(data), (response) => {
             response = JSON.parse(response);
             this.updateOrderForm();
             this.UI.Cart.emptyCartList();
