@@ -22,16 +22,14 @@ class Application {
             this.inProcess = false;
             this.inSettingProject = false;
 
+            // TODO use await Promise.all([])
+
+            await Promise.all([this.Data.getBases(), this.Data.getFonts(), this.Data.getPrints(), this.Data.loadProjects()]);
+
             this.UI.Profile.init();
             this.UI.Menu.init();
 
-            // TODO use await Promise.all([])
-
-            await Promise.all([this.Data.getBases(), this.Data.getFonts(), this.Data.getPrints()]);
-
             if (this.logged){
-                await this.Data.loadProjects();
-
                 const id = localStorage.getItem('project_id') || 0;
                 const project = this.Data.Projects.find( p => p.id == id ) || this.Data.Projects[0];
 

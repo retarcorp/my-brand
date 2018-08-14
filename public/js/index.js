@@ -8,7 +8,7 @@ class Starter {
             ['Base','BaseVariant','Position','Size','WorkZone','Project','VariantProject','FontSettings','Widget','ProjectSettings']
             ,['TxtWidget','ImageWidget','ComplexWidget', 'Path', 'Font','Print', 'BaseLine']
             ,['VerticalBaseLine', 'HorizontalBaseLine']
-            ,['src/ui/BaseList', 'src/ui/BaseSettings', 'src/ui/Create', 'src/ui/FontsList', 'src/ui/Keyboard', 'src/ui/Layers', 'src/ui/LightBox', 'src/ui/Logos', 'src/ui/Menu', 'src/ui/PrintsList', 'src/ui/Profile', 'src/ui/Slider', 'src/ui/Tabs', 'src/ui/TextSettings', 'src/ui/Cart', 'src/ui/Order']
+            ,['src/ui/BaseList', 'src/ui/BaseSettings', 'src/ui/Create', 'src/ui/FontsList', 'src/ui/Keyboard', 'src/ui/Layers', 'src/ui/LightBox', 'src/ui/Logos', 'src/ui/Menu', 'src/ui/PrintsList', 'src/ui/Profile', 'src/ui/Slider', 'src/ui/Tabs', 'src/ui/TextSettings', 'src/ui/Cart', 'src/ui/Order', 'src/ui/Brand']
             ,['src/ui/UI', 'src/graphCore/Canvas', 'src/graphCore/Filter', 'src/graphCore/RenderList', 'src/graphCore/Toolkit'],
             ,['src/graphCore/GraphCore', 'src/data/Data', 'src/ajax/Ajax']
             ,['src/app/App']

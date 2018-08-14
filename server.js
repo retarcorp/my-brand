@@ -85,6 +85,7 @@ app.get('/delete_project', deleteProject);
 app.get('/load', loadProject);
 app.get('/load/templates', loadProject);
 app.get('/load/prints', loadProject);
+app.get('/load/tags', loadProject);
 app.post('/save', saveProject);
 app.post('/save/template', saveProject);
 
@@ -103,6 +104,7 @@ app.get('/profile', profile);
 
 app.post('/cart/add', cart);
 app.get('/cart/load', cart);
+app.get('/cart/amount', cart);
 
 app.get('/order/load', order);
 app.post('/order/set', order);

@@ -43,6 +43,23 @@ const TemplateFactory = {
         `
     }
 
+    ,getHintHtml(parts) {
+        return `
+            <li class="hint-list__item">
+                ${parts.main}<span class="text-rest">${parts.unchecked}</span>
+            </li>
+        `
+    }
+
+    ,getTagSearchHtml(tag) {
+        return `
+            <div class="brand__tag">
+                <p>${tag}</p>
+                <button class="brand__tag-close" name="brandTag_close"></button>
+            </div>
+        `
+    }
+
     ,getStyleTag() {
         return (`
             <style rel="stylesheet" type="text/css" name="FONTS_FACES">
