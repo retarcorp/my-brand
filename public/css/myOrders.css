@@ -1,0 +1,154 @@
+.my-orders{
+    display: flex;
+    align-items: flex-start;
+    margin: 0 30px;
+}
+.order__info{
+    margin-left: 30px;
+    box-sizing: border-box;
+    padding: 30px;
+    max-width: 360px;
+    width: 100%;
+    background-color: #f0f0fa;
+}
+
+.status__order{
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.info__text{
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.order__table{
+    width: 100%;
+}
+.table__th{
+    padding: 15px 0;
+    text-align: center;
+}
+.table__td{
+    padding: 15px 0;
+    text-align: center;
+    font-weight: 400;
+}
+.order__price{
+    font-weight: 700;
+    margin: 0 auto;
+}
+.table__td a{
+    color: #393939;
+    font-size: 16px;
+}
+
+
+
+/*  CURRENT ORDER */
+
+
+.order__item{
+    display: flex;
+    align-items: center;
+    padding: 30px 0;
+}
+
+.order__item:first-child{
+    padding-top: 0;
+}
+
+.order__item:not(:last-child){
+    border-bottom: 1px solid #f0f0fa;
+}
+
+.order__item img{
+    width: 160px;
+}
+
+.order__name{
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+.order__size{
+    margin-bottom: 15px;
+}
+.order__size,
+.order__color{
+    display: flex;
+    align-items: center;
+}
+
+.order__size p:first-child,
+.order__color p:first-child{
+    font-weight: 700;
+}
+
+.order__size p,
+.order__color p,
+.order__count p{
+    font-size: 18px;
+    font-weight: 400;
+    margin-right: 15px;
+}
+
+.item__color{
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+}
+
+.order__price{
+    font-size: 18px;
+}
+
+.order__customer-info{
+    margin-left: 30px;
+    box-sizing: border-box;
+    padding: 30px;
+    max-width: 360px;
+    width: 100%;
+    background-color: #f0f0fa;
+}
+
+.customer__field{
+    display: flex;
+    margin-bottom: 20px;
+}
+.customer__field p:first-child{
+    width: 100px;
+    font-size: 16px;
+    font-weight: 700;
+}
+.customer__field p:last-child{
+    font-size: 16px;
+    font-weight: 400;
+}
+.current__order{
+    display: flex;
+    margin: 0 30px;
+    align-items: flex-start;
+}
+.order__container{
+    width: 100%;
+}
+.order__count{
+    font-size: 16px;
+}
+
+/* .btn-back{
+    width: 100%;
+}
+.btn-back a {
+
+} */
+
+.btn-back a{
+    margin-top: 15px;
+    margin-left: 30px;
+    font-size: 20px;
+    text-decoration: none;
+    color: #393939;
+}
