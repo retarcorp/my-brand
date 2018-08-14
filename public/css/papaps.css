@@ -810,6 +810,20 @@ input[type=number]::-webkit-outer-spin-button {
     background-image: url(../img/icon/like-black-heart-button.png);
 }
 
+.link__my-orders:after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -21px;
+    display: block;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100%;
+    width: 14px;
+    height: 14px;
+    background-image: url(../img/icon/shopping-bag.png);
+}
+
 .link__logout:after{
     content: '';
     position: absolute;
