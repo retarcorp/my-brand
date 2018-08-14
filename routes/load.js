@@ -43,7 +43,7 @@ router.get('/load', function(req, res, next) {
             bases.reverse();
 
             const pages = Math.ceil(data.length / 20);
-            res.send( { projects: bases, last_id: id, pages: pages });
+            res.send( { projects: bases, last_id: id, pages: pages, amount: data.length });
         });
 
     } else res.send([]);
@@ -124,6 +124,39 @@ router.get('/load/prints', (req, res, next) => {
         } else {
             response.message = "No data found";
             response.errors.push(ErrorHandler.generateError('noData', { options: null }));
+
+            res.send(response);
+        }
+    });
+});
+
+router.get('/load/tags', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/load/tags',
+                headers: req.headers
+            }
+        };
+
+    Mongo.select({}, 'tags', (response_db) => {
+        const data = response_db[0];
+
+        if (data) {
+            response.status = true;
+            response.message = 'Tags loaded';
+            response.data = data;
+
+            res.send(response);
+        } else {
+            response.status = false;
+            response.message = 'No tags found';
 
             res.send(response);
         }

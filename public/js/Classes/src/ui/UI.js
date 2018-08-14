@@ -33,6 +33,7 @@ class UI {
         this.Slider = new Slider(this);
         this.Cart = new Cart(this);
         this.Order = new Order(this);
+        this.Brand = new Brand(this);
 
         this.leftMenu = $('.left-menu');
 
@@ -40,6 +41,7 @@ class UI {
     }
 
     init(){
+        this.Brand.init();
         this.Tabs.init();
 
         this.BaseList.init();

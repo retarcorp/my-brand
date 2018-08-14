@@ -78,7 +78,7 @@ class Cart {
          this.container.html('');
 
          for (let item of list) {
-             await App.setProject(item);
+             await App.setProject(item, false);
 
              this.container.prepend(TemplateFactory.getCartItemHtml(item));
 

@@ -41,8 +41,10 @@ class Data {
     }
 
     async loadProjects(page = 1) {
-        const projects = (await this.App.Ajax.getJSON('/load?page='+page)).projects;
+        const response = (await this.App.Ajax.getJSON('/load?page='+page));
+        const projects = response.projects;
         this.Projects = projects;
+        this.UserProjectsCount = response.amount;
     }
 
     getProjectData() {
@@ -64,7 +66,7 @@ class Data {
             data = null;
         }
 
-        this.App.Ajax.postJSON('/save', JSON.stringify(data || this.getProjectData()), callback);
+        this.App.Ajax.post('/save', JSON.stringify(data || this.getProjectData()), callback);
     }
 
 }

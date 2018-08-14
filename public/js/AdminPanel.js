@@ -208,6 +208,11 @@ AdminApp = {
                 AdminApp.PrintsList.loadPanel();
             }
 
+            if ($(e.target).hasClass('ordersUI')) {
+                $('.panel__card').removeClass('active');
+                AdminApp.OrdersList.loadPanel();
+            }
+
             AdminApp.UI.menu_point.removeClass('active');
             $(e.target).addClass('active');
         }
@@ -954,7 +959,7 @@ AdminApp = {
 
             let sources = [];
 
-            App.setProjectOnBase(this.base);
+            App.setProjectOnBase(this.base, false);
             const color = App.GraphCore.Filter.getAverageImageColor(App.currentProjectVariant.variant.image);
 
             if (templates.length) {
@@ -1108,98 +1113,98 @@ AdminApp = {
         ,template: null
     }
 
-    ,TemplatesList: {
-        init() {
-            this.list.on('click', this.checkEvent.bind(this));
-            this.page_list.on('click', this.checkEvent.bind(this));
-            this.loadTemplates(1);
-
-        }
-
-        ,checkEvent(e) {
-            const target = $(e.target);
-
-            if(target.hasClass('panel__basis-edit')) {
-                const template = target.parent().parent().data('template');
-
-                this.panel.removeClass('active');
-                this.list.addClass('loading');
-                AdminApp.TemplatePanel.setTemplate(template);
-                AdminApp.TemplatePanel.panel.addClass('active');
-            }
-
-            if(target.hasClass('panel__page-point')) {
-                const page = target.data('page');
-                this.loadTemplates(page);
-            }
-
-            if(target.hasClass('panel__basis-remove')) {
-                const id = (target.parent().parent().data('template')).id;
-                this.removeTemplate(id);
-            }
-        }
-
-        ,loadTemplates(page = 1) {
-            this.list.addClass('loading');
-
-            App.Ajax.get('/load/templates?page='+page, (response) => {
-                const data = JSON.parse(response);
-
-                this.list.removeClass('loading');
-                //this.formTemplatesPage(data.data, data.pages, page);
-            });
-        }
-
-        ,async formTemplatesPage(templates, page_count, page) {
-            this.list.html(
-                templates.reduce( (acc, template) => acc + TemplateFactory.getAdminPanelTemplateListPointHtml(template), ``)
-            );
-
-            this.formPages(page_count, page);
-
-            let index = 0;
-
-            for (let template of templates) {
-                await this.setPreviewImage(template, this.list.children()[index]);
-                index++;
-            }
-        }
-
-        ,formPages(page_count, page = 1) {
-            this.page_list.html('');
-
-            for (let page = 1; page <= page_count; page++) {
-                this.page_list.append(TemplateFactory.getAdminPanelPages(page));
-                this.page_list.children(':last-child').attr('data-page', page);
-            }
-
-            this.page_list.children().removeClass('selected');
-            this.page_list.children(`[data-page="${page}"]`).addClass('selected');
-        }
-
-        ,async setPreviewImage(template, child) {
-            await App.setProject(template);
-
-            App.isPreview = true;
-            App.GraphCore.RenderList.render(App.GraphCore.ctx);
-            App.isPreview = false;
-
-            $(child).find('.panel__basis-img img').attr('src', App.GraphCore.canvas.toDataURL());
-            $(child).data('template', template);
-        }
-
-        ,removeTemplate(id) {
-            App.Ajax.get('/delete/template?id='+id, (data) => {
-                this.loadTemplates(1);
-            });
-        }
-
-        ,list: $('.templates-list .panel__basis-list')
-        ,page_list: $('.panel__page-list.templates')
-        ,panel: $('.templates-list')
-        //,new_template: $('[name="templateAdd"]')
-        ,base: null
-    }
+    // ,TemplatesList: {
+    //     init() {
+    //         this.list.on('click', this.checkEvent.bind(this));
+    //         this.page_list.on('click', this.checkEvent.bind(this));
+    //         this.loadTemplates(1);
+    //
+    //     }
+    //
+    //     ,checkEvent(e) {
+    //         const target = $(e.target);
+    //
+    //         if(target.hasClass('panel__basis-edit')) {
+    //             const template = target.parent().parent().data('template');
+    //
+    //             this.panel.removeClass('active');
+    //             this.list.addClass('loading');
+    //             AdminApp.TemplatePanel.setTemplate(template);
+    //             AdminApp.TemplatePanel.panel.addClass('active');
+    //         }
+    //
+    //         if(target.hasClass('panel__page-point')) {
+    //             const page = target.data('page');
+    //             this.loadTemplates(page);
+    //         }
+    //
+    //         if(target.hasClass('panel__basis-remove')) {
+    //             const id = (target.parent().parent().data('template')).id;
+    //             this.removeTemplate(id);
+    //         }
+    //     }
+    //
+    //     ,loadTemplates(page = 1) {
+    //         this.list.addClass('loading');
+    //
+    //         App.Ajax.get('/load/templates?page='+page, (response) => {
+    //             const data = JSON.parse(response);
+    //
+    //             this.list.removeClass('loading');
+    //             //this.formTemplatesPage(data.data, data.pages, page);
+    //         });
+    //     }
+    //
+    //     ,async formTemplatesPage(templates, page_count, page) {
+    //         this.list.html(
+    //             templates.reduce( (acc, template) => acc + TemplateFactory.getAdminPanelTemplateListPointHtml(template), ``)
+    //         );
+    //
+    //         this.formPages(page_count, page);
+    //
+    //         let index = 0;
+    //
+    //         for (let template of templates) {
+    //             await this.setPreviewImage(template, this.list.children()[index]);
+    //             index++;
+    //         }
+    //     }
+    //
+    //     ,formPages(page_count, page = 1) {
+    //         this.page_list.html('');
+    //
+    //         for (let page = 1; page <= page_count; page++) {
+    //             this.page_list.append(TemplateFactory.getAdminPanelPages(page));
+    //             this.page_list.children(':last-child').attr('data-page', page);
+    //         }
+    //
+    //         this.page_list.children().removeClass('selected');
+    //         this.page_list.children(`[data-page="${page}"]`).addClass('selected');
+    //     }
+    //
+    //     ,async setPreviewImage(template, child) {
+    //         await App.setProject(template);
+    //
+    //         App.isPreview = true;
+    //         App.GraphCore.RenderList.render(App.GraphCore.ctx);
+    //         App.isPreview = false;
+    //
+    //         $(child).find('.panel__basis-img img').attr('src', App.GraphCore.canvas.toDataURL());
+    //         $(child).data('template', template);
+    //     }
+    //
+    //     ,removeTemplate(id) {
+    //         App.Ajax.get('/delete/template?id='+id, (data) => {
+    //             this.loadTemplates(1);
+    //         });
+    //     }
+    //
+    //     ,list: $('.templates-list .panel__basis-list')
+    //     ,page_list: $('.panel__page-list.templates')
+    //     ,panel: $('.templates-list')
+    //     //,new_template: $('[name="templateAdd"]')
+    //     ,base: null
+    // }
 
     ,PrintsList: {
         init() {

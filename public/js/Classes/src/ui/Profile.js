@@ -31,6 +31,11 @@ class Profile {
 
         this.cart_button = $('.details__add-basket');
 
+        this.projectsAmount = $('.link__my-work > span');
+        this.projectsAmount.text(this.UI.App.Data.UserProjectsCount);
+
+        this.cart_amount = $('.cart__count')
+
 
         this.profile_item.on('click', this.showProfileMenu);
 
@@ -63,6 +68,7 @@ class Profile {
 
 
         this.checkLogged();
+        this.loadCartAmount();
 
         if (this.container.length) {
             this.container.html('Favorites loading...');
@@ -129,6 +135,18 @@ class Profile {
             if (card) {
                 this.changeToLink(card);
             }
+        });
+    }
+
+    setCartAmount(amount) {
+        this.cart_amount.text(amount);
+    }
+
+    loadCartAmount() {
+        App.Ajax.get('/cart/amount', (response) => {
+            response = JSON.parse(response);
+
+            this.setCartAmount(response.data);
         });
     }
 
@@ -201,7 +219,7 @@ class Profile {
             ,password: $('input[name="pass"]').val()
         };
 
-        App.Ajax.postJSON('/login', JSON.stringify(data), (data) => {
+        App.Ajax.post('/login', JSON.stringify(data), (data) => {
             data = JSON.parse(data);
 
             if (data.status) {
@@ -316,7 +334,7 @@ class Profile {
 
     async loadPreviewImage(project, img, card) {
         const app = this.UI.App;
-        await app.setProject(project);
+        await app.setProject(project, false);
 
         app.isPreview = true;
         app.GraphCore.RenderList.render(app.GraphCore.ctx);

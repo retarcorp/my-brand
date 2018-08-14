@@ -134,10 +134,10 @@ canvas {
 
 /*CART*/
 
-/*.order__section {*/
-    /*opacity: 0;*/
-    /*pointer-events: none;*/
-/*}*/
+.order__section.active {
+    opacity: 1;
+    pointer-events: all;
+}
 
 .cart__item.active {
     opacity: 1;
@@ -170,4 +170,12 @@ canvas {
 
 .order__table.active {
     display: inline-table;
+}
+
+.new-brand__create.active {
+    display: flex;
+}
+
+.new-brand__hint-container.active {
+    display: block;
 }

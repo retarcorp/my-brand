@@ -115,4 +115,38 @@ router.get('/cart/load', (req, res, next) => {
 
 });
 
+router.get('/cart/amount', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/cart/amount',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next);
+
+    if (user) {
+        Mongo.select({ user: user.name }, 'cart', (response_db) => {
+            const cart = response_db;
+
+            response.status = true;
+            response.message = 'Cart counted';
+            response.data = cart.length;
+
+            res.send(response);
+        });
+    } else {
+        response.status = false;
+        response.message = "User didn't logged";
+
+        res.send(response);
+    }
+});
+
 module.exports = router;

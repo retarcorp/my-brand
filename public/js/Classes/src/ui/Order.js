@@ -88,6 +88,7 @@ class Order {
             this.UI.Cart.emptyCartList();
 
             console.log(response);
+            location.href = '/somepage';
         });
     }
 
