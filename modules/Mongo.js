@@ -21,9 +21,11 @@ module.exports = {
 			this.Assert.equal(null, error);
 			console.log('Successfully conected to MongoDB');
 
+			this.cli = client;
+			this.db = this.cli.db(this.DB);
 			db = client.db(this.DB);
 
-			client.close();
+            //client.close();
 		});
 	}
 
@@ -39,8 +41,8 @@ module.exports = {
 	}
 
 	,insert: function(data, collection, callback) {
-		this.connect( (db, client) => {
-			let coll = db.collection(collection);
+		// this.connect( (db, client) => {
+			let coll = this.db.collection(collection);
 
 			//console.log(data, collection, coll);
 
@@ -53,14 +55,14 @@ module.exports = {
 
 				console.log('Data inserted');
 
-                client.close();
+                //client.close();
 			});
-		});
+		// });
 	}
 
 	,select: function(key, collection, callback) {
-		this.connect( (db, client) => {
-			let coll = db.collection(collection);
+		// this.connect( (db, client) => {
+			let coll = this.db.collection(collection);
 
 			if (!(typeof key == 'object')) key = {};
 
@@ -70,14 +72,14 @@ module.exports = {
 				if (callback) callback(data);
 				console.log('Data ejected');
 
-                client.close();
+                //client.close();
 			});
-		});
+		// });
 	}
 
 	,update: function(key, change, collection, callback) {
-		this.connect( (db, client) => {
-			let coll = db.collection(collection);
+		// this.connect( (db, client) => {
+			let coll = this.db.collection(collection);
 
 			if (!(typeof key == 'object')) key = {};
 			if (!(typeof change == 'object')) change = {};
@@ -88,14 +90,14 @@ module.exports = {
 				if (callback) callback(data);
 				console.log('Data updated');
 
-                client.close();
+                //client.close();
 			});
-		});
+		// });
 	}
 
 	,count: function(key, collection, callback) {
-		this.connect( (db, client) => {
-			let coll = db.collection(collection);
+		// this.connect( (db, client) => {
+			let coll = this.db.collection(collection);
 
 			if (typeof key !== 'object') key = {};
 
@@ -103,15 +105,15 @@ module.exports = {
 				.then( (count) => {
 					(callback) ? callback(count) : 0
 
-                    client.close();
+                    //client.close();
                 })
 				.catch(err => console.log(err));
-		})
+		// })
 	}
 
 	,delete: function(key, collection, callback) {
-		this.connect( (db, client) => {
-			let coll = db.collection(collection);
+		// this.connect( (db, client) => {
+			let coll = this.db.collection(collection);
 
 			if (!(typeof key == 'object')) key = { nothingToDelete: Infinity };
 
@@ -122,14 +124,14 @@ module.exports = {
 
 				console.log('Data deleted');
 
-                client.close();
+                //client.close();
 			});
-		});
+		// });
 	}
 
 	,drop: function(collection, callback) {
-		this.connect( (db) => {
-			let coll = db.collection(collection);
+		// this.connect( (db) => {
+			let coll = this.db.collection(collection);
 
 			if (!collection.length) return;
 
@@ -140,7 +142,7 @@ module.exports = {
 
 				console.log('Collection deleted');
 			});
-		});
+		// });
 	}
 
 	,toObjectId: function(str) {
