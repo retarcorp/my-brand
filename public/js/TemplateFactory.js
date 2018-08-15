@@ -415,6 +415,34 @@ const TemplateFactory = {
         `
     }
 
+    ,getOrderHeadHtml() {
+        return `
+            <tr class="header-row table__tr">
+                <th class="table__th">№</th>
+                <th class="table__th">Дата заказа</th>
+                <th class="table__th">Статус</th>
+                <th class="table__th">Сумма</th>
+                <th class="table__th"></th>
+            </tr>
+        `
+    }
+
+    ,getOrderItemHtml(order) {
+        const time = parseInt(order.info.ordered);
+
+        return `
+            <tr class="table__row">
+                <td class="table__td" name="order__number">${order.number}</td>
+                <td class="table__td" name="order__date">${new Date(time).toLocaleDateString()} ${new Date(time).toLocaleTimeString()}</td>
+                <td class="table__td" name="order__status">${order.status}</td>
+                <td class="table__td order__price" name="order__price">${order.info.price} руб</td>
+                <td class="table__td" name="order__showLink">
+                    <a href="#" name="orderShow_user">Просмотреть</a>
+                </td>
+            </tr>
+        `
+    }
+
     ,getAdminPanelOrderHeadHtml() {
         return `
             <tr class="o_tr-head">
@@ -440,6 +468,43 @@ const TemplateFactory = {
                     <a href="#" class="link__table">Просмотреть</a>
                 </td>
             </tr>
+        `
+    }
+
+    ,getOrderPreviewHtml(order, product) {
+        const prodColor = product.settings.color || product.settings.startColor;
+        let color = [];
+
+        if (prodColor.indexOf('#') >= 0) {
+            color = App.GraphCore.Filter.hexToRgb(prodColor);
+            color = Object.assign([], Object.values(color)).join(',');
+        } else {
+            if (prodColor instanceof Array) {
+                color = prodColor.join(',');
+            }
+        }
+
+        const rgb = color.replace(/[^0-9,]/gm, '').split(',').map(c => parseInt(c));
+
+        return `
+            <div class="order__item">
+                <img src="" alt="">
+                <div class="order__description">
+                    <p class="order__name">${product.base.name}</p>
+                    <div class="order__size">
+                        <p>Размеры: </p>
+                        <p>${product.settings.size || product.base.size[0]}</p>
+                    </div>
+                    <div class="order__color">
+                        <p>Цвет: </p>
+                        <div class="item__color" style="background-color: rgb(${rgb.join(',')})"></div>
+                    </div>
+                </div>
+                <div class="order__count">
+                    <p> <span>${product.amount}</span> шт. </p>
+                </div>
+                <p class="order__price">${product.amount * parseInt(product.base.price)} <span>P</span></p>
+            </div>
         `
     }
 
@@ -498,6 +563,7 @@ const TemplateFactory = {
                 </div>
                 <p class="cart__price">${product.amount * parseInt(product.base.price)} <span>P</span></p>
         `
+
     }
 
     ,getTextLayerHtml(widget) {
@@ -599,6 +665,44 @@ const TemplateFactory = {
                         </div>
                     </div>
 `
+    }
+
+    ,getCustomerInfoHtml(order) {
+        const info = order.info;
+        return `
+            <div class="customer__field">
+                <p>Ф.И.О:</p>
+                <p name="fio">${ (info.credentials) ? info.credentials : ""}</p>
+            </div>
+            <div class="customer__field">
+                <p>Телефон:</p>
+                <p name="phone">${ (info.phone) ? info.phone : ""}</p>
+            </div>
+            <div class="customer__field">
+                <p>Адрес:</p>
+                <p name="address">${ (info.location) ? info.location : ""}</p>
+            </div>
+            <div class="customer__field">
+                <p>Доставка:</p>
+                <p name="delivery">${ (info.delivery) ? info.delivery : "Почтой"}</p>
+            </div>
+            <div class="customer__field">
+                <p>Email:</p>
+                <p name="email">${ (info.email) ? info.email : ""}</p>
+            </div>
+            <div class="customer__field">
+                <p>Город:</p>
+                <p name="town">${ (info.town) ? info.town : ""}</p>
+            </div>
+            <div class="customer__field">
+                <p>Оплата:</p>
+                <p name="payment">${ (info.paytype) ? info.paytype : ""}</p>
+            </div>
+            <div class="customer__field">
+                <p>Итог:</p>
+                <p name="total" style="font-weight:700;font-size:18px;">${ (info.price) ? info.price : "0"} <span>P</span></p>
+            </div>
+        `
     }
 
     ,getAdminPanelCustomerInfoHtml(info) {

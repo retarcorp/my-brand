@@ -90,11 +90,11 @@
                     </li>
                 </ul>
             </section>
-            <header>
+            <header name="orderOrdersList_order" class="active">
                 <h1 class="products-similar__header products-similar__header_margin">Мои заказы</h1>
             </header>
-            <section class="my-orders">
-                <table class="order__table">
+            <section class="my-orders active" name="orderOrdersList_order">
+                <table class="order__table" name="orderTableList_user">
                     <tr class="header-row table__tr">
                         <th class="table__th">№</th>
                         <th class="table__th">Дата заказа</th>
@@ -151,7 +151,7 @@
                         <div class="loader"></div>
                     </div> -->
                 </table>
-                <div class="order__info">
+                <div class="order__info" name="orderInfo_user">
                     <h1 class="status__order">Заказ №<span>2141</span> успешно оформлен</h1>
                     <p class="info__text">Наши менеджери свяжуться с Вами в ближайшее время, для подтверждения заказа.</p>
                 </div>
@@ -159,12 +159,12 @@
 
 
 
-            <header>
+            <header name="orderOrderPreview_order">
                 <h1 class="products-similar__header products-similar__header_margin">Заказ №3214 (Отправлен)</h1>
             </header>
-            <section>
+            <section name="orderOrderPreview_order">
                 <div class="current__order">
-                    <div class="order__container">
+                    <div class="order__container" name="orderListContainer_user">
                         <div class="order__item">
                             <img src="img/basis/2.jpg" alt="">
                             <div class="order__description">
@@ -220,7 +220,7 @@
                             <p class="order__price">1700 <span>P</span></p>
                         </div>
                     </div>
-                    <div class="order__customer-info">
+                    <div class="order__customer-info" name="orderCustomerInfo_user">
                         <div class="customer__field">
                             <p>Ф.И.О:</p>
                             <p name="fio">Иванов Иван Иванович</p>
