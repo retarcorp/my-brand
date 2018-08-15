@@ -17,11 +17,11 @@ class Slider {
                 dots: false,
                 infinite: false,
                 speed: 300,
-                // variableWidth: true,
-                slidesToShow: 4,
+                variableWidth: true,
+                slidesToShow: 5,
                 prevArrow: '<button type="button" class="slick-prev slider__button button button__left"></button>',
                 nextArrow: '<button type="button" class="slick-next slider__button button button__right"></button>',
-                slidesToScroll: 2,
+                slidesToScroll: 1,
                 responsive: [
                     {
                         breakpoint: 1024,

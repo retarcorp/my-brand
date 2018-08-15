@@ -300,7 +300,7 @@ body,
     position: relative;
     padding-bottom: 63px;
     border-radius: 10px;
-    margin: 35px 30px;
+    /* margin: 0 30px; */
 }
 .slider__link{
     color: #393939;
