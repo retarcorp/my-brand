@@ -112,12 +112,44 @@ router.get('/delete/print', (req, res, next) => {
             }
         });
 
-        Mongo.delete({ _id: query._id }, 'prints', (response_db) => {
-            response.status = true;
-            response.message = "Print deleted";
+        Mongo.select({ _id: query._id }, 'prints', (response_db) => {
+            const print = response_db[0];
 
-            res.send(response);
+            if (print) {
+                Mongo.select({}, 'tags', (response_db) => {
+                    const data = response_db[0];
+
+                    if (data) {
+                        let tags = data.tags;
+
+                        tags = tags.filter( t => {
+                            return !print.tags.find( tag => t == tag);
+                        });
+                        data.tags = tags;
+
+                        Mongo.update({ _id: data._id }, data, 'tags');
+
+                        Mongo.delete({ _id: query._id }, 'prints', (response_db) => {
+                            response.status = true;
+                            response.message = "Print deleted";
+
+                            res.send(response);
+                        });
+                    } else {
+                        response.status = false;
+                        response.message = "No tags presented in DB";
+
+                        res.send(response);
+                    }
+                });
+            } else {
+                response.status = false;
+                response.message = "Print didn't match";
+
+                res.send(response);
+            }
         });
+
     }
 });
 

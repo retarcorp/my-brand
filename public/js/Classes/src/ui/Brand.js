@@ -160,6 +160,7 @@ class Brand {
 
     clearTagInput() {
         this.tag_input.val('');
+        this.closeHint();
     }
 
     openSection() {
