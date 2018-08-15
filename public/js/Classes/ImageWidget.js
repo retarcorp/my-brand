@@ -35,17 +35,24 @@ class ImageWidget extends Widget {
 
     loadLazy() {
         return new Promise( (resolve, reject) => {
-            this.image.src = this.src;
+            if (!this.isCrashed) {
+                this.image.src = this.src;
 
-            this.image.onload = () => {
-                this.download = true;
+                this.image.onload = () => {
+                    this.download = true;
+                    resolve(true);
+                }
+
+                this.image.onerror = () => {
+                    this.download = false;
+                    this.isCrashed = true;
+                    //App.currentProjectVariant.deleteWidget(this.id);
+                    resolve(true);
+                }
+            } else {
                 resolve(true);
             }
 
-            this.image.onerror = () => {
-                this.download = false;
-                resolve(true);
-            }
         });
     }
 
@@ -244,7 +251,7 @@ class ImageWidget extends Widget {
     }
 
     render(ctx) { //INNER
-        if (this.download) {
+        if (this.download && !this.isCrashed) {
             let _x = this.position.x + App.currentWorkzone.position.x,
                 _y = this.position.y + App.currentWorkzone.position.y;
 

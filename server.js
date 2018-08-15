@@ -106,6 +106,8 @@ app.post('/cart/add', cart);
 app.get('/cart/load', cart);
 app.get('/cart/amount', cart);
 
+app.get('/myOrders', order);
+app.get('/myOrders/load', order);
 app.get('/order/load', order);
 app.post('/order/set', order);
 app.post('/order/update', order);

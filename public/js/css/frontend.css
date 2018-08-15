@@ -179,3 +179,15 @@ canvas {
 .new-brand__hint-container.active {
     display: block;
 }
+
+.order__info.active {
+    display: block;
+}
+
+[name="orderOrdersList_order"].active {
+    display: flex;
+}
+
+[name="orderOrderPreview_order"].active {
+    display: block;
+}

@@ -10,6 +10,7 @@
     max-width: 360px;
     width: 100%;
     background-color: #f0f0fa;
+    display: none;
 }
 
 .status__order{
@@ -151,4 +152,9 @@
     font-size: 20px;
     text-decoration: none;
     color: #393939;
+}
+
+[name="orderOrdersList_order"],
+[name="orderOrderPreview_order"] {
+    display: none;
 }

@@ -7,6 +7,50 @@ var User = require('../modules/Users');
 var URL = require('url');
 var qrs = require('querystring');
 
+router.get('/myOrders', (req, res, next) => {
+    res.sendFile('myOrders.html', { root: 'public/' });
+});
+
+router.get('/myOrders/load', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: "Unexpected error",
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/myOrders/load',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next);
+
+    if (user) {
+        Mongo.select({ user: user.name }, 'order', (response_db) => {
+            const orders = response_db;
+
+            response.data = orders.map( o => {
+                delete o.comment;
+
+                return o;
+            });
+
+            response.status = true;
+            response.message = "Orders loaded";
+            response.data = orders;
+
+            res.send(response);
+        });
+    } else {
+        response.status = false;
+        response.message = "User didn't logged";
+
+        res.send(response);
+    }
+});
+
 router.post('/order/set', (req, res, next) => {
     const query = qrs.parse(URL.parse(req.url).query);
     let parse = "";
@@ -27,7 +71,7 @@ router.post('/order/set', (req, res, next) => {
             },
             user = User.checkSession(req, res, next);
 
-        if (user) {
+        if (user && user.admin) {
             // Mongo.select({ user: user.name }, 'cart', (response_db) => {
                 const order = {};
 
@@ -47,6 +91,7 @@ router.post('/order/set', (req, res, next) => {
                         Mongo.insert( order, 'order', (response_db) => {
                             response.status = true;
                             response.message = "Order created";
+                            response.data = order;
 
                             res.send(response);
                         });
@@ -86,7 +131,7 @@ router.get('/order/load', (req, res, next) => {
         },
         user = User.checkSession(req, res, next);
 
-    if (user && user.admin) {
+    if (user) {
         Mongo.select({ status: query.type }, 'order', (response_db) => {
             const orders = response_db;
 

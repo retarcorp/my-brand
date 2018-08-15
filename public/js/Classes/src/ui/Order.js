@@ -9,6 +9,16 @@ class Order {
         this.order_price = $('[name="orderPrice"] > span');
         this.cart = $('[name="userCart"]');
 
+        this.table = $('[name="orderTableList_user"]');
+        this.info = $('[name="orderInfo_user"]');
+        this.order_status = this.info.find('.status__order > span');
+
+        this.order_preview = $('[name="orderListContainer_user"]');
+        this.order_customer_info = $('[name="orderCustomerInfo_user"]');
+
+        this.orders_list_section = $('[name="orderOrdersList_order"]');
+        this.orders_preview_section = $('[name="orderOrderPreview_order"]');
+
         this.inputs = {
             credentials: this.form_section.find('#fio'),
             phone: this.form_section.find('#phone'),
@@ -21,10 +31,24 @@ class Order {
 
         this.create_order.on('click', this.openOrderForm.bind(this));
         this.form_section.on('click', this.checkEvent.bind(this));
+        this.orders_preview_section.on('click', this.checkEvent.bind(this));
+
+        if (this.table.length) {
+            this.loadUserOrders();
+            this.table.on('click', this.checkEvent.bind(this));
+        }
     }
 
     sendData(data, cb) {
         this.UI.App.Ajax.post('/order/set', data, cb);
+    }
+
+    loadUserOrders() {
+        App.Ajax.get('/myOrders/load', (response) => {
+            response = JSON.parse(response);
+
+            this.formOrdersList(response.data);
+        });
     }
 
     checkEvent(e) {
@@ -50,6 +74,27 @@ class Order {
             if (target.attr('name') == 'acceptOrder') {
                 e.preventDefault();
                 this.acceptOrder();
+
+                return;
+            }
+
+            if (target.attr('name') == "order__showLink") {
+                e.preventDefault();
+                const child = target.parent(),
+                    order = child.data('order');
+
+                this.closeOrdersList();
+                this.openOrderPreview();
+                this.showOrder(order);
+
+                return;
+            }
+
+            if (target.hasClass('btn-back')) {
+                e.preventDefault();
+
+                this.closeOrderPreview();
+                this.openOrdersList();
 
                 return;
             }
@@ -88,13 +133,74 @@ class Order {
             this.UI.Cart.emptyCartList();
 
             console.log(response);
-            location.href = '/somepage';
+            location.href = '/myOrders?number='+response.data.number;
         });
+    }
+
+    formOrdersList(orders) {
+        this.table.html('');
+        this.table.append(TemplateFactory.getOrderHeadHtml());
+
+        const orderN = this.UI.App.parseURL();
+
+        if (orderN && orderN.number) {
+            this.order_status.text(orderN.number);
+            this.info.addClass('active');
+        } else {
+            this.info.removeClass('active');
+        }
+
+        const children = [];
+
+        orders.forEach( o => {
+            const child = $(TemplateFactory.getOrderItemHtml(o));
+            child.data('order', o);
+
+            children.push(child);
+        });
+
+        children.forEach( ch => this.table.append(ch));
+    }
+
+    async formOrderPreview(order) {
+        this.order_preview.html(TemplateFactory.getPreloader());
+
+        this.setCustomerInfo(order);
+
+        const children = [];
+        const app = this.UI.App;
+
+        for (let c of order.cart) {
+            await app.setProject(c, false);
+            const child = $(TemplateFactory.getOrderPreviewHtml(order, c));
+
+            child.find('img').attr('src', await app.getVariantPreview());
+            children.push(child);
+        }
+
+        this.order_preview.html('');
+        children.forEach( ch => this.order_preview.append(ch));
+    }
+
+    setCustomerInfo(order) {
+        this.order_customer_info.html(TemplateFactory.getCustomerInfoHtml(order));
+    }
+
+    showOrder(order) {
+        this.formOrderPreview(order)
     }
 
     openOrderForm() {
         this.updateOrderPrice();
         this.form_section.addClass('active');
+    }
+
+    openOrderPreview() {
+        this.orders_preview_section.addClass('active');
+    }
+
+    openOrdersList() {
+        this.orders_list_section.addClass('active');
     }
 
     updateOrderForm() {
@@ -107,5 +213,13 @@ class Order {
 
     closeOrderForm() {
         this.form_section.removeClass('active');
+    }
+
+    closeOrdersList() {
+        this.orders_list_section.removeClass('active');
+    }
+
+    closeOrderPreview() {
+        this.orders_preview_section.removeClass('active');
     }
 }
