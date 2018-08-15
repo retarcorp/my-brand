@@ -22,7 +22,7 @@ class Brand {
             this.UI.App.Ajax.get('/load/tags', (response) => {
                 response = JSON.parse(response);
 
-                this.tags = response.data.tags;
+                this.tags = response.data.tags || [];
             });
 
 

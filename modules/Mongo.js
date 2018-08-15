@@ -99,7 +99,7 @@ module.exports = {
 
 			if (typeof key !== 'object') key = {};
 
-			coll.countDocuments(key)
+			coll.count(key)
 				.then( (count) => {
 					(callback) ? callback(count) : 0
 
