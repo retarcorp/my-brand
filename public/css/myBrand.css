@@ -1,0 +1,89 @@
+.my-brand{
+    padding: 0 30px;
+}
+
+
+.my-brand__header{
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    margin: 20px 0;
+}
+
+.my-brand__container{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 100px);
+    margin: 0 auto;
+}
+
+
+.myBrand__tags-container{
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 20px;
+}
+.myBrand__tag{
+    height: 31px;
+    padding: 0 11px;
+    line-height: 31px;
+    background-color: #f0f0fa;
+    font-weight: 400;
+    font-size: 13px;
+    width: 78px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.myBrand__tag:not(:last-child){
+    margin-right: 10px;
+}
+
+.button__edit-mbr{
+    width: 130px;
+    height: 40px;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+}
+.user__text{
+    font-size: 18px;
+    font-weight: 400;
+}
+.user__info{
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #a5a5a5;
+}
+
+.myBrand-information{
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    border-bottom: 1px solid #F0F0FA;
+    padding-bottom: 12px;
+}
+
+.my-brand .slider__item{
+    box-shadow: 0 0 79px rgba(56,49,187, 0.18);
+}
+
+.my-brand .slider__item .slider__btn-edit-mbr{
+    opacity: 1;
+    display: block;
+    margin: 0 auto;
+    width: 190px;
+    height: 44px;
+    border-radius: 10px;
+    font-size: 17px;
+    color: #fff;
+}
+
+.my-brand .slider__item .slider__buttons{
+    opacity: 1;
+}

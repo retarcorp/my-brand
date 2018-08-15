@@ -506,3 +506,9 @@ body,
 .form__header{
     padding-bottom: 15px;
 }
+
+
+.main__products .slider__item{
+    width: 235px;
+    margin: 0 20px;
+}
