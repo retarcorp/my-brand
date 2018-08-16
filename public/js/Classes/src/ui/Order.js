@@ -17,6 +17,7 @@ class Order {
         this.order_customer_info = $('[name="orderCustomerInfo_user"]');
 
         this.orders_list_section = $('[name="orderOrdersList_order"]');
+        this.orders_list_section_loader = this.orders_list_section.find('[name="orderSectionLoader_set"]');
         this.orders_preview_section = $('[name="orderOrderPreview_order"]');
 
         this.inputs = {
@@ -34,7 +35,9 @@ class Order {
         this.orders_preview_section.on('click', this.checkEvent.bind(this));
 
         if (this.table.length) {
+            this.offSectionLoader();
             this.loadUserOrders();
+            this.setPreloader();
             this.table.on('click', this.checkEvent.bind(this));
         }
     }
@@ -138,9 +141,6 @@ class Order {
     }
 
     formOrdersList(orders) {
-        this.table.html('');
-        this.table.append(TemplateFactory.getOrderHeadHtml());
-
         const orderN = this.UI.App.parseURL();
 
         if (orderN && orderN.number) {
@@ -159,6 +159,8 @@ class Order {
             children.push(child);
         });
 
+        this.table.html('');
+        this.table.append(TemplateFactory.getOrderHeadHtml());
         children.forEach( ch => this.table.append(ch));
     }
 
@@ -184,6 +186,15 @@ class Order {
 
     setCustomerInfo(order) {
         this.order_customer_info.html(TemplateFactory.getCustomerInfoHtml(order));
+    }
+
+    setPreloader() {
+        this.table.html('');
+        this.table.append(TemplateFactory.getPreloader());
+    }
+
+    offSectionLoader() {
+        this.orders_list_section_loader.addClass('off');
     }
 
     showOrder(order) {
