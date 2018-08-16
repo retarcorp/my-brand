@@ -52,6 +52,7 @@ section.registration{
 .form__header{
     font-size: 22px;
     text-align: center;
+    /* margin-bottom: 20px; */
 }
 
 .form__input{
@@ -86,8 +87,8 @@ section.registration{
     height: 50px;
 }
 .button_margin{
-    margin-bottom: 15px;
-    margin-top: 15px;
+    /* margin-bottom: 15px;
+    margin-top: 15px; */
 }
 .form__btns{
     text-align: center;
