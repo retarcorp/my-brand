@@ -33,6 +33,7 @@ router.post('/cart/add', (req, res, next) => {
             if (response_db.length) {
                 const project = response_db[0];
 
+                response.subdata = (project.cart_id) ? false : true;
                 project.cart_id = (project.cart_id) ? project.cart_id :  md5(User.genSalt(12));
 
                 //delete project._id;
@@ -51,8 +52,6 @@ router.post('/cart/add', (req, res, next) => {
                     });
                 });
 
-
-
             } else {
                 response.status = true;
                 response.message = "No projects found";
@@ -61,9 +60,45 @@ router.post('/cart/add', (req, res, next) => {
             }
 
         });
-
-
     })
+});
+
+router.post('/cart/add/product', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        request = req.body,
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            query: query,
+            data: [],
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/cart/load',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next);
+
+    if (user) {
+        const project = request;
+        project.new = (project.cart_id) ? false : true;
+        project.cart_id = (project.cart_id) ? project.cart_id : md5(User.genSalt(12));
+        project.user = user.name;
+
+        Mongo.update({ cart_id: project.cart_id, user: user.name }, project, 'cart', () => {
+            response.data = project;
+            response.status = true;
+            response.message = "Cart saved";
+
+            res.send(response);
+        });
+    } else {
+        response.status = false;
+        response.message = "User didn't logged";
+
+        res.send(response);
+    }
 });
 
 router.get('/cart/load', (req, res, next) => {

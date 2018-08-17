@@ -41,8 +41,8 @@ class BaseVariant {
                     this.loaded = true;
 
                     const ctx = document.createElement('canvas').getContext('2d');
-                    this.size.width = 400;
-                    this.size.height = 400 * this.filterImage.height/this.filterImage.width;
+                    this.size.width = CANVAS_WIDTH;
+                    this.size.height = CANVAS_WIDTH * this.filterImage.height/this.filterImage.width;
 
                     ctx.canvas.width = this.size.width;
                     ctx.canvas.height = this.size.height;
@@ -103,8 +103,8 @@ class BaseVariant {
 
         ctx.translate(0.5, 0.5);
 
-        ctx.canvas.width = 400;
-        ctx.canvas.height = 400*(this.image.height/this.image.width);
+        ctx.canvas.width = CANVAS_WIDTH;
+        ctx.canvas.height = CANVAS_WIDTH*(this.image.height/this.image.width);
 
         ctx.fillStyle = "#fff";
 
@@ -129,7 +129,7 @@ class BaseVariant {
         //debugger;
         if (this.loaded) {
             App.UI.Profile.projectLoaded = true;
-                ctx.drawImage(this.filterImage, 0, 0, 400, 400 * this.filterImage.height/this.filterImage.width);
+                ctx.drawImage(this.filterImage, 0, 0, CANVAS_WIDTH, CANVAS_WIDTH * this.filterImage.height/this.filterImage.width);
         }
 
         //ctx.drawImage(this.image, 0, 0, this.size.width, this.size.height);App.GraphCore.Filter.setColorFilterImage(ctx, this.image)

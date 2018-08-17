@@ -91,12 +91,13 @@
                         <a href="#" class="profile__name">UserName</a>
                         <section class="profile__menu">
                             <a href="/profile" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
+                            <a href="#" class="profile__link link__my-orders">Мои заказы</a>
                             <a href="#" class="profile__link link__logout">Выход</a>
                         </section>
                     </li>
                     <li class="main-menu__item main-menu__item_margin cart-li">
                         <a href="/cart.html" class="cart"></a>
-                        <span class="cart__count">12</span>
+                        <span class="cart__count"></span>
                     </li>
                 </ul>
             </nav>
@@ -116,7 +117,7 @@
         <section class="section__cart">
             <h1 class="block__header">Корзина товаров</h1>
             <div class="cart__container"  name="userCart">
-                <div class="cart__item">
+                <!-- <div class="cart__item">
                     <img src="img/basis/2.jpg" alt="">
                     <div class="cart__description">
                         <p class="cart__name">Мужской свитшот STAR</p>
@@ -136,53 +137,14 @@
                     </div>
                     <p class="cart__price">1700 <span>P</span></p>
                     <button class="cart__remove-btn"></button>
-                </div>
-                <div class="cart__item">
-                    <img src="img/basis/2.jpg" alt="">
-                    <div class="cart__description">
-                        <p class="cart__name">Мужской свитшот STAR</p>
-                        <div class="cart__size">
-                            <p>Размеры: </p>
-                            <div class="item__size">L (52)</div>
-                        </div>
-                        <div class="cart__color">
-                            <p>Цвет: </p>
-                            <div class="item__color" style="background-color: red"></div>
-                        </div>
-                    </div>
-                    <div class="quantity-block">
-                        <button class="quantity-arrow-minus"> - </button>
-                        <input class="quantity-num" type="number" value="1" />
-                        <button class="quantity-arrow-plus"> + </button>
-                    </div>
-                    <p class="cart__price">1700 <span>P</span></p>
-                    <button class="cart__remove-btn"></button>
-                </div>
-                <div class="cart__item">
-                    <img src="img/basis/2.jpg" alt="">
-                    <div class="cart__description">
-                        <p class="cart__name">Мужской свитшот STAR</p>
-                        <div class="cart__size">
-                            <p>Размеры: </p>
-                            <div class="item__size">L (52)</div>
-                        </div>
-                        <div class="cart__color">
-                            <p>Цвет: </p>
-                            <div class="item__color" style="background-color: red"></div>
-                        </div>
-                    </div>
-                    <div class="quantity-block">
-                        <button class="quantity-arrow-minus"> - </button>
-                        <input class="quantity-num" type="number" value="1" />
-                        <button class="quantity-arrow-plus"> + </button>
-                    </div>
-                    <p class="cart__price">1700 <span>P</span></p>
-                    <button class="cart__remove-btn"></button>
+                </div> -->
+                <div class="loader-container">
+                    <div class="loader"></div>
                 </div>
             </div>
             <div class="cart__buttons">
                 <a href="#" class="link__link">< Вернуться к покупкам</a>
-                <p class="total__price">Итого: <span>4550 </span><span>P</span> </p>
+                <p class="total__price">Итого: <span>0 </span><span>P</span> </p>
                 <button class="button__issue-cart" name="createOrder">Оформить заказ</button>
             </div>
         </section>
@@ -191,9 +153,13 @@
                 <h1 class="header__order">ОФОРМЛЕНИЕ ЗАКАЗА</h1>
                 <div class="button button__close"></div>
                 <form class="order__form" name="orderForm">
-                    <div class="info__field">
+                    <div class="info__field full-width">
                         <label class="field__label" for="fio">Ф.И.О: </label>
                         <input class="field__input" type="text" id="fio">
+                    </div>
+                    <div class="info__field full-width">
+                        <label class="field__label" for="address">Адрес: </label>
+                        <input class="field__input" type="text" id="address">
                     </div>
                     <div class="info__field">
                         <label class="field__label" for="phone">Телефон: </label>
@@ -202,14 +168,6 @@
                     <div class="info__field">
                         <label class="field__label" for="email">Email: </label>
                         <input class="field__input" type="text" id="email">
-                    </div>
-                    <div class="info__field">
-                        <label class="field__label" for="town">Город: </label>
-                        <input class="field__input" type="text" id="town">
-                    </div>
-                    <div class="info__field">
-                        <label class="field__label" for="address">Адрес: </label>
-                        <input class="field__input" type="text" id="address">
                     </div>
                     <div class="panel__column-item-radio font__radio">
                         <p class="panel__column-item-radio-header">Оплата: </p>
@@ -234,30 +192,8 @@
         <section class="main__products-similar products-similar products-similar_padding">
             <h1 class="products-similar__header products-similar__header_margin">Популярные товары</h1>
             <div class="slider__container">
-                <div class="slider__item">
-                    <a href="#" class="slider__link">
-                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
-                        <p class="slider__item-type">Мужкская футболка 3D</p>
-                        <p class="slider__item-name">Fashion flowers</p>
-                        <p class="slider__item-price">1200 P</p>
-                        <div class="slider__buttons">
-                            <button class="button slider__btn-edit button_gradient_yellow"></button>
-                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
-                        </div>
-                    </a>
-                </div>
-
-                <div class="slider__item">
-                    <a href="#" class="slider__link">
-                        <img class="slider__item-img" src="img/basis/2.jpg" alt="">
-                        <p class="slider__item-type">Мужкская футболка 3D</p>
-                        <p class="slider__item-name">Fashion flowers</p>
-                        <p class="slider__item-price">1200 P</p>
-                        <div class="slider__buttons">
-                            <button class="button slider__btn-edit button_gradient_yellow"></button>
-                            <button class="button slider__btn-add button_gradient_blue">В корзину</button>
-                        </div>
-                    </a>
+                <div class="loader-container">
+                    <div class="loader"></div>
                 </div>
 
             </div>

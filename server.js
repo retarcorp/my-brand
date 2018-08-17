@@ -104,11 +104,13 @@ app.get('/profile', profile);
 
 app.post('/cart/add', cart);
 app.get('/cart/load', cart);
+app.post('/cart/add/product', cart);
 app.get('/cart/amount', cart);
 
 app.get('/myOrders', order);
 app.get('/myOrders/load', order);
 app.get('/order/load', order);
+app.get('/order/get', order);
 app.post('/order/set', order);
 app.post('/order/update', order);
 

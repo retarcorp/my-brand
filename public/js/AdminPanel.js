@@ -105,6 +105,7 @@ AdminApp = {
 
     ,getFonts(page, callback) {
         if (typeof page != 'number') page = 1;
+        this.setPreloader();
 
         User.Ajax.get(`/fonts?page=${page}`, (data) => {
 
@@ -137,13 +138,17 @@ AdminApp = {
     }
 
     ,setFontsHtml(fonts, callback) {
-        this.fontsPanel.html(
-            fonts.reduce(  (acc, font) => acc + TemplateFactory.getAdminPanelFontshtml(font), `` )
-        );
+        const children = [];
 
-        fonts.forEach( (f) => {
-            App.UI.FontsList.checkFont(f);
+        fonts.forEach( font => {
+            const child = $(TemplateFactory.getAdminPanelFontshtml(font));
+            children.push(child);
+
+            App.UI.FontsList.checkFont(font);
         });
+
+        this.fontsPanel.html('');
+        children.forEach( ch => this.fontsPanel.append(ch));
 
         // this.style.html(
         //     fonts.reduce( (acc, font) => acc + TemplateFactory.getFontStyle(font), ``)
@@ -154,6 +159,11 @@ AdminApp = {
         // console.log('styled')
 
         if (callback) callback(fonts);
+    }
+
+    ,setPreloader() {
+        this.fontsPanel.html('');
+        this.fontsPanel.append(TemplateFactory.getPreloader());
     }
 
     ,updateFile() {
@@ -491,7 +501,7 @@ AdminApp = {
             child.data('workzone', { x: 0, y: 0, width: 0, height: 0 });
 
             image.onload = () => {
-                size.width = 400;
+                size.width = CANVAS_WIDTH;
                 size.height = Math.round(size.width * (image.height/image.width));
                 size.int = image.height/image.width;
 
@@ -687,6 +697,8 @@ AdminApp = {
         }
 
         ,getBases(page = 1, callback) {
+            AdminApp.BaseList.setPreloader();
+
             User.Ajax.get('/bases?page='+page, callback);
         }
 
@@ -712,6 +724,11 @@ AdminApp = {
 
         ,setConf(conf) {
             this.template_on.prop('checked', conf);
+        }
+
+        ,setPreloader() {
+            this.list.html('');
+            this.list.append(TemplateFactory.getPreloader());
         }
 
         ,changeConf(e) {
@@ -782,12 +799,18 @@ AdminApp = {
         }
 
         ,setBaseListHtml(bases) {
-            this.list.html(
-                bases.reduce( (acc, base) => acc + TemplateFactory.getAdminPanelBaseListPointHtml(base, base.variants.find( (variant) => variant.main)), ``));
+            const children = [];
 
-            $.each(this.list.children(), (index, child) => {
-                $(child).data('base', bases[index]);
+
+            bases.forEach( base => {
+                const child = $(TemplateFactory.getAdminPanelBaseListPointHtml(base, base.variants.find( (variant) => variant.main)));
+                child.data('base', base);
+
+                children.push(child);
             });
+
+            this.list.html('');
+            children.forEach( ch => this.list.append(ch));
         }
 
         ,setBasePagesHtml(pages) {
@@ -874,6 +897,7 @@ AdminApp = {
         }
 
         ,loadUI(base) {
+            this.setPreloader();
             this.openPanel();
             this.list.addClass('loading');
             this.addNew = false;
@@ -889,6 +913,7 @@ AdminApp = {
         }
 
         ,loadUIPage(page) {
+            this.setPreloader();
             this.openPanel();
             this.list.addClass('loading');
             this.addNew = false;
@@ -955,8 +980,7 @@ AdminApp = {
         }
 
         ,async formTemplatesList(templates) {
-            this.list.html('');
-
+            const children = [];
             let sources = [];
 
             App.setProjectOnBase(this.base, false);
@@ -964,8 +988,10 @@ AdminApp = {
 
             if (templates.length) {
                 for (let t of templates) {
-                    this.list.append(TemplateFactory.getAdminPanelTemplateListPointHtml(t));
-                    this.list.children(':last-child').data('template', t);
+                    const child = $(TemplateFactory.getAdminPanelTemplateListPointHtml(t));
+                    child.data('template', t);
+                    // this.list.append(TemplateFactory.getAdminPanelTemplateListPointHtml(t));
+                    // this.list.children(':last-child').data('template', t);
 
                     await App.setProject(t);
                     App.Project.settings.color = App.GraphCore.Filter.getAverageImageColor(App.Project.variants[0].variant.image);
@@ -974,13 +1000,16 @@ AdminApp = {
                         sources.push(await App.getVariantPreview(v, true, color));
                     }
 
-                    this.list.children(':last-child').find('[name="templateImageContainer"]').html(
+                    child.find('[name="templateImageContainer"]').html(
                         sources.reduce( (acc, src) => acc + TemplateFactory.getImageHtml(src), ``)
                     );
 
                     sources = [];
+                    children.push(child);
                 }
 
+                this.list.html('');
+                children.forEach( ch => this.list.append(ch));
             }
 
             this.list.removeClass('loading');
@@ -998,7 +1027,10 @@ AdminApp = {
             this.pages.children(`:nth-child(${selected || 1})`).addClass('selected');
         }
 
-        
+        ,setPreloader() {
+            this.list.html('');
+            this.list.append(TemplateFactory.getPreloader());
+        }
 
         // ,async getPreviewImage(variant, ti, vi) {
         //     await App.setCurrentVariant(variant);
@@ -1266,12 +1298,18 @@ AdminApp = {
         }
 
         ,formPrintsList(prints) {
-            this.list.html('');
+            const children = [];
+            this.setPreloader();
 
             prints.forEach( print => {
-                this.list.append(TemplateFactory.getAdminPanelPrintItemHtml(print));
-                this.list.children(':last-child').data('print', print);
+                const child = $(TemplateFactory.getAdminPanelPrintItemHtml(print));
+                child.data('print', print);
+
+                children.push(child);
             });
+
+            this.list.html('');
+            children.forEach( ch => this.list.append(ch));
         }
 
         ,formPrintsPages(pages, selected = 1) {
@@ -1309,6 +1347,11 @@ AdminApp = {
         ,setAwaitLoading() {
             this.list.addClass('loading');
             this.uploadButton.addClass('_no-events');
+        }
+
+        ,setPreloader() {
+            this.list.html('');
+            this.list.append(TemplateFactory.getPreloader());
         }
 
         ,unsetAwaitLoading() {
@@ -1646,21 +1689,17 @@ AdminApp = {
         }
 
         ,formOrdersTable(orders) {
-            this.table.html('');
-            this.closed.html('');
-
-            this.table.append(TemplateFactory.getAdminPanelOrderHeadHtml());
-            // this.closed.append(TemplateFactory.getAdminPanelOrderHeadHtml());
+            const children = [];
 
             orders.forEach( (order) => {
-                // if (order.status != 'Закрыт') {
-                    this.table.append(TemplateFactory.getAdminPanelOrderItemHtml(order));
-                    this.table.children(':last-child').data('order', order);
-                // } else {
-                //     this.closed.append(TemplateFactory.getAdminPanelOrderItemHtml(order));
-                //     this.closed.children(':last-child').data('order', order);
-                // }
+                const child = $(TemplateFactory.getAdminPanelOrderItemHtml(order));
+                child.data('order', order);
+                children.push(child);
             });
+
+            this.table.html('');
+            this.table.append(TemplateFactory.getAdminPanelOrderHeadHtml());
+            children.forEach( ch => this.table.append(ch));
         }
 
         ,formOrdersPages(pages = 1, selected = 1) {
@@ -1674,6 +1713,11 @@ AdminApp = {
             this.pages.children(`:nth-child(${selected})`).addClass('selected');
         }
 
+        ,setPreloader() {
+            this.table.html('');
+            this.table.append(TemplateFactory.getPreloader());
+        }
+
         ,openOrderUI(order) {
             this.closePanel();
 
@@ -1684,6 +1728,7 @@ AdminApp = {
         }
 
         ,loadPanelPage(page = 1) {
+            this.setPreloader();
             this.openPanel();
             this.setAwaitLoading();
 
@@ -1716,6 +1761,7 @@ AdminApp = {
         }
 
         ,loadPanel() {
+            this.setPreloader();
             this.openPanel();
             this.setAwaitLoading();
 
@@ -1860,7 +1906,7 @@ AdminApp = {
         ,async formOrderList(cart) {
             this.cart = cart;
 
-            this.setListLoading();
+            // this.setListLoading();
             this.setOrderNumber(this.order.number);
             this.setComment(this.order.comment);
             this.setOrderStatus(this.order.status);
@@ -1936,6 +1982,7 @@ AdminApp = {
         }
 
         ,setListLoading() {
+            this.customer.html('')
             this.list.html('');
             this.list.append(TemplateFactory.getPreloader());
         }
@@ -1982,11 +2029,22 @@ AdminApp = {
             });
         }
 
-        ,loadPanel(order) {
-            this.openPanel();
-            this.order = order;
+        ,loadOrder(number, callback) {
+            App.Ajax.get('/order/get?number='+number, callback);
+        }
 
-            this.formOrderList(order.cart);
+        ,loadPanel(order) {
+            this.setListLoading();
+            this.openPanel();
+
+            this.loadOrder(order.number, (response) => {
+                response = JSON.parse(response);
+
+                this.order = response.data;
+                this.formOrderList(this.order.cart);
+            });
+
+            // this.formOrderList(order.cart);
         }
 
         ,openOrdersList() {

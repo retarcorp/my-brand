@@ -295,3 +295,10 @@ input[type="number"] {
 .total{
   font-size: 22px;
 }
+
+.full-width{
+    width: 100%
+}
+.full-width > input{
+    width: 100%;
+}

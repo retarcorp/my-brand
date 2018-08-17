@@ -35,11 +35,10 @@ router.get('/myOrders/load', (req, res, next) => {
                 delete o.comment;
 
                 return o;
-            });
+            }).reverse();
 
             response.status = true;
             response.message = "Orders loaded";
-            response.data = orders;
 
             res.send(response);
         });
@@ -115,7 +114,7 @@ router.post('/order/set', (req, res, next) => {
     });
 });
 
-router.get('/order/load', (req, res, next) => {
+router.get('/order/get', (req, res, next) => {
     const query = qrs.parse(URL.parse(req.url).query),
         response = {
             status: false,
@@ -132,8 +131,51 @@ router.get('/order/load', (req, res, next) => {
         user = User.checkSession(req, res, next);
 
     if (user) {
+        query.number = parseInt(query.number);
+
+        Mongo.select({ number: query.number }, 'order', (response_db) => {
+            const orders = response_db;
+
+            if (orders.length >= 0) {
+                response.data = orders[0];
+                response.status = true;
+                response.message = 'Order loaded';
+
+                res.send(response);
+            } else {
+                res.send(response);
+            }
+
+        });
+    } else {
+        response.status = false;
+        response.message = "User didn't logged";
+
+        res.send(response);
+    }
+})
+
+router.get('/order/load', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/order/load',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next);
+
+    if (user && user.admin) {
         Mongo.select({ status: query.type }, 'order', (response_db) => {
             const orders = response_db;
+
+            orders.forEach( o => delete o.cart );
 
             if (query.page && !query.page != 'all') {
                 query.page = parseInt(query.page);
@@ -142,10 +184,10 @@ router.get('/order/load', (req, res, next) => {
                     if (index >= (query.page - 1) * 40 && index < query.page * 40) {
                         return o;
                     }
-                });
+                }).reverse();
 
             } else {
-                response.data = orders;
+                response.data = orders.reverse();
             }
 
             response.status = true;

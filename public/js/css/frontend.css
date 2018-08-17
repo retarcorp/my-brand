@@ -39,7 +39,8 @@
     opacity: 1;
 }
 
-.main-menu__item.login.active .authorization__form {
+.main-menu__item.login.active .authorization__form,
+.head__item.login.active .authorization__form {
     display: flex;
 }
 
@@ -190,4 +191,8 @@ canvas {
 
 [name="orderOrderPreview_order"].active {
     display: block;
+}
+
+.off {
+    display: none;
 }

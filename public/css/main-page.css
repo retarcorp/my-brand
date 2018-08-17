@@ -499,14 +499,17 @@ body,
     box-shadow: 0 0 55px rgba(56,49,187, 0.18);
 }
 
-.authorization__form{
+.main-page__header .authorization__form{
     top: 45px !important;
 }
 
-.form__header{
+.main-page__header .form__header{
     padding-bottom: 15px;
 }
 
+.main-page__header .form__link{
+    margin-top: 15px;
+}
 
 .main__products .slider__item{
     width: 235px;

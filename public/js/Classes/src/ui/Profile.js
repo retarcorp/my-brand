@@ -5,7 +5,7 @@ class Profile {
 
     init() {
         this.logins = $('.authorization__form');
-        this.logins_item = $('.main-menu__item.login');
+        this.logins_item = $('.main-menu__item.login, .head__item.login');
         this.logins_submit = $('input[type="submit"][value="Вход"]');
 
         this.logout_item = $('.profile__link.link__logout');
@@ -61,7 +61,7 @@ class Profile {
 
         this.page_list.on('click', this.checkFavoritesEvent);
 
-        this.cart_button.on('click', this.addToCartProject.bind(this));
+        this.cart_button.on('click', this.checkEvent.bind(this));
 
 
         //$('body').on('click', this.showLoginForm);
@@ -71,7 +71,23 @@ class Profile {
         this.loadCartAmount();
 
         if (this.container.length) {
-            this.container.html('Favorites loading...');
+            //this.container.html('Favorites loading...');
+        }
+    }
+
+    checkEvent(e) {
+        const currentTarget = $(e.currenttarget);
+        let target = $(e.target);
+
+        while(!target.is(currentTarget)) {
+            if (target.hasClass('details__add-basket')) {
+                const project = this.UI.App.Project;
+
+                this.addToCartProject(project);
+                return;
+            }
+
+            target = target.parent();
         }
     }
 
@@ -120,9 +136,19 @@ class Profile {
         }
     }
 
-    addToCartProject(e) {
-        this.UI.App.isToCart = true;
-        this.saveProject(e);
+    addToCartProject(project) {
+        const data = JSON.stringify(this.UI.App.Data.getProjectData(project));
+
+        App.Ajax.postJSON('/cart/add/product', data, (response) => {
+            response = JSON.parse(response);
+
+            if (response.status && response.data.new) {
+                const amount = parseInt(this.cart_amount.text());
+                this.cart_amount.text(amount + 1);
+            }
+
+            console.log(response);
+        })
     }
 
     addToCart(id, card) {
@@ -130,7 +156,10 @@ class Profile {
         this.UI.App.Ajax.post('/cart/add', data, (response) => {
             response = JSON.parse(response);
 
-            console.log(response);
+            if (response.status && response.subdata) {
+                const curr = parseInt(this.cart_amount.text());
+                this.cart_amount.text(curr + 1);
+            }
 
             if (card) {
                 this.changeToLink(card);
@@ -247,6 +276,7 @@ class Profile {
 
         if (App.logged) {
             App.UI.Profile.save_project.removeClass('pending');
+            App.UI.Profile.save_project.removeClass('inactive');
             App.UI.Profile.save_project.addClass('active');
         }
 
@@ -257,6 +287,9 @@ class Profile {
 
                 App.UI.Profile.save_project.removeClass('active');
                 App.UI.Profile.save_project.addClass('pending');
+
+                setTimeout( () => App.UI.Profile.save_project.addClass('inactive'), 3000);
+
                 App.Project.id = response.id;
 
                 if (App.isToCart) {
@@ -270,7 +303,7 @@ class Profile {
 
     async formProjectsList(e, page) {
         await this.UI.App.Data.loadProjects(page);
-        await this.setProjectsList();
+        await this.setProjectsList(page);
 
         const collection = $('.panel__page-point.active'),
             target = $(`.panel__page-point[data-page=${page}]`);
@@ -282,7 +315,7 @@ class Profile {
         this.page_list.removeClass('loading');
     }
 
-    formPageList(pages) {
+    formPageList(pages = 1, selected = 1) {
         this.page_list.html('');
 
         for (let page = 1; page <= pages; page++) {
@@ -290,6 +323,7 @@ class Profile {
             this.page_list.children(":last-child").attr('data-page', page);
         }
 
+        this.page_list.children(`:nth-child(${selected})`).addClass('selected');
     }
 
     removeProject(id, card) {
@@ -305,30 +339,37 @@ class Profile {
         });
     }
 
-    async setProjectsList() {
+    async setProjectsList(page) {
         if (!this.container.length) {
             return;
         }
 
-        let projects = this.UI.App.Data.Projects,
-            pages = Math.ceil(projects.length/20);
+        const children = [];
+        let projects = this.UI.App.Data.Projects;
+
+        this.setPreloader();
 
         if (!projects || !projects.length) {
             this.container.html('There is no favorites yet.');
         } else {
-            this.container.html(
-                projects.reduce((acc, project) => acc + TemplateFactory.getFavoritesListHtml(project), ``)
-            );
+            let pages = Math.ceil(projects.length/20);
 
-            this.formPageList(pages);
+            // this.container.html(
+            //     projects.reduce((acc, project) => acc + TemplateFactory.getFavoritesListHtml(project), ``)
+            // );
 
-            let index = 0;
+            this.formPageList(pages, page);
 
             for (let project of projects) {
-                await this.loadPreviewImage(project, $('.favorites__img')[index], this.favorites.children()[index]);
-                index++;
+                const child = $(TemplateFactory.getFavoritesListHtml(project));
+
+                await this.loadPreviewImage(project, child.find('.favorites__img'), child);
+
+                children.push(child);
             }
 
+            this.container.html('');
+            children.forEach( ch => this.container.append(ch));
         }
     }
 
@@ -344,6 +385,10 @@ class Profile {
         $(card).data('project', app.Project);
         const dataURL = app.GraphCore.canvas.toDataURL('image/png');
 
-        img.src = dataURL;
+        img.attr('src', dataURL);
+    }
+
+    setPreloader() {
+        this.container.html(TemplateFactory.getPreloader());
     }
 }

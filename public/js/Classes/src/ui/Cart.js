@@ -75,19 +75,25 @@ class Cart {
 
     async formCartList(list) {
          const app = this.UI.App;
-         this.container.html('');
+         const children = [];
+
+         //this.setPreloader();
 
          for (let item of list) {
              await App.setProject(item, false);
+             const child = $(TemplateFactory.getCartItemHtml(item));
 
-             this.container.prepend(TemplateFactory.getCartItemHtml(item));
+             child.data('item', item);
+             child.find('.quantity-num').on('input', this.recountPrice.bind(this));
+             child.find('img').attr('src', await app.getVariantPreview());
 
-             this.container.children(':first-child').data('item', item);
-             this.container.children(':first-child').find('.quantity-num').on('input', this.recountPrice.bind(this));
-             this.container.children(':first-child').find('img').attr('src', await app.getVariantPreview());
+             children.push(child);
          }
 
-        this.recountPrice();
+         this.container.html('');
+         children.forEach( ch => this.container.prepend(ch));
+
+         this.recountPrice();
     }
 
     emptyCartList() {
@@ -125,6 +131,10 @@ class Cart {
 
     setAwaitLoading() {
          this.container.addClass('loading');
+    }
+
+    setPreloader() {
+         this.container.html(TemplateFactory.getPreloader());
     }
 
     unsetAwaitLoading() {

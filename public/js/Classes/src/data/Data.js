@@ -47,15 +47,18 @@ class Data {
         this.UserProjectsCount = response.amount;
     }
 
-    getProjectData() {
+    getProjectData(p) {
+        const project = p || App.Project;
+
         let data = {
-            variants: App.Project.variants
-            ,base: App.Project.base
-            ,settings: App.Project.settings
-            ,id: App.Project.id
+            variants: project.variants
+            ,base: project.base
+            ,settings: project.settings
+            ,id: project.id
+            ,cart_id: project.cart_id
         }
 
-        data.templates = (App.Project.templates) ? App.Project.templates : [];
+        data.templates = (project.templates) ? project.templates : [];
 
         return data;
     }

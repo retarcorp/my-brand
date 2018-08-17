@@ -100,11 +100,11 @@ let Users = {
         }
 	}
 
-	,genSalt() {
+	,genSalt(mss) {
 		let salt = "",
 			code = 0;
 
-		for (let i = 0; i < 8; i++) {
+		for (let i = 0; i < mss; i++) {
 			code = Math.round(Math.random() * 76 + 48);
 			salt += String.fromCharCode(code);
 		}

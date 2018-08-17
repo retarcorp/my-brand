@@ -9,7 +9,7 @@ class Slider {
         container.html(bases.reduce((acc, base) => acc + TemplateFactory.getSliderSlideHtml(base),""));
         $.each(container.children(), (index, child) => {
             $(child).data("base", bases[index]);
-            $(child).on('click', this.emitBaseChange);
+            $(child).on('click', this.emitBaseChange.bind(this));
         });
 
         if(container.length) {
@@ -55,9 +55,16 @@ class Slider {
 
     emitBaseChange(e) {
         e.preventDefault();
+        const target = $(e.target),
+            currentTarget = $(e.currentTarget),
+            base = $(currentTarget).data('base');
 
-        const base = $(this).data('base');
-
-        location.href = '/constructor?id='+base._id;
+        if (target.hasClass('slider__btn-add')) {
+            this.UI.App.getProjectOnBaseAsync(base)
+                .then( project => this.UI.Profile.addToCartProject(project))
+                .catch(err => console.log(err));
+        } else {
+            location.href = '/constructor?id='+base._id;
+        }
     }
 }
