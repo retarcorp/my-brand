@@ -167,7 +167,7 @@ class BaseList {
 
         this.UI.Layers.loadLayers();
 
-        this.UI.App.GraphCore.setDimensions(400, 400 * this.UI.App.currentProjectVariant.variant.size.height/this.UI.App.currentProjectVariant.variant.size.width);
+        this.UI.App.GraphCore.setDimensions(CANVAS_WIDTH, CANVAS_WIDTH * this.UI.App.currentProjectVariant.variant.size.height/this.UI.App.currentProjectVariant.variant.size.width);
         this.UI.App.GraphCore.setCurrentWidget(null);
 
         this.UI.LightBox.setPreviewImage();

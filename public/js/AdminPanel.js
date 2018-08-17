@@ -501,7 +501,7 @@ AdminApp = {
             child.data('workzone', { x: 0, y: 0, width: 0, height: 0 });
 
             image.onload = () => {
-                size.width = 400;
+                size.width = CANVAS_WIDTH;
                 size.height = Math.round(size.width * (image.height/image.width));
                 size.int = image.height/image.width;
 

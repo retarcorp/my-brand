@@ -104,6 +104,7 @@ app.get('/profile', profile);
 
 app.post('/cart/add', cart);
 app.get('/cart/load', cart);
+app.post('/cart/add/product', cart);
 app.get('/cart/amount', cart);
 
 app.get('/myOrders', order);

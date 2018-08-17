@@ -162,7 +162,7 @@
     font-family: 'Lato', sans-serif;
     font-size: 15px;
     font-weight: lighter;
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 
 .details__after.pending {
@@ -173,6 +173,10 @@
 .details__after.active {
     opacity: 1;
     pointer-events: all;
+}
+
+.details__after.inactive {
+    pointer-events: none;
 }
 
 .details__after a {

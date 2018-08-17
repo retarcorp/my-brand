@@ -48,10 +48,10 @@ class Filter {
     getAverageImageColor(image) {
         let ctx = document.createElement('canvas').getContext('2d');
 
-        ctx.canvas.width = image.height;
-        ctx.canvas.height = image.width;
+        ctx.canvas.width = CANVAS_WIDTH;
+        ctx.canvas.height = CANVAS_WIDTH * image.height/image.width;
 
-        ctx.canvas.height = ctx.canvas.width * (image.height/image.width);
+        // ctx.canvas.height = ctx.canvas.width * (image.height/image.width);
         ctx.drawImage(image, 0, 0, ctx.canvas.width, ctx.canvas.height);
 
         let data = ctx.getImageData(0,0,ctx.canvas.width,ctx.canvas.height),
@@ -80,6 +80,24 @@ class Filter {
         this.GraphCore.App.Project.settings.startColor = hex;
 
         return hex;
+    }
+
+    getImageAverageColorAsync(src) {
+        const ctx = document.createElement('canvas').getContext('2d'),
+            image = new Image();
+
+        image.src = src;
+        ctx.canvas.width = CANVAS_WIDTH;
+
+        return new Promise( (res, rej) => {
+            image.onload = () => {
+                res(this.getAverageImageColor(image));
+            };
+
+            image.onerror = (err) => {
+                rej(err);
+            };
+        });
     }
 
     getImageFilterData(ctx, image) {

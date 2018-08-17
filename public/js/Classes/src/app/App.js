@@ -136,6 +136,7 @@ class Application {
             // });
 
             project.settings.size = data.settings.size;
+            project.cart_id = data.cart_id;
             return project;
         }
 
@@ -178,6 +179,23 @@ class Application {
         v.recountWidgets();
 
         return v;
+    }
+
+    getProjectOnBaseAsync(base) {
+        const project = Project.newProject(base || this.Data.Bases[0]),
+            variant = project.base.variants[0];
+
+        return new Promise( (res, rej) => {
+            this.GraphCore.Filter.getImageAverageColorAsync(variant.src)
+                .then( color => {
+                    project.settings.startColor = color
+                    res(project);
+                })
+                .catch(err => {
+                    console.log(err);
+                    rej(err);
+                });
+        });
     }
 
     async getNewProject(preview = true) {

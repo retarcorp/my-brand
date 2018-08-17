@@ -16,8 +16,8 @@ class GraphCore {
 
     init() {
         this.canvas = document.createElement('canvas');
-        this.canvas.width = 400;
-        this.canvas.height = 400;
+        this.canvas.width = CANVAS_WIDTH;
+        this.canvas.height = CANVAS_WIDTH;
         this.canvas_container = $('.product__preview');
 
         this.ctx = this.canvas.getContext('2d');
@@ -71,7 +71,7 @@ class GraphCore {
         this.resetScale();
 
         const variant = App.currentProjectVariant,
-            width = 400,
+            width = CANVAS_WIDTH,
             height = width * variant.variant.image.height/variant.variant.image.width;
 
         this.setDimensions(width, height);

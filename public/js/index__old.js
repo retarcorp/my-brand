@@ -1436,8 +1436,8 @@ const App = {
 
             this.canvas = document.createElement('canvas');
 
-            this.canvas.width = 400;
-            this.canvas.height = 400;
+            this.canvas.width = CANVAS_WIDTH;
+            this.canvas.height = CANVAS_WIDTH;
 
             if (document.querySelector('.product__preview'))
                 $('.product__preview').html(this.canvas);
@@ -1644,8 +1644,8 @@ const App = {
                 let ctx = document.createElement('canvas').getContext('2d'),
                     image = new Image();
 
-                ctx.canvas.width = 400;
-                ctx.canvas.height = 400;
+                ctx.canvas.width = CANVAS_WIDTH;
+                ctx.canvas.height = CANVAS_WIDTH;
 
                 image.src = src;
                 image.onload = () => {

@@ -35,11 +35,10 @@ router.get('/myOrders/load', (req, res, next) => {
                 delete o.comment;
 
                 return o;
-            });
+            }).reverse();
 
             response.status = true;
             response.message = "Orders loaded";
-            response.data = orders;
 
             res.send(response);
         });
@@ -185,10 +184,10 @@ router.get('/order/load', (req, res, next) => {
                     if (index >= (query.page - 1) * 40 && index < query.page * 40) {
                         return o;
                     }
-                });
+                }).reverse();
 
             } else {
-                response.data = orders;
+                response.data = orders.reverse();
             }
 
             response.status = true;
