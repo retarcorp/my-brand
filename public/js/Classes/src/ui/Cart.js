@@ -6,11 +6,11 @@ class Cart {
      init() {
          this.container = $('[name="userCart"]');
          this.total = $('.total__price').children(':first-child');
+         this.create_order = $('[name="createOrder"]');
 
          if (this.container.length) {
              this.loadCart();
-
-             this.container.on('click', this.checkEvent.bind(this))
+             this.container.on('click', this.checkEvent.bind(this));
          }
      }
 
@@ -67,6 +67,10 @@ class Cart {
          this.loadCartListAll( (response) => {
              response = JSON.parse(response);
 
+             if (!response.data.length) {
+                 this.hideOptions();
+             }
+
              this.formCartList(response.data);
              // this.formPageList(response.pages);
              this.unsetAwaitLoading();
@@ -86,6 +90,7 @@ class Cart {
              child.data('item', item);
              child.find('.quantity-num').on('input', this.recountPrice.bind(this));
              child.find('img').attr('src', await app.getVariantPreview());
+             child.find('.quantity-num').val(item.amount || 1);
 
              children.push(child);
          }
@@ -96,6 +101,11 @@ class Cart {
          this.recountPrice();
     }
 
+    hideOptions() {
+         this.create_order.remove();
+         this.total.remove();
+    }
+
     emptyCartList() {
          this.container.html('');
     }
@@ -104,9 +114,13 @@ class Cart {
          App.Ajax.get('/delete/cart?cart_id='+cart_id, (response) => {
              response = JSON.parse(response);
 
-             console.log(response);
+             const amount = this.UI.Profile.cart_amount.text();
+             this.UI.Profile.setCartAmount(amount-1);
 
              card.remove();
+             if (!this.container.children().length) {
+                 this.hideOptions();
+             }
          });
     }
 
@@ -119,6 +133,12 @@ class Cart {
                  price = parseInt(item.base.price),
                  amount = parseInt($(child).find('.quantity-num').val());
 
+             if (amount <= 0 || isNaN(amount)) {
+                 amount = 1;
+                 $(child).find('.quantity-num').val(amount);
+             }
+
+             $(child).find('.cart__price').text(amount * price + ' P');
              value += amount * price;
          });
 

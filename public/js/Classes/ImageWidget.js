@@ -34,6 +34,8 @@ class ImageWidget extends Widget {
     }
 
     loadLazy() {
+        this.download = false;
+
         return new Promise( (resolve, reject) => {
             if (!this.isCrashed) {
                 this.image.src = this.src;
@@ -243,6 +245,18 @@ class ImageWidget extends Widget {
 
     getPosition() {
         return this.position;
+    }
+
+    getData() {
+        return {
+            position: this.position
+            ,size: this.size
+            ,src: this.src
+            ,type: this.type
+            ,fancywork: this.fancywork
+            ,print: this.print
+            ,layer: this.layer
+        }
     }
 
     renderPath(ctx) { //INNER

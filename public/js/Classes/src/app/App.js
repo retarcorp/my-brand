@@ -31,12 +31,21 @@ class Application {
 
             if (this.logged){
                 const id = localStorage.getItem('project_id') || 0;
-                const project = this.Data.Projects.find( p => p.id == id ) || this.Data.Projects[0];
+                const temp = this.parseURL().temp;
+                let project;
+
+                if (!temp || !temp.length) {
+                    project = this.Data.Projects.find( p => p.id == id ) || this.Data.Projects[0];
+                } else {
+                    project = await this.Data.getTemp('/temp/load?temp='+temp);
+                }
 
                 // TODO rename method setProject to more evident one
                 (this.Data.Projects.length && !(this.parseURL()).id) ? await this.setProject(project) : await this.getNewProject();
+                localStorage.removeItem('brand');
             } else  {
-                await this.getNewProject();
+                (!localStorage.getItem('brand')) ? await this.getNewProject() : await this.setProject(localStorage.getItem('brand'));
+                localStorage.removeItem('brand');
             }
 
             this.currentWorkzone = this.currentProjectVariant.variant.workzone;
@@ -98,6 +107,7 @@ class Application {
             const project = new Project(Base.fromJSON(data.base));
 
             project.settings.color = data.settings.color;
+            project.settings.size = data.settings.size || data.base.size[0];
             project.id = data.id;
             // project.name = data.name;
             // project.price = project.base.price;
@@ -135,7 +145,6 @@ class Application {
             //     return v;
             // });
 
-            project.settings.size = data.settings.size;
             project.cart_id = data.cart_id;
             return project;
         }
@@ -162,6 +171,10 @@ class Application {
             w.id = ID;
             w.tags = widget.tags || [];
             w._id = widget._id || 0;
+
+            w.fancywork = widget.fancywork || false;
+            w.print = widget.print || false;
+
             ID++;
 
             if (w instanceof TextWidget) {

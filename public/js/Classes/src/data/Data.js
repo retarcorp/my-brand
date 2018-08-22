@@ -40,6 +40,13 @@ class Data {
         await Promise.all(promises);
     }
 
+    async getTemp(path, temp) {
+        const response = await this.App.Ajax.getJSON(path);
+        this.Temp = response.data;
+
+        return this.Temp;
+    }
+
     async loadProjects(page = 1) {
         const response = (await this.App.Ajax.getJSON('/load?page='+page));
         const projects = response.projects;
@@ -48,17 +55,25 @@ class Data {
     }
 
     getProjectData(p) {
+        App.GraphCore.setCurrentWidget(null);
         const project = p || App.Project;
+        const variants = project.variants.map(v => {
+            return {
+                layers: v.layers,
+                widgets: v.widgets.map( w => w.getData()),
+                variant: v.variant.getData()
+            }
+        });
 
         let data = {
-            variants: project.variants
+            variants: variants
             ,base: project.base
             ,settings: project.settings
             ,id: project.id
             ,cart_id: project.cart_id
         }
 
-        data.templates = (project.templates) ? project.templates : [];
+        //data.templates = (project.templates) ? project.templates : [];
 
         return data;
     }

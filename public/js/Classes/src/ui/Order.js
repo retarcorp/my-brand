@@ -19,6 +19,7 @@ class Order {
         this.orders_list_section = $('[name="orderOrdersList_order"]');
         this.orders_list_section_loader = this.orders_list_section.find('[name="orderSectionLoader_set"]');
         this.orders_preview_section = $('[name="orderOrderPreview_order"]');
+        this.orders_preview_number = $('[name="textPreviewHeader_order"]');
 
         this.inputs = {
             credentials: this.form_section.find('#fio'),
@@ -87,7 +88,7 @@ class Order {
                     order = child.data('order');
 
                 this.closeOrdersList();
-                this.openOrderPreview();
+                this.openOrderPreview(order);
                 this.showOrder(order);
 
                 return;
@@ -206,7 +207,8 @@ class Order {
         this.form_section.addClass('active');
     }
 
-    openOrderPreview() {
+    openOrderPreview(order) {
+        this.orders_preview_number.text(`Заказ №${order.number} (Отправлен)`);
         this.orders_preview_section.addClass('active');
     }
 

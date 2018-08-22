@@ -7,13 +7,9 @@ ErrorHandler = {
         return this[errorType](data);
     }
 
-    ,fileType(data) {
+    ,fileType() {
         const error = {
             errorType: "fileType",
-            data: {
-                fileName: data.file.originalFilename
-            },
-            requestOptions: data.options,
             message: "Unavailable file type"
         }
 

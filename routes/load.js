@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Mongo = require('../modules/Mongo');
+var User = require('../modules/Users');
 var ErrorHandler = require('../modules/ErrorHandler');
 
 var URL = require('url');
@@ -51,7 +52,7 @@ router.get('/load', function(req, res, next) {
 });
 
 router.get('/load/templates', (req, res, next) => {
-    const user = req.cookies.user.name || req.session.user.name; ////WORKFLOW
+    const user = User.checkSession(req, res, next); ////WORKFLOW
     const query = qrs.parse(URL.parse(req.url).query);
 
     console.log(query);
@@ -61,7 +62,7 @@ router.get('/load/templates', (req, res, next) => {
             pages = 0,
             response = {};
 
-        if (query.page || query.page != 'all') {
+        if (query.page && query.page != 'all') {
             query.page = parseInt(query.page);
 
             response.data = templates.filter( (t, index) => {

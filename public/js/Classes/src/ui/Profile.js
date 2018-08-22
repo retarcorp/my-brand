@@ -122,9 +122,9 @@ class Profile {
 
         if (target.hasClass('favorites__buy')) {
             const card = target.parent().parent().parent(),
-                id = card.data('project_id');
+                project = card.data('project');
 
-            App.UI.Profile.addToCart(id, card);
+            App.UI.Profile.addToCart(project, card);
             // console.log('Need addToCart functionality');
         }
 
@@ -139,22 +139,40 @@ class Profile {
     addToCartProject(project) {
         const data = JSON.stringify(this.UI.App.Data.getProjectData(project));
 
+        if (this.inProgress) {
+            return;
+        }
+
+        this.inProgress = true;
         App.Ajax.postJSON('/cart/add/product', data, (response) => {
             response = JSON.parse(response);
 
-            if (response.status && response.data.new) {
+            if (response.status && response.substatus == "SAVED_NEW") {
                 const amount = parseInt(this.cart_amount.text());
                 this.cart_amount.text(amount + 1);
             }
 
-            console.log(response);
-        })
+            // if (response.buffer)
+            // Object.keys(response.buffer).forEach( key => {
+            //     console.log('KEY: ' + key, JSON.stringify(response.buffer[key]) == JSON.stringify(response.item[key]));
+            // });
+
+            this.inProgress = false;
+        });
     }
 
-    addToCart(id, card) {
-        const data = JSON.stringify({ id: id });
-        this.UI.App.Ajax.post('/cart/add', data, (response) => {
+    addToCart(project, card) {
+        const app = this.UI.App,
+            data = JSON.stringify(project);
+
+        if (this.inProgress) {
+            return;
+        }
+
+        this.UI.App.Ajax.postJSON('/cart/add/product', data, (response) => {
             response = JSON.parse(response);
+
+            this.inProgress = false;
 
             if (response.status && response.subdata) {
                 const curr = parseInt(this.cart_amount.text());
@@ -382,7 +400,7 @@ class Profile {
         app.isPreview = false;
 
         $(card).data('project_id', app.Project.id);
-        $(card).data('project', app.Project);
+        $(card).data('project', project);
         const dataURL = app.GraphCore.canvas.toDataURL('image/png');
 
         img.attr('src', dataURL);

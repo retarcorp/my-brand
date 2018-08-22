@@ -388,6 +388,21 @@ class TextWidget extends Widget {
 
     }
 
+    getData() {
+        console.log(this.size);
+
+        return {
+            position: this.position
+            ,size: this.size
+            ,type: this.type
+            ,fontSettings: this.fontSettings
+            ,lines: this.lines
+            ,text: this.text
+            ,color: this.color
+            ,layer: this.layer
+        }
+    }
+
     renderPath(ctx) { //INNER
         if (this.isSelected && !App.isPreview)
             this.path.render(ctx);

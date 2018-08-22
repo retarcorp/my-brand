@@ -34,6 +34,7 @@ var userLogout = require('./routes/logout');
 var cart = require('./routes/cart');
 var order = require('./routes/order');
 var find = require('./routes/find');
+var temp = require('./routes/temp');
 
 
 /*TEST*/
@@ -95,6 +96,7 @@ app.post('/login', loadUser);
 app.post('/register', register);
 
 app.post('/upload', uploadFile);
+app.post('/upload/font', uploadFile);
 app.post('/upload/redact', uploadFile);
 app.post('/upload/print', uploadFile);
 app.post('/test_blob', testBlob);
@@ -117,7 +119,10 @@ app.post('/order/update', order);
 app.get('/constructor', constructor);
 
 app.get('/find/font/by/name', find);
+app.post('/find/prints/by/tags', find);
 
+app.get('/temp/load', temp);
+app.post('/temp/save', temp);
 /* TEST */
 
 app.post('/form_data', formData);

@@ -146,6 +146,26 @@ class VariantProject {
         return this;
     }
 
+    changeImageWidget(id, print) {
+        const widget = this.widgets.find( w => w.id == id);
+
+        if (widget && widget instanceof ImageWidget) {
+            widget.src = print.src;
+            widget.tags = print.tags;
+            widget.text = print.name;
+            widget.fancywork = print.fancywork;
+            widget.print = print.print;
+            widget.layer.text = print.name;
+            widget._id = print._id;
+
+            return widget.loadLazy();
+        }
+
+        return new Promise((res, rej) => {
+            rej();
+        });
+    }
+
     recountWidgets() {
         this.widgets.forEach( (elem, index) => {
             elem.index = index;

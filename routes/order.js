@@ -70,7 +70,7 @@ router.post('/order/set', (req, res, next) => {
             },
             user = User.checkSession(req, res, next);
 
-        if (user && user.admin) {
+        if (user) {
             // Mongo.select({ user: user.name }, 'cart', (response_db) => {
                 const order = {};
 

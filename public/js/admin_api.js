@@ -20,11 +20,13 @@ Admin = {
         data.append('fancywork', AdminApp.font_fancywork.prop('checked'));
         data.append('print', AdminApp.font_print.prop('checked'));
 
-        User.Ajax.post('/upload', data, (data) => {
+        User.Ajax.post('/upload/font', data, (data) => {
             let status = JSON.parse(data).status;
 
             if (status) {
                 if (callback) callback();
+            } else {
+
             }
         });
     }

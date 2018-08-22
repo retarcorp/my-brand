@@ -72,6 +72,14 @@ class BaseVariant {
         return this;
     }
 
+    getData() {
+        return {
+            src: this.src
+            ,workzone: this.workzone
+            ,size: this.size
+        }
+    }
+
     setColor() {
         App.GraphCore.Filter.setColorFilterImage(this.image, App.Project.settings.color);
 
