@@ -39,15 +39,15 @@ router.post('/upload', (req, res, next) => {
 			fle.forEach( (fl, index) => {
 
                 if (fl.path) {
-                    if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
-                        const file_exp = (fl.originalFilename.indexOf('.ttf') >= 0) ? ".ttf" : ".otf";
-                              file_name = md5(User.genSalt())+file_exp;
-
-                        fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${file_name}`));
-                        Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${file_name}`, fancywork: fields.fancywork[0], print: fields.print[0] },  'fonts', () => {
-
-                        });
-                    }
+                    // if (fl.originalFilename.indexOf('.ttf') >= 0 || fl.originalFilename.indexOf('.otf') >= 0) {
+                    //     const file_exp = (fl.originalFilename.indexOf('.ttf') >= 0) ? ".ttf" : ".otf";
+                    //           file_name = md5(User.genSalt())+file_exp;
+                    //
+                    //     fs.createReadStream(fl.path).pipe(fs.createWriteStream(`public/fonts/${file_name}`));
+                    //     Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${file_name}`, fancywork: fields.fancywork[0], print: fields.print[0] },  'fonts', () => {
+                    //
+                    //     });
+                    // }
 
                     //console.log(fl.headers['content-type']);
 
@@ -100,6 +100,59 @@ router.post('/upload', (req, res, next) => {
 
 	})
 
+});
+
+router.post('/upload/font', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            request: {},
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/upload/font',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next);
+
+    if (user && user.admin) {
+        const form = new multiparty.Form();
+
+        form.parse(req, (err, fields, files) => {
+            const file = files[0][0];
+            response.request = { fields: fields, files: files };
+
+            console.log(files);
+
+            if (file.originalFilename.indexOf('.ttf') >= 0 || file.originalFilename.indexOf('.otf') >= 0) {
+                const file_exp = (file.originalFilename.indexOf('.ttf') >= 0) ? ".ttf" : ".otf",
+                    file_name = md5(User.genSalt())+file_exp;
+
+                fs.createReadStream(file.path).pipe(fs.createWriteStream(`public/fonts/${file_name}`));
+                Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${file_name}`, fancywork: fields.fancywork[0], print: fields.print[0] },  'fonts', () => {
+                    response.status = true;
+                    response.message = 'Font uploaded';
+
+                    res.send(response);
+                });
+            } else {
+                response.status = false;
+                response.message = "Unhandle file type";
+                response.errors.push(ErrorHandler.generateError('fileType'));
+
+                res.send(response);
+            }
+        });
+    } else {
+        response.status = false;
+        response.message = "User doesn't have rights";
+
+        res.send(response);
+    }
 });
 
 router.post('/upload/redact', (req, res, next) => {

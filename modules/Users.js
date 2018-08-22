@@ -84,6 +84,16 @@ let Users = {
 		return check.password == md5(check.salt + User.password + check.salt);
 	}
 
+	,checkHash(data1, data2) {
+		return !Object.keys(data1).find( key => {
+            console.log('KEY: '+key, md5(JSON.stringify(data1[key])) == md5(JSON.stringify(data2[key])));
+
+            if (md5(JSON.stringify(data1[key])) != md5(JSON.stringify(data2[key]))) {
+				return true;
+            }
+		});
+	}
+
 	,checkSession(req, res, next) {
         if (!req.cookies.user) {
             if (!req.session.user) {
@@ -100,7 +110,7 @@ let Users = {
         }
 	}
 
-	,genSalt(mss) {
+	,genSalt(mss = 6) {
 		let salt = "",
 			code = 0;
 

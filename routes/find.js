@@ -82,4 +82,52 @@ router.get('/find/font/by/name', (req, res, next) => {
     });
 });
 
+router.post('/find/prints/by/tags', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        request = req.body,
+        response = {
+            status: false,
+            message: "Unexpected error",
+            data: [],
+            query: query,
+            errors: [],
+            request: request,
+            log: {
+                type: 'POST',
+                path: '/find/prints/by/tags',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res,next);
+
+    Mongo.select({}, 'prints', (response_db) => {
+        const prints = response_db,
+            tags = request.tags,
+            filter = (tags.length) ? prints.filter( print => {
+                const pTags = print.tags,
+                    fTags = pTags.filter( pTag => {
+                        return tags.find( tag => pTag == tag);
+                    }),
+                    relevation = fTags.length;
+
+                if(relevation) {
+                    print.relevation = relevation;
+                    return print;
+                } else {
+                    return false;
+                }
+            }) : prints;
+
+        filter.sort( (pA, pB) => {
+            return pB - pA;
+        });
+
+        response.data = filter;
+        response.status = true;
+        response.message = "Prints filtered, sorted and loaded";
+
+        res.send(response);
+    });
+});
+
 module.exports = router;

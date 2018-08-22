@@ -13,7 +13,8 @@
 .my-brand__container{
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
     width: calc(100% - 100px);
     margin: 0 auto;
 }
@@ -69,7 +70,11 @@
     padding-bottom: 12px;
 }
 
-.my-brand .slider__item{
+.my-brand .slider__item {
+    margin: 10px 15px;
+}
+
+.my-brand .slider__item:hover{
     box-shadow: 0 0 79px rgba(56,49,187, 0.18);
 }
 

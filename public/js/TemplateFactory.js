@@ -216,7 +216,7 @@ const TemplateFactory = {
         return `
             <li class="panel__basis-item">
                 <div class="panel__basis-img">
-                    <img src="${main_variant.image}" alt="">
+                    <img src="${(main_variant) ? main_variant.image : ""}" alt="">
                 </div>
                 <div class="panel__basis-description">
                     <span class="panel__basis-name">
@@ -739,6 +739,31 @@ const TemplateFactory = {
                 <span>Итог: </span>
                 <span>${ (info.price) ? info.price : "0"} Р</span>
             </div>
+        `
+    }
+
+    ,getBrandProductHtml(template) {
+        return `
+            <div class="slider__item active">
+                <img class="slider__item-img" name="myBrand_item-img" src="img/basis/cd3776021c76e63d6a9a1804dc8a21a4.png" alt="">
+                <span class="slider__item-name" name="myBrand_item-name">
+                    ${template.base.name}
+                    <div class="type__basis" name="myBrand_item-basis-type">
+                        ${(template.base.print) ? `<p class="type__basis-paint" title="Печать"></p>` : ""}
+                        ${(template.base.fancywork) ? `<p class="type__basis-needle" title="Вышивка"></p>` : ""}
+                    </div>
+                </span>
+                <p class="slider__item-price" name="myBrand_item-price">${template.base.price} P</p>
+                <div class="slider__buttons">
+                    <button class="button slider__btn-edit-mbr button_gradient_yellow" name="myBrand_item-btn-edit">Редактировать</button>
+                </div>
+            </div>
+        `
+    }
+
+    ,getTagItemHtml(tag) {
+        return `
+            <div class="myBrand__tag">${tag}</div>
         `
     }
 

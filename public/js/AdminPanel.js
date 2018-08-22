@@ -119,9 +119,10 @@ AdminApp = {
     ,resetUpload() {
         $('input[name="font"]').val('');
 
-        $('input[type="file"][name="font_file"]').remove();
-        $('input[name="font"]').after(TemplateFactory.getAdminPanelFontFileInput());
-        $('input[type="file"]').on('change', this.updateFile);
+        $('input[type="file"][name="font_file"]').val('');
+        $('input[type="file"][name="font_file"]')[0].dataset.after = "Введите имя файла";
+        // $('input[name="font"]').after(TemplateFactory.getAdminPanelFontFileInput());
+        // $('input[type="file"]').on('change', this.updateFile);
 
         $('.panel__font-form').removeClass('loading');
     }
@@ -167,7 +168,12 @@ AdminApp = {
     }
 
     ,updateFile() {
-        this.dataset.after = this.files[0].name;
+        if (this.files[0].name.indexOf('.ttf') >= 0 || this.files[0].name.indexOf('.otf') >= 0) {
+            this.dataset.after = this.files[0].name;
+        } else {
+            $('input[type="file"][name="font_file"]').val('');
+            alert('Only .otf and .ttf files allowed');
+        }
     }
 
     ,loadFontsPage(page, callback) {
@@ -262,6 +268,7 @@ AdminApp = {
 
             this.inputs.print.on('change', this.setPrintType);
             this.inputs.fancywork.on('change', this.setPrintType);
+            this.inputs.price.on('input', this.checkPrice.bind(this));
 
             $('.base__add .add-size').on('click', this.addSize);
             $('.add-basis-upload').on('click', this.sendData);
@@ -280,6 +287,27 @@ AdminApp = {
             this.clearInputs();
 
             this.renderWorkzone();
+        }
+
+        ,checkPrice(e) {
+            const target = $(e.target);
+            let value = parseInt(target.val());
+
+            if (isNaN(value)) {
+                value = "";
+                this.setPrice(value);
+
+                return;
+            }
+
+            if (value < 0) {
+                value = Math.abs(value);
+                this.setPrice(value);
+
+                return;
+            }
+
+            this.setPrice(value);
         }
 
         ,sendData() {
@@ -464,16 +492,27 @@ AdminApp = {
             let file = this.files[0],
                 reader = new FileReader();
 
-            reader.onload = (e) => {
+            this.value = '';
 
-                AdminApp.BasePanel.fileCount++;
-                AdminApp.BasePanel.checkFileSpace();
-
-                AdminApp.BasePanel.addVariant(e.target.result, file);
+            if (!file) {
+                return;
             }
 
-            reader.readAsDataURL(file);
-            AdminApp.BasePanel.main_variant.addClass('active');
+            if (file.name.indexOf('.png') >= 0) {
+
+                reader.onload = (e) => {
+                    AdminApp.BasePanel.fileCount++;
+                    AdminApp.BasePanel.checkFileSpace();
+                    AdminApp.BasePanel.addVariant(e.target.result, file);
+                }
+
+                reader.readAsDataURL(file);
+                AdminApp.BasePanel.main_variant.addClass('active');
+
+                return;
+            }
+
+            alert('Only .png files accepted!');
         }
 
         ,onDeleteVariant(e) {
@@ -524,6 +563,10 @@ AdminApp = {
 
             this.main_variant.addClass('active');
             this.main_variant_image.attr('src', node.find('img').attr('src'));
+        }
+
+        ,setPrice(price) {
+            this.inputs.price.val(price || 0);
         }
 
         ,checkFileSpace() {
@@ -1010,6 +1053,8 @@ AdminApp = {
 
                 this.list.html('');
                 children.forEach( ch => this.list.append(ch));
+            } else {
+                this.list.html('');
             }
 
             this.list.removeClass('loading');
@@ -1664,13 +1709,11 @@ AdminApp = {
             const target = $(e.target);
 
             if (target.hasClass('onen__order')) {
-                target.addClass('active');
-                this.openInProgressOrders();
+                this.openInProgressOrders(target);
             }
 
             if (target.hasClass('close__order')) {
-                target.addClass('active');
-                this.openClosedOrders();
+                this.openClosedOrders(target);
             }
         }
 
@@ -1744,17 +1787,29 @@ AdminApp = {
             });
         }
 
-        ,openClosedOrders() {
+        ,openClosedOrders(btn) {
             // this.table.removeClass('active');
             // this.closed.addClass('active');
+            if (this.onPending) {
+                return;
+            }
+
+            btn && btn.addClass('active');
+
             this.type = 'Закрыт';
             this.loadPanel();
             $('.onen__order').removeClass('active');
         }
 
-        ,openInProgressOrders() {
+        ,openInProgressOrders(btn) {
             // this.table.addClass('active');
             // this.closed.removeClass('active');
+            if (this.onPending) {
+                return;
+            }
+
+            btn && btn.addClass('active');
+
             this.type = 'В обработке';
             this.loadPanel();
             $('.close__order').removeClass('active');
@@ -1764,9 +1819,12 @@ AdminApp = {
             this.setPreloader();
             this.openPanel();
             this.setAwaitLoading();
+            this.onPending = true;
 
             this.loadOrdersPage( (response) => {
                 response = JSON.parse(response);
+
+                this.onPending = false;
 
                 this.unsetAwaitLoading();
                 this.formOrdersTable(response.data);
