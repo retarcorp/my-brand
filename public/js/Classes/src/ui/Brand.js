@@ -361,7 +361,8 @@ class Brand {
     }
 
     editBrand(brand) {
-        const data = this.UI.App.Data.getProjectData(brand);
+    	const app = this.UI.App, 
+    		data = app.Data.getProjectData(app.getProject(brand));
 
         this.UI.App.Ajax.postJSON('/temp/save?type=brand', JSON.stringify(data), (response) => {
             response = JSON.parse(response);
