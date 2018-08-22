@@ -41,7 +41,7 @@ class Application {
                 }
 
                 // TODO rename method setProject to more evident one
-                (this.Data.Projects.length && !(this.parseURL()).id) ? await this.setProject(project) : await this.getNewProject();
+                (project && !(this.parseURL()).id) ? await this.setProject(project) : await this.getNewProject();
                 localStorage.removeItem('brand');
             } else  {
                 (!localStorage.getItem('brand')) ? await this.getNewProject() : await this.setProject(localStorage.getItem('brand'));
