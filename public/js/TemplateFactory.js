@@ -307,10 +307,11 @@ const TemplateFactory = {
     }
 
     ,getSliderSlideHtml(base) {
+        const main_variant = base.variants.find( v => v.main) || base.variants[0];
         return `
             <div class="slider__item">
                 <a href="#" class="slider__link">
-                    <img class="slider__item-img" src="${base.variants[0].src}" alt="">
+                    <img class="slider__item-img" src="${base.variants[0].src || main_variant.image}" alt="">
                     <p class="slider__item-type">${base.type}</p>
                     <span class="slider__item-name">
                         ${base.name}
@@ -764,6 +765,25 @@ const TemplateFactory = {
     ,getTagItemHtml(tag) {
         return `
             <div class="myBrand__tag">${tag}</div>
+        `
+    }
+
+    ,getCatalogItemHtml(base) {
+        const main_variant = base.variants.find( v => v.main) || base.variants[0];
+        return `
+            <div class="brand__item">
+                <img class="brand__img" src="${main_variant.image}">
+                <div class="info">
+                    <p class="favorites__type">${base.type}</p>
+                    <p class="favorites__name">${base.name}</p>
+                    <p class="favorites__price">${base.price} P</p>
+                </div>
+                <div class="favorites__buttons">
+                    <button class="button brand__create">
+                        Создать
+                    </button>
+                </div>
+            </div>
         `
     }
 

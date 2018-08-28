@@ -47,7 +47,7 @@ class Profile {
         });
 
         this.logins_submit.on('click', () => this.logins.submit());
-        this.logins.on('submit', () => { this.login(); return false;});
+        this.logins.on('submit', (e) => { this.login(e); return false;});
 
         this.logins_item.on('click', this.showLoginForm);
 
@@ -259,8 +259,8 @@ class Profile {
         App.UI.Profile.registration_item.removeClass('active');
     }
 
-    login() {
-        event.preventDefault();
+    login(e) {
+        e.preventDefault();
         let data = {
             name: $('input[name="user"]').val()
             ,password: $('input[name="pass"]').val()

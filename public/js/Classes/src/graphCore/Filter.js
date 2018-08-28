@@ -10,13 +10,13 @@ class Filter {
         }
 
         const ctx = document.createElement('canvas').getContext('2d');
-        ctx.canvas.width = image.width;
-        ctx.canvas.height = image.height;
+        ctx.canvas.width = CANVAS_WIDTH;
+        ctx.canvas.height = CANVAS_WIDTH * image.height/image.width;
 
         this.GraphCore.Canvas.clear(ctx);
         ctx.drawImage(image,0,0, ctx.canvas.width, ctx.canvas.height);
 
-        const data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.width),
+        const data = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height),
             currentColor = this.GraphCore.App.Project.settings.startColor;
 
         const before = this.hexToRgb(currentColor),
