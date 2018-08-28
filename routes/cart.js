@@ -86,6 +86,7 @@ router.post('/cart/add/product', (req, res, next) => {
         response.message = "User didn't logged";
 
         res.send(response);
+        return;
     }
 
     const project = request;

@@ -17,7 +17,7 @@ class Data {
     }
 
     async getBases(){
-        const data = await this.App.Ajax.getJSON("/bases");
+        const data = await this.App.Ajax.getJSON("/bases?page=1");
         this.Bases = data.bases.map((obj) => Base.fromJSON(obj));
     }
 

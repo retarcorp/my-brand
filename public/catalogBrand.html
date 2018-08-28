@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700&amp;subset=latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main-page.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/constructor.css">
+    <link rel="stylesheet" href="css/papaps.css">
+    <link rel="stylesheet" href="css/catalog.css">
+    <link rel="stylesheet" href="css/favorites.css">
+    <link rel="stylesheet" type="text/css" href="css/auth-admin.css">
+    <link rel="stylesheet" type="text/css" href="css/admin-panel.css">
+    <link rel="stylesheet" type="text/css" href="css/slick.css"/>
+
+
+    <title>Catalog</title>
+</head>
+<body>
+    <div id="wrapper">
+        <header class="header header_padding header_background">
+
+            <div class="size-header">
+                <div class="header__adaptive-menu header__adaptive-menu_margin"></div>
+                <div class="header__logo logo">
+                    <a href="/" class="logo__text">Мой бренд</a>
+                </div>
+                <nav class="header__main-menu main-menu">
+                    <ul class="main-menu__list">
+                        <li class="main-menu__item">
+                            <a href="/catalogProject.html" class="main-menu__link text_color_main">Каталог продуктов</a>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin">
+                            <a href="/deliveryPayment.html" class="main-menu__link text_color_main">Доставка и оплата</a>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin">
+                            <a href="/aboutProject.html" class="main-menu__link text_color_main">О проекте</a>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin">
+                            <a href="/contactUs.html" class="main-menu__link text_color_main">Связаться с нами</a>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin login">
+                            <a href="#" class="main-menu__link text_color_main">Войти</a>
+                            <form class="authorization__form form form_shadow form_radius form_padding">
+                                <header class="form__header">Вход пользователя</header>
+                                <div class="form__data">
+                                    <input id="login" class="input_margin form__input input_padding input_border input_text" required name="user" type="text" placeholder="Ваш логин">
+                                    <input id="password" class="form__input input_padding input_border input_text" type="password" required name="pass" placeholder="Пароль">
+                                </div>
+                                <div class="form__btns">
+                                    <input type="submit" class="form__button button button_gradient_blue button_text_color" value="Вход">
+                                    <a href="#" class="form__link">Восстановить пароль</a>
+                                </div>
+                                <div class="form__socials">
+                                    <a href="#" class="social__link vk"></a>
+                                    <a href="#" class="social__link odnoklas"></a>
+                                    <a href="#" class="social__link facebook"></a>
+                                    <a href="#" class="social__link google"></a>
+                                    <a href="#" class="social__link twitter"></a>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin registration">
+                            <button class="button button__registration">Регистрация</button>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin profile">
+                            <a href="#" class="profile__name">UserName</a>
+                            <section class="profile__menu">
+                                <a href="/profile" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
+                                <a href="/myOrders" class="profile__link link__my-orders">Мои заказы</a>
+                                <a href="#" class="profile__link link__logout">Выход</a>
+                            </section>
+                        </li>
+                        <li class="main-menu__item main-menu__item_margin cart-li">
+                            <a href="/cart.html" class="cart"></a>
+                            <span class="cart__count">12</span>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <main class="main main_margin main_background main_shadow">
+            <section class="main__navigation main__navigation_shadow">
+                <ul class="navigation__list navigation__list_padding">
+                    <li class="navigation__item">
+                        <a href="#" class="navigation__link">Главная</a>
+                    </li>
+                    <li class="navigation__item navigation__item_margin current">
+                        <a href="#" class="navigation__link">Каталог продуктов</a>
+                    </li>
+                </ul>
+            </section>
+            <section class="main__products block_padding">
+                <h1 class="products__header text_color_black products__header_padding">Каталог продуктов</h1>
+                <nav class="products__menu products__menu_padding">
+                    <div class="adaptive__menu-products">
+                        <button class="adaptive__button"></button>
+                    </div>
+                    <ul class="products__list">
+                        <li class="products__item text_color_black active">Все</li>
+                        <li class="products__item text_color_black">Футболки</li>
+                        <li class="products__item text_color_black">Толстовки</li>
+                        <li class="products__item text_color_black">Шорты и брюки</li>
+                        <!-- <li class="products__item text_color_black">Майки</li> -->
+                        <li class="products__item text_color_black">Головные уборы</li>
+                        <li class="products__item text_color_black">Аксессуары</li>
+                        <!-- <li class="products__item text_color_black">Верхняя одежда</li> -->
+                    </ul>
+                </nav>
+                <section class="main__products-similar products-similar products-similar_padding">
+
+                    <div class="brand-list__container" name="baseContainerBrand_base">
+                        <!-- <div class="slider__item">
+                            <a href="#" class="slider__link">
+                                <img class="slider__item-img" src="img/basis/2.jpg" alt="">
+                                <p class="slider__item-type">Мужкская футболка 3D</p>
+                                <p class="slider__item-name">Fashion flowers</p>
+                                <p class="slider__item-price">1200 P</p>
+                                <div class="slider__buttons">
+                                    <button class="button slider__btn-edit button_gradient_yellow"></button>
+                                    <button class="button slider__btn-add button_gradient_blue">В корзину</button>
+                                </div>
+                            </a>
+                        </div> -->
+                        <div class="loader-container">
+                            <div class="loader"></div>
+                        </div>
+                   
+                    </div>
+                    <div class="panel__card-page" name="baseCatalogPages_base">
+
+                        <ul class="panel__page-list bases">
+                            <li class="panel__page-point">
+                                <span class="panel__page-num">1</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <!-- <div class="products__button">
+                        <button class="button button__to-catalog button_gradient_blue">Перейти в каталог</button>
+                    </div> -->
+                </section>
+            </section>
+
+        </main>
+        <footer class="footer footer_margin footer_background footer_padding main_shadow">
+            <div class="header__logo logo">
+                <a href="#" class="logo__text">Мой бренд</a>
+            </div>
+            <nav class="header__main-menu main-menu">
+                <ul class="main-menu__list">
+                    <li class="main-menu__item">
+                        <a href="#" class="main-menu__link text_color_main">Каталог продуктов</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Доставка и оплата</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">О проекте</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
+                    </li>
+                    <li class="main-menu__item main-menu__item_margin">
+                        <a href="#" class="main-menu__link text_color_main login">Войти</a>
+                    </li>
+                </ul>
+            </nav>
+        </footer>
+
+        <section class="new-brand__create">
+            <div class="new-brand__form">
+                <h1 class="new-brand__header">Создать бренд</h1>
+                <button class="close__tab"></button>
+                <input id="new-brand__text" name="newBrand_text" class="new-brand__input" type="text" placeholder="Надпись">
+                <!--<input id="new-brand__tags" neme="newBrand_tag" class="new-brand__input"  type="text" placeholder="Теги для поиска">-->
+
+                <div class="new-brand__input tags" name="brandTags_brand">
+                    <!--<div class="new-brand__tag-container">-->
+                    <!--<div class="brand__tag">-->
+                    <!--<p>Чика</p>-->
+                    <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                    <!--</div>-->
+                    <!--<div class="brand__tag">-->
+                    <!--<p>Чика</p>-->
+                    <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                    <!--</div>-->
+                    <!--<div class="brand__tag">-->
+                    <!--<p>Чика</p>-->
+                    <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                    <!--</div>-->
+                    <!--<div class="brand__tag">-->
+                    <!--<p>Чика</p>-->
+                    <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                    <!--</div>-->
+                    <!--<div class="brand__tag">-->
+                    <!--<p>Чика</p>-->
+                    <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                    <!--</div>-->
+                    <!--<div class="brand__tag">-->
+                    <!--<p>Чика</p>-->
+                    <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                    <!--</div>-->
+
+                    <!--</div>-->
+                    <div class="new-brand__tag-search" name="brandTagContainer_tag">
+                        <div class="new-brand__hint-container">
+                            <ul class="brand__hint-list">
+                                <li class="hint-list__item">
+                                    Microp<span class="text-rest">hone</span>
+                                </li>
+                                <li class="hint-list__item">
+                                    Microp<span class="text-rest">s</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <input class="new-brand__tag-input" type="text" name="brandTagInput_tag">
+                    </div>
+                </div>
+
+                <!--<div class="brand__tag">-->
+                <!--<p>Чика</p>-->
+                <!--<button class="brand__tag-close" name="brandTag_close"></button>-->
+                <!--</div>-->
+
+                <!--<ul class="brand__hint-list">-->
+                <!--<li class="hint-list__item">Чикачикачика</li>-->
+                <!--<li class="hint-list__item">Чикачиafadsfdsfadfadsfadsкачика</li>-->
+                <!--<li class="hint-list__item">Чикачикачика</li>-->
+                <!--</ul>-->
+                <div class="form__button-background">
+                    <input type="submit" class="send__new-brand" value="Создать бренд" name="brandCreateBrand_brand">
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/slick.min.js"></script>
+    <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script src = "js/require.js"> </script>
+    <script src = "js/TemplateFactory.js"> </script>
+    <script src="js/user_api.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/jscolor.js"></script>
+    <script>
+            // $('.slider__container').slick({
+            //     dots: false,
+            //     infinite: false,
+            //     speed: 300,
+            //     // variableWidth: true,
+            //     slidesToShow: 4,
+            //     prevArrow: '<button type="button" class="slick-prev slider__button button button__left"></button>',
+            //     nextArrow: '<button type="button" class="slick-next slider__button button button__right"></button>',
+            //     slidesToScroll: 2,
+            //     responsive: [
+            //         {
+            //             breakpoint: 1024,
+            //             settings: {
+            //                 slidesToShow: 3,
+            //                 slidesToScroll: 3,
+            //                 infinite: true,
+            //                 dots: false
+            //             }
+            //         },
+            //         {
+            //             breakpoint: 768,
+            //             settings: {
+            //                 slidesToShow: 2,
+            //                 slidesToScroll: 1
+            //             }
+            //         },
+            //         {
+            //             breakpoint: 480,
+            //             settings: {
+            //                 slidesToShow: 1,
+            //                 slidesToScroll: 2
+            //             }
+            //         }
+            //     ]
+            // });
+    </script>
+</body>
+</html>

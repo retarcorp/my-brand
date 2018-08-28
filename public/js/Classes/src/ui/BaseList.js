@@ -13,6 +13,10 @@ class BaseList {
 
         this.variants_container = $('.template__list');
 
+        this.base_container = $('[name="baseContainerCatalog_base"]');
+        this.brand_container = $('[name="baseContainerBrand_base"]');
+        this.pages_list = $('[name="baseCatalogPages_base"]');
+
 
         this.arrows.on('click', this.setProjectVariant);
         this.sizeContainer.on('click', this.UI.onBaseSize);
@@ -26,6 +30,22 @@ class BaseList {
 
         this.setSizeHtml();
         this.setBaseSize(this.UI.App.Project.settings.size || this.sizeContainer.children(":first-child"));
+
+        if (this.brand_container.length) {
+            this.type = 'brand';
+            this.getBases();
+
+            this.brand_container.on('click', this.checkBaseEvent.bind(this));
+            this.pages_list.on('click', this.checkBaseEvent.bind(this));
+        }
+
+        if (this.base_container.length) {
+            this.type = 'catalog';
+            this.getBases();
+
+            this.base_container.on('click', this.checkBaseEvent.bind(this));
+            this.pages_list.on('click', this.checkBaseEvent.bind(this));
+        }
     }
 
     checkInfoEvent(e) {
@@ -51,6 +71,49 @@ class BaseList {
                 const variant = target.data('variant');
 
                 this.selectProjectVariant(variant, target);
+            }
+
+            target = target.parent();
+        }
+    }
+
+    checkBaseEvent(e) {
+        const currentTarget = $(e.currentTarget);
+        let target = $(e.target);
+
+        while (!target.is(currentTarget)) {
+            if (target.hasClass('brand__create')) {
+                const child = target.parent().parent(),
+                    base = child.data('base');
+                this.openCreateBrandSection(base);
+
+                return;
+            }
+
+            if (target.hasClass('slider__btn-add')) {
+                e.preventDefault();
+                const child = target.parent().parent().parent(),
+                    base = child.data('base');
+                this.addToCartBase(base);
+
+                return;
+            }
+
+            if (target.hasClass('slider__btn-edit') || target.hasClass('slider__item')) {
+                e.preventDefault();
+                const child = target.parent().parent().parent(),
+                    base = child.data('base');
+                this.createProjectOnBase(base);
+
+                return;
+            }
+
+            if (target.hasClass('panel__page-point')) {
+                e.preventDefault();
+                const page = target.data('page');
+                this.getBases(page);
+
+                return;
             }
 
             target = target.parent();
@@ -160,6 +223,12 @@ class BaseList {
         App.UI.BaseList.resetVariant();
     }
 
+    setPreloader() {
+        this.clearContainer();
+        this.base_container.append(TemplateFactory.getPreloader());
+        this.brand_container.append(TemplateFactory.getPreloader());
+    }
+
     resetVariant() {
         this.UI.App.currentWorkzone = this.UI.App.currentProjectVariant.variant.getWorkzone();
         this.UI.App.currentProjectVariant.variant.setColor();
@@ -173,5 +242,79 @@ class BaseList {
         this.UI.LightBox.setPreviewImage();
     }
 
+    getBases(page, amount) {
+        this.setPreloader();
 
+        this.loadBases(page, amount)
+            .then( data => {
+                this.formBasesList(data.bases);
+                this.formPages(data.pages, page);
+            })
+            .catch(err => console.error(err));
+    }
+
+    loadBases(page = 1, amount = 20) {
+        return new Promise((res, rej) => {
+            this.UI.App.Ajax.get(`/bases?page=${page}&amount=${amount}`)
+                .then( response => {
+                    response = JSON.parse(response);
+
+                    res(response);
+                })
+                .catch(err => {
+                    rej(err);
+                });
+        });
+    }
+
+    formBasesList(bases = []) {
+        const children = [],
+            container = (this.type == 'catalog') ? this.base_container : this.brand_container;
+        this.clearContainer();
+
+        bases.forEach( base => {
+            base = (this.type == 'catalog') ? Base.fromJSON(base) : base;
+            const child = (this.type == 'brand') ? $(TemplateFactory.getCatalogItemHtml(base)) : $(TemplateFactory.getSliderSlideHtml(base));
+            child.data('base', base);
+            children.push(child);
+        });
+
+        children.forEach(ch => container.append(ch));
+    }
+
+    formPages(pages = 1, selected = 1) {
+        const children = [];
+        this.pages_list.html('');
+
+        for (let page = 1; page <= pages; page++) {
+            const child = $(TemplateFactory.getAdminPanelPages(page));
+            child.data('page', page);
+            children.push(child);
+        }
+
+        children.forEach( ch => this.pages_list.append(ch));
+        children[selected - 1].addClass('selected');
+    }
+
+    clearContainer() {
+        this.base_container.html('');
+        this.brand_container.html('');
+    }
+
+    openCreateBrandSection(base) {
+        this.UI.Brand.setBase(base);
+        this.UI.Brand.openSection();
+    }
+
+    addToCartBase(base) {
+        const app = this.UI.App;
+
+        app.getProjectOnBaseAsync(base)
+            .then( project => this.UI.Profile.addToCartProject(project) )
+            .catch(err => console.error(err));
+    }
+
+    createProjectOnBase(base) {
+        location.href = '/constructor?id='+base._id;
+    }
 }
