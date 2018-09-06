@@ -171,6 +171,7 @@ class BaseList {
         App.GraphCore.Filter.getImageAverageColorAsync(base.variants[0].src)
             .then( color => {
                 let colors = JSON.parse(JSON.stringify(base.colorArray || []));
+                colors.push(color);
 
                 this.colorContainer.html(
                     colors.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)

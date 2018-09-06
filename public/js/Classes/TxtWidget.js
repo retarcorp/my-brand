@@ -53,23 +53,16 @@ class TextWidget extends Widget {
 
     loadLazy() {
         return new Promise( (rsv, rjk) => {
-            if (App.fontStyle.text().indexOf(this.fontSettings.fontFamily) >= 0) {
+            if (document.fonts.check('12px ' + this.fontSettings.fontFamily)) {
                 rsv();
             } else {
                 App.UI.FontsList.loadFont(this.fontSettings.fontFamily, (response) => {
                     response = JSON.parse(response);
 
                     if (!(response.data instanceof Array)) {
-                        App.UI.FontsList.addFont(response.data);
-
-                        document.fonts.load('12px '+response.data.font)
-                            .then( d => {
-                                rsv()
-                            } )
-                            .catch(err =>  {
-                                console.log(err);
-                                rsv();
-                            });
+                        App.UI.FontsList.addFont(response.data)
+                            .then(() => rsv())
+                            .catch((err) => rjk(err));
                     } else {
                         rsv();
                     }

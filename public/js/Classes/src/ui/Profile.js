@@ -386,6 +386,7 @@ class Profile {
                 await this.loadPreviewImage(project, child.find('.favorites__img'), child);
 
                 children.push(child);
+                debugger
             }
 
             this.container.html('');

@@ -29,6 +29,8 @@ class Application {
             this.UI.Profile.init();
             this.UI.Menu.init();
             this.UI.FontsList.injectFont();
+            this.fontStyle = $('[name="FONTS_FACES"]');
+            this.widgetsFonts = $('[name="WIDGETs_FONTS"]');
 
             if (this.logged){
                 const id = localStorage.getItem('project_id') || 0;
@@ -253,7 +255,7 @@ class Application {
         return this.Project;
     }
 
-    async setProject(project, preview = true) {
+    async setProject(project, preview = true, preload = true) {
         this.Project = this.getProject(project);
         this.currentWorkzone = this.currentProjectVariant.variant.workzone;
         this.inSettingProject = true;
@@ -266,7 +268,6 @@ class Application {
         $('.price__value').text(this.Project.base.price);
 
         await this.loadProjectAssets();
-        console.log(document.fonts.check('12px LuckiestGuy'));
 
         if (preview) {
             await this.UI.BaseList.setVariantsList(this.Project);

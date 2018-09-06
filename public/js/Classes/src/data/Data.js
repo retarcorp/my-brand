@@ -54,6 +54,30 @@ class Data {
         this.UserProjectsCount = response.amount;
     }
 
+    readAsArrayBuffer(blob) {
+        const reader = new FileReader();
+        reader.readAsArrayBuffer(blob);
+        return this.getPromiseOnload(reader);
+    }
+
+    readAsDataURL(blob) {
+        const reader = new FileReader()
+        reader.readAsDataURL(blob);
+        return this.getPromiseOnload(reader);
+    }
+
+    getPromiseOnload(itemToBeLoad){
+        return new Promise( (rsv, rej) => {
+            itemToBeLoad.onload = (e) => {
+                rsv(e.target.result);
+            };
+
+            itemToBeLoad.onerror = (err) => {
+                rej(err);
+            }
+        });
+    }
+
     getProjectData(p) {
         App.GraphCore.setCurrentWidget(null);
         const project = p || App.Project;

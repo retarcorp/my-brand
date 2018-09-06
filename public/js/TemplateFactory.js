@@ -64,9 +64,9 @@ const TemplateFactory = {
         `
     }
 
-    ,getStyleTag() {
+    ,getStyleTag(name) {
         return (`
-            <style rel="stylesheet" type="text/css" name="FONTS_FACES">
+            <style rel="stylesheet" type="text/css" name="${name}">
                 ${App.Data.Fonts.reduce((acc, font)=> acc + TemplateFactory.getFontStyle(font), ``)}
             </style>
             `);
