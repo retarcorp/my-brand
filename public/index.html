@@ -115,7 +115,7 @@
                     <a href="#" class="navigation__link">Майки</a>
                 </li>
 
-                <li class="navigation__item navigation__item_margin current">Мужская толстовка</li>
+                <li class="navigation__item navigation__item_margin current" name="productName">Загружается...</li>
             </ul>
         </section>
         <section class="main__product-details product-details product-details_padding">
@@ -136,6 +136,8 @@
                     <div class="left-setting-panel">
                         <div class="editor__right" style="position: relative;">
                             <!-- <button class="decoration__button button button__constructor-prew"></button> -->
+                            <button class="decoration__button button button__flip-horizontal"></button>
+                            <button class="decoration__button button button__flip-vertical"></button>
                             <button class="decoration__button button button__horizontal"></button>
                             <button class="decoration__button button button__vertical"></button>
                             <button class="decoration__button button button__trush"></button>
@@ -209,18 +211,27 @@
                                 <input type="hidden" value="" id="_color__text">
                                 <label for="color-text">
                                     <button id="color-text" class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
-                                    <p>Выбрать свой цвет</p>
+                                    <!--<p>Выбрать свой цвет</p>-->
                                 </label>
 
                             </div>
                         </div>
                     </div>
 
-                    <!-- <div class="editor__decoration editor__item_margin">
-                        <button class="decoration__button button button__bold"></button>
-                        <button class="decoration__button button button__italic"></button>
-                        <button class="decoration__button button button__underline"></button>
-                    </div> -->
+
+                    <div class="editor__print-left">
+                        <div class="button__container choose__print" data-printType="2">
+                            <button class="decoration__button button print-type button__paint"></button>
+                        </div>
+
+                        <div class="button__container choose__3D" data-printType="4">
+                            <button class="decoration__button button print-type button__3d"></button>
+                        </div>
+
+                        <div class="button__container choose__fancywork" data-printType="1">
+                            <button class="decoration__button button print-type button__needle"></button>
+                        </div>
+                    </div>
 
                 </div>
 
@@ -332,49 +343,16 @@
                     <li class="file__menu-item file-menu__uploadBtnTab">Загруженные изображения</li>
                 </ul>
             </div>
-            <div class="file__picture-list file__picture-list_padding active">
-                <div class="picture-list__picture">
-                    <img src="img/1.png" alt="" class="picture__img">
-                    <div class="picture-btns picture__button-file">
-                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                    </div>
+
+            <div class="content__container">
+                <div class="file__picture-list file__picture-list_padding active">
+
                 </div>
-                <div class="picture-list__picture picture-list__picture_margin">
-                    <img src="img/1.png" alt="" class="picture__img">
-                    <div class="picture-btns picture__button-file">
-                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                    </div>
-                </div>
-                <div class="picture-list__picture picture-list__picture_margin">
-                    <img src="img/1.png" alt="" class="picture__img">
-                    <div class="picture-btns picture__button-file">
-                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                    </div>
+                <div class="file-upload__picture-list file-upload__picture-list_padding">
+
                 </div>
             </div>
-            <div class="file-upload__picture-list file-upload__picture-list_padding">
-                <div class="picture-list__picture">
-                    <img src="img/1.png" alt="" class="picture__img">
-                    <div class="picture-btns">
-                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                        <button class="button picture__button picture__remove">Удалить</button>
-                    </div>
-                </div>
-                <div class="picture-list__picture picture-list__picture_margin">
-                    <img src="img/1.png" alt="" class="picture__img">
-                    <div class="picture-btns">
-                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                        <button class="button picture__button picture__remove">Удалить</button>
-                    </div>
-                </div>
-                <div class="picture-list__picture picture-list__picture_margin">
-                    <img src="img/1.png" alt="" class="picture__img">
-                    <div class="picture-btns">
-                        <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
-                        <button class="button picture__button picture__remove">Удалить</button>
-                    </div>
-                </div>
-            </div>
+
             <div class="file-upload__button file-upload__button_margin">
                 <button class="button print__send button__add-photo button_gradient_blue button__add-photo_margin">
                     <span class="button__add-photo_text button_text_color">Выбрать файлы</span>

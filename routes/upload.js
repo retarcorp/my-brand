@@ -86,8 +86,10 @@ router.post('/upload', (req, res, next) => {
                 Base.price = fields.price[0];
                 Base.fancywork = fields.fancywork[0];
                 Base.print = fields.print[0];
+                Base._3D = fields._3D[0];
                 Base.type = fields.type[0];
                 Base._id = fields._id[0];
+                Base.colorArray = fields.colors;
 
                 Mongo.update({ _id: Base._id }, Base, 'bases', (data) => {
                     console.log('ISERTED BASE');
@@ -133,12 +135,20 @@ router.post('/upload/font', (req, res, next) => {
                     file_name = md5(User.genSalt())+file_exp;
 
                 fs.createReadStream(file.path).pipe(fs.createWriteStream(`public/fonts/${file_name}`));
-                Mongo.update({ font: fields.font[0] }, { font: fields.font[0], src: `/fonts/${file_name}`, fancywork: fields.fancywork[0], print: fields.print[0] },  'fonts', () => {
-                    response.status = true;
-                    response.message = 'Font uploaded';
+                Mongo.update({ font: fields.font[0] }, {
+                        font: fields.font[0],
+                        src: `/fonts/${file_name}`,
+                        fancywork: fields.fancywork[0],
+                        print: fields.print[0],
+                        _3D: fields._3D[0]
+                    },
 
-                    res.send(response);
-                });
+                    'fonts', () => {
+                        response.status = true;
+                        response.message = 'Font uploaded';
+
+                        res.send(response);
+                    });
             } else {
                 response.status = false;
                 response.message = "Unhandle file type";
@@ -206,8 +216,12 @@ router.post('/upload/redact', (req, res, next) => {
                 Base.price = fields.price[0];
                 Base.fancywork = fields.fancywork[0];
                 Base.print = fields.print[0];
+                Base._3D = fields._3D[0];
                 Base.type = fields.type[0];
                 Base._id = fields._id[0];
+                Base.colorArray = fields.colors;
+
+                console.log(Base);
 
                 Mongo.update({ _id: Base._id }, Base, 'bases', (data) => {
                     console.log('ISERTED BASE');
@@ -273,6 +287,7 @@ router.post('/upload/print', (req, res, next) => {
             print.tags = JSON.parse(fields.tags[0]);
             print.fancywork = fields.fancywork[0];
             print.print = fields.print[0];
+            print._3D = fields._3D[0];
             print.src = `img/prints/${file_name}`;
 
             query._id = (query._id && query._id != '0') ? query._id : md5(User.genSalt(12));

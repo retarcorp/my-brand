@@ -24,10 +24,11 @@ class Application {
 
             // TODO use await Promise.all([])
 
-            await Promise.all([this.Data.getBases(), this.Data.getFonts(), this.Data.getPrints(), this.Data.loadProjects()]);
+            await Promise.all([this.Data.getBases(), /*this.Data.getFonts(), this.Data.getPrints(),*/ this.Data.loadProjects()]);
 
             this.UI.Profile.init();
             this.UI.Menu.init();
+            this.UI.FontsList.injectFont();
 
             if (this.logged){
                 const id = localStorage.getItem('project_id') || 0;
@@ -42,10 +43,16 @@ class Application {
 
                 // TODO rename method setProject to more evident one
                 (project && !(this.parseURL()).id) ? await this.setProject(project) : await this.getNewProject();
-                localStorage.removeItem('brand');
+
+                this.setBreadcrumbs();
             } else  {
-                (!localStorage.getItem('brand')) ? await this.getNewProject() : await this.setProject(localStorage.getItem('brand'));
-                localStorage.removeItem('brand');
+                const temp = this.parseURL().temp;
+
+                (!temp || !temp.length) ?
+                    await this.getNewProject() :
+                    await this.setProject(await this.Data.getTemp('/temp/load?temp='+temp));
+
+                this.setBreadcrumbs();
             }
 
             this.currentWorkzone = this.currentProjectVariant.variant.workzone;
@@ -166,16 +173,20 @@ class Application {
             w.index = index;
             w.layer = widget.layer;
 
-            v.layers[index].id = ID;
-            w.layer.id = ID;
-            w.id = ID;
+            v.layers[index].id = widget.id || ID;
+            w.layer.id = widget.id || ID;
+            w.id = widget.id || ID;
             w.tags = widget.tags || [];
             w._id = widget._id || 0;
+            w.printType = widget.printType || 1;
+            w.reverseX = widget.reverseX || 1;
+            w.reverseY = widget.reverseY || 1;
 
-            w.fancywork = widget.fancywork || false;
-            w.print = widget.print || false;
+            w.fancywork = widget.fancywork || 'false';
+            w.print = widget.print || 'false';
+            w._3D = widget._3D || 'false';
 
-            ID++;
+            ID = widget.id + 1 || ID + 1;
 
             if (w instanceof TextWidget) {
                 w.lines = widget.lines;
@@ -201,7 +212,7 @@ class Application {
         return new Promise( (res, rej) => {
             this.GraphCore.Filter.getImageAverageColorAsync(variant.src)
                 .then( color => {
-                    project.settings.startColor = color
+                    project.settings.startColor = color;
                     res(project);
                 })
                 .catch(err => {
@@ -224,6 +235,7 @@ class Application {
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
         if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
+        if (this.Project.base._3D == "true") $('.details__name .type__basis').prepend('<p class="type__basis-3D" title="3D"></p>');
 
         $('.details__name span').text(this.Project.base.name);
         $('.price__value').text(this.Project.base.price);
@@ -234,6 +246,8 @@ class Application {
         if (preview) {
             await this.UI.BaseList.setVariantsList(this.Project);
         }
+
+        await this.UI.BaseList.setBaseColors();
 
         this.inSettingProject = false;
         return this.Project;
@@ -246,11 +260,13 @@ class Application {
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
         if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
+        if (this.Project.base._3D == "true") $('.details__name .type__basis').prepend('<p class="type__basis-3D" title="3D"></p>');
 
         $('.details__name span').text(this.Project.base.name);
         $('.price__value').text(this.Project.base.price);
 
         await this.loadProjectAssets();
+        console.log(document.fonts.check('12px LuckiestGuy'));
 
         if (preview) {
             await this.UI.BaseList.setVariantsList(this.Project);
@@ -269,6 +285,7 @@ class Application {
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
         if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
+        if (this.Project.base._3D == "true") $('.details__name .type__basis').prepend('<p class="type__basis-3D" title="3D"></p>');
 
         $('.details__name span').text(this.Project.base.name);
         $('.price__value').text(this.Project.base.price);
@@ -314,6 +331,7 @@ class Application {
 
         if (this.Project.base.fancywork == "true") $('.details__name .type__basis').prepend('<p class="type__basis-needle" title="Вышивка"></p>');
         if (this.Project.base.print == "true") $('.details__name .type__basis').prepend('<p class="type__basis-paint" title="Печать"></p>');
+        if (this.Project.base._3D == "true") $('.details__name .type__basis').prepend('<p class="type__basis-3D" title="3D"></p>');
 
         $('.details__name span').text(this.Project.base.name);
         $('.price__value').text(this.Project.base.price);
@@ -321,6 +339,12 @@ class Application {
         await this.loadProjectAssets();
 
         return this.Project;
+    }
+
+    setBreadcrumbs() {
+        const crumb = $('[ name="productName"]');
+
+        crumb.text(this.Project.base.name);
     }
 
     async loadProjectAssets() {
@@ -356,7 +380,7 @@ class Application {
 
     // TODO rename to verb-based name
     startRender() {
-        if (!App.inProcess) {
+        if (!App.inProcess && !App.inSettingProject) {
             if (!App.isPreview)
                 App.GraphCore.RenderList.render(App.GraphCore.ctx);
             else

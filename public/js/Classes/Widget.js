@@ -10,6 +10,12 @@ class Widget {
         this.position = position;
         this.size = size;
         this.isSelected = false;
+
+        this.reverseX = 1;
+        this.reverseY = 1;
+
+        this.canvas = document.createElement('canvas');
+        this.ctx = this.canvas.getContext('2d');
     }
 
     /**
@@ -39,6 +45,18 @@ class Widget {
 
     pointIn() {
 
+    }
+
+    toggleXReverse() {
+        this.reverseX = -this.reverseX;
+    }
+
+    toggleYReverse() {
+        this.reverseY = -this.reverseY;
+    }
+
+    setPrintType(printType) {
+        this.printType = parseInt(printType) || 0b001;
     }
 
     static fromJSON(json) {

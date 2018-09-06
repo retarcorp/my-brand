@@ -5,7 +5,7 @@ class BaseList {
 
     init(){
         this.arrows = $('.product__rotate');
-        this.colorContainer = $('.workspace-color');
+        this.colorContainer = $('.color-btns');
         this.sizeContainer = $('.size__container');
         this.container = $("#bases-container");
         this.info_item = $('.link__info');
@@ -30,6 +30,7 @@ class BaseList {
 
         this.setSizeHtml();
         this.setBaseSize(this.UI.App.Project.settings.size || this.sizeContainer.children(":first-child"));
+        //this.setBaseColors();
 
         if (this.brand_container.length) {
             this.type = 'brand';
@@ -99,9 +100,18 @@ class BaseList {
                 return;
             }
 
-            if (target.hasClass('slider__btn-edit') || target.hasClass('slider__item')) {
+            if (target.hasClass('slider__btn-edit')) {
                 e.preventDefault();
                 const child = target.parent().parent().parent(),
+                    base = child.data('base');
+                this.createProjectOnBase(base);
+
+                return;
+            }
+
+            if (target.hasClass('slider__item')) {
+                e.preventDefault();
+                const child = target,
                     base = child.data('base');
                 this.createProjectOnBase(base);
 
@@ -149,8 +159,24 @@ class BaseList {
                 this.UI.App.Project.base.size.reduce( (acc, size) => acc + TemplateFactory.getSizeHtml(size), ``)
             );
         }
+    }
 
+    async setBaseColors(base) {
+        base = base || this.UI.App.Project.base;
 
+        if (!base) {
+            return;
+        }
+
+        App.GraphCore.Filter.getImageAverageColorAsync(base.variants[0].src)
+            .then( color => {
+                let colors = JSON.parse(JSON.stringify(base.colorArray || []));
+
+                this.colorContainer.html(
+                    colors.reduce( (acc, color) => acc + TemplateFactory.getBaseColorHtml(color), ``)
+                );
+            })
+            .catch(err => console.error(err));
     }
 
     async setVariantsList(project) {

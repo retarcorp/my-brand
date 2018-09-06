@@ -20,7 +20,11 @@ const TemplateFactory = {
     }
 
     ,getBaseColorHtml(color) {
-        return `<input class="color" style="background-color: ${color};" readonly data-color="${color}">`;
+        return `<input class="details__color" style="background-color: ${color};" readonly data-color="${color}">`;
+    }
+
+    ,getAdminPanelBaseColorHtml(color) {
+        return `<div class="base__color" style="background-color: ${color};" readonly data-color="${color}"></div>`;
     }
 
     /**
@@ -224,6 +228,7 @@ const TemplateFactory = {
                         <div class="type__basis">
                             ${ (base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
                             ${ (base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
+                            ${ (base._3D == "true") ? '<p class="type__basis-3D" title="3D"></p>' : "" }
                         </div>
                     </span>
 
@@ -279,7 +284,8 @@ const TemplateFactory = {
                         <div class="type__basis">
                             ${ (project.base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
                             ${ (project.base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
-                        </div>
+                            ${ (project.base._3D == "true") ? '<p class="type__basis-3D" title="3D"></p>' : "" }
+                            </div>
                     </span>
                     <p class="slider__item-price">${project.base.price} P</p>
                     <div class="slider__buttons">
@@ -318,6 +324,7 @@ const TemplateFactory = {
                         <div class="type__basis">
                             ${ (base.print == "true") ? '<p class="type__basis-paint" title="Печать"></p>' : "" }
                             ${ (base.fancywork == "true") ? '<p class="type__basis-needle" title="Вышивка"></p>' : "" }
+                            ${ (base._3D == "true") ? '<p class="type__basis-3D" title="3D"></p>' : "" }
                         </div>
                     </span>
                     <p class="slider__item-price">${base.price} P</p>
@@ -752,9 +759,10 @@ const TemplateFactory = {
                     <div class="type__basis" name="myBrand_item-basis-type">
                         ${(template.base.print) ? `<p class="type__basis-paint" title="Печать"></p>` : ""}
                         ${(template.base.fancywork) ? `<p class="type__basis-needle" title="Вышивка"></p>` : ""}
-                    </div>
-                </span>
-                <p class="slider__item-price" name="myBrand_item-price">${template.base.price} P</p>
+                        ${(template.base._3D) ? `<p class="type__basis-3D" title="3D"></p>` : ""}
+                        </div>
+                    </span>
+                    <p class="slider__item-price" name="myBrand_item-price">${template.base.price} P</p>
                 <div class="slider__buttons">
                     <button class="button slider__btn-edit-mbr button_gradient_yellow" name="myBrand_item-btn-edit">Редактировать</button>
                 </div>
@@ -786,5 +794,4 @@ const TemplateFactory = {
             </div>
         `
     }
-
 }

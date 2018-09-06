@@ -6,7 +6,6 @@
 
 class Project {
     constructor(base) {
-
         this.base = base;
         this.ordered = new Date();
         this.modified = new Date();
@@ -15,6 +14,7 @@ class Project {
         this.currentVariant = 0;
 
         this.addVariants();
+        //this.setBaseColors();
     }
 
     /**
@@ -25,6 +25,11 @@ class Project {
         this.base.variants.forEach( (elem) => {
             this.variants.push(new VariantProject(elem));
         });
+    }
+
+    setBaseColors(base) {
+        base = base || this.base;
+        App.UI.BaseList.setBaseColors(base);
     }
 
     // TODO method names must contain verb

@@ -108,15 +108,29 @@ class Brand {
     }
 
     checkCreateEvent(e) {
-        const target = $(e.target);
+        const currentTarget = $(e.currentTarget);
+        let target = $(e.target);
 
-        if (target.hasClass('create__button-create') || target.hasClass('button__edit-mbr')) {
+        if (target.is(currentTarget)) {
             const base = this.base || this.UI.App.Project.base;
 
             this.setBase(base);
             this.openSection();
 
             return;
+        }
+
+        while(!target.is(currentTarget)) {
+            if (target.hasClass('create__button-create') || target.hasClass('button_text') || target.hasClass('button__edit-mbr')) {
+                const base = this.base || this.UI.App.Project.base;
+
+                this.setBase(base);
+                this.openSection();
+
+                return;
+            }
+
+            target = target.parent();
         }
     }
 

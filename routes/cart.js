@@ -27,7 +27,7 @@ router.post('/cart/add', (req, res, next) => {
                 message: "Unexpected error",
                 data: data
             },
-            user = req.cookies.user.name || req.session.user.name;
+            user = req.cookies.user.name || req.session.user.name ;
 
         Mongo.select({ id: data.id, user: user }, 'uniq', (response_db) => {
             if (response_db.length) {
@@ -79,7 +79,7 @@ router.post('/cart/add/product', (req, res, next) => {
                 headers: req.headers
             }
         },
-        user = User.checkSession(req, res, next);
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (!user) {
         response.status = false;
@@ -179,7 +179,7 @@ router.get('/cart/load', (req, res, next) => {
             }
         };
 
-    let user = User.checkSession(req, res, next);
+    let user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (user) {
         Mongo.select({ user: user.name }, 'cart', (response_db) => {
@@ -227,7 +227,7 @@ router.get('/cart/amount', (req, res, next) => {
                 headers: req.headers
             }
         },
-        user = User.checkSession(req, res, next);
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (user) {
         Mongo.select({ user: user.name }, 'cart', (response_db) => {

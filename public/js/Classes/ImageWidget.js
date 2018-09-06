@@ -8,7 +8,7 @@
  */
 
 class ImageWidget extends Widget {
-    constructor(position, size, src, tags, _id, fancywork, print){
+    constructor(position, size, src, tags, _id, fancywork, print, _3D){
         super(position,size);
         this.type = "ImageWidget";
 
@@ -16,9 +16,13 @@ class ImageWidget extends Widget {
         this.tags = tags;
         this.image = new Image();
         this._id = _id;
+        this.int = 1;
+        this.reverseX = 1;
+        this.reverseY = 1;
 
         this.fancywork = fancywork;
         this.print = print;
+        this._3D = _3D;
 
         // this.image.src = this.src;
 
@@ -41,7 +45,11 @@ class ImageWidget extends Widget {
                 this.image.src = this.src;
 
                 this.image.onload = () => {
+                    this.int = this.image.height/this.image.width;
+                    this.recountHeight();
+
                     this.download = true;
+
                     resolve(true);
                 }
 
@@ -256,7 +264,15 @@ class ImageWidget extends Widget {
             ,fancywork: this.fancywork
             ,print: this.print
             ,layer: this.layer
+            ,printType: this.printType
+            ,reverseX: this.reverseX
+            ,reverseY: this.reverseY
+            ,id: this.id
         }
+    }
+
+    recountHeight() {
+        this.size.height = this.size.width * this.int;
     }
 
     renderPath(ctx) { //INNER
@@ -264,16 +280,25 @@ class ImageWidget extends Widget {
             this.path.render(ctx);
     }
 
+    prerender() {
+        this.canvas.width = this.size.width;
+        this.canvas.height = this.size.height;
+
+        this.ctx.setTransform(this.reverseX,0,0,this.reverseY,0,0);
+        this.ctx.drawImage(this.image, 0, 0, this.size.width*this.reverseX, this.size.height*this.reverseY);
+    }
+
     render(ctx) { //INNER
         if (this.download && !this.isCrashed) {
             let _x = this.position.x + App.currentWorkzone.position.x,
                 _y = this.position.y + App.currentWorkzone.position.y;
 
-            ctx.drawImage(this.image, _x, _y, this.size.width, this.size.height);
+            this.prerender();
+            ctx.drawImage(this.canvas, _x, _y);
         }
     }
 
-    static getDefault(src, tags, _id, fancywork, print){
+    static getDefault(src, tags, _id, fancywork, print, _3D){
         return new this(
             new Position(20,20)
             ,new Size(100,100)
@@ -282,6 +307,7 @@ class ImageWidget extends Widget {
             ,_id
             ,fancywork
             ,print
+            ,_3D
         )
     }
 }

@@ -1,3 +1,61 @@
+.editor__print-left {
+    display: flex;
+    border-radius: 5px;
+    background: #ececec;
+    overflow: hidden;
+    /*min-width: 122px;*/
+    display: flex;
+    margin-left: 10px;
+}
+
+.button__container {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+}
+
+.choose__fancywork,
+.choose__print,
+.choose__3D {
+    display: none;
+}
+
+.button__container.selected {
+    background: #d7d7d7;
+}
+
+.button__3d {
+    background: url('../img/icon/3d.png') center center no-repeat;
+}
+
+.button__needle {
+    background: url('../img/icon/needle.png') center center no-repeat;
+}
+
+.button__paint {
+    background: url('../img/icon/paint.png') center center no-repeat;
+}
+
+.button.print-type {
+    background-size: contain;
+    width: 25px;
+    height: 25px;
+}
+
+#color-text {
+    background-image: url('../img/icon/colorwheel.png');
+    background-position: center center;
+}
+
+.content__container {
+    overflow-y: scroll;
+    margin: 10px 25px;
+    max-height: 250px;
+}
+
 .add-photo{
     display: none;
     width: 100%;
@@ -36,7 +94,7 @@
 
 .file-upload__button_margin,
 .file__button_margin{
-    margin: 45px auto 43px;
+    margin: 5px auto 20px;
 }
 
 .file-upload .button__add-photo{
@@ -88,29 +146,32 @@
 
 .file-upload__picture-list_padding,
 .file__picture-list_padding{
-    padding-top: 25px;
+    /*padding-top: 25px;*/
 }
 
 .file-upload__picture-list,
 .file__picture-list{
-    width: 470px;
+    width: 100%;
+    max-width: 793px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    /*display: flex;*/
+    /*justify-content: space-around;*/
+    /*flex-wrap: wrap;*/
 }
 .file__picture-list{
-    padding-bottom: 40px;
+    /*padding-bottom: 40px;*/
 }
 
 .picture-list__picture{
-    width: 135px;
+    width: 120px;
     position: relative;
     cursor: pointer;
+    margin: 10px;
+    display: inline-block;
 }
 
 .picture-list__picture_margin{
-    margin-left: 20px;
+    /*margin-left: 20px;*/
 }
 .picture__img{
     width: 100%;
@@ -186,7 +247,8 @@
 
 .editor__text-input{
     /* height: 20px; */
-    width: 146px;
+    max-width: 146px;
+    width: 100%;
     font-size: 16px;
     font-weight: 500;
     padding: 2px 0;
@@ -199,6 +261,7 @@
 .editor__fonts{
     height: 20px;
     position: relative;
+    margin: 0 5px;
 }
 .editor__fonts-list{
     width: 100%;
@@ -214,18 +277,18 @@
     padding-right: 15px;
 }
 .editor__left,
-.editor__right{
+.editor__right {
     display: flex;
     align-items: center;
     border-radius: 5px;
     background-color: #ececec;
     justify-content: space-between;
-    padding: 0 10px;
+    padding: 10px;
     box-sizing: border-box;
     height: 40px;
 }
 .editor__left{
-    width: 100%;
+    max-width: 100%;
 }
 
 .editor__preview,
@@ -374,7 +437,7 @@ input[type=range]:focus::-ms-fill-upper {
     flex-direction: column-reverse;
     justify-content: space-around;
     width: 41px;
-    height: 215px;
+    height: 261px;
 }
 .fonts-list__button{
     /*width: 12px;*/
@@ -468,6 +531,16 @@ input[type=number]::-webkit-outer-spin-button {
     background-size: 13px 15px;
 }
 
+.button__flip-horizontal {
+    background-image: url(../img/icon/fliph.png);
+    background-size: 13px 15px;
+}
+
+.button__flip-vertical {
+    background-image: url(../img/icon/flipv.png);
+    background-size: 13px 15px;
+}
+
 .button__vertical{
     background-image: url(../img/icon/vertical-center.png);
     background-size: 13px 15px;
@@ -521,9 +594,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .editor__color{
     border-radius: 5px;
-    width: 22px;
-    height: 22px;
-    border: 1px solid #D4D4D4;
+    width: 20px;
+    height: 20px;
+    /*border: 1px solid #D4D4D4;*/
 }
 .fonts-list__item{
     text-align: center;
@@ -731,10 +804,12 @@ input[type=number]::-webkit-outer-spin-button {
 .file__picture-list,
 .file-upload__picture-list{
     display: none;
+    /*overflow-y: scroll;*/
+    max-height: 300px;
 }
 .file__picture-list.active,
 .file-upload__picture-list.active{
-    display: flex;
+    display: block;
 }
 .authorization__form{
     display: none;
@@ -915,7 +990,7 @@ input[type=number]::-webkit-outer-spin-button {
     border-radius: 5px;
     width: 20px;
     height: 20px;
-    border: 1px solid #D4D4D4;
+    /*border: 1px solid #D4D4D4;*/
     margin-bottom: 10px;
     margin-right: 10px;
 }
@@ -949,7 +1024,7 @@ input[type=number]::-webkit-outer-spin-button {
 .color-pick{
     margin: 0;
     box-sizing: border-box;
-
+    flex-shrink: 0;
 }
 
 .custom-color{

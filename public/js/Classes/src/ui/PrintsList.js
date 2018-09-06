@@ -21,18 +21,30 @@ class PrintsList {
 
 
         this.userPrints.html('');
-        this.gallery.html(
-            this.UI.App.Data.Prints.reduce( (acc, print) => acc + TemplateFactory.getPrintHtml(print), `` )
-        );
-
-
-        this.setGalleryData(this.UI.App.Data.Prints);
+        this.loadSuitablePrints();
     }
 
     setGalleryData(data) {
         $.each(this.gallery.children(), (index, child) => {
             $(child).data('print', data[index]);
         });
+    }
+
+    setGallery() {
+        this.gallery.html(
+            this.UI.App.Data.Prints.reduce( (acc, print) => acc + TemplateFactory.getPrintHtml(print), `` )
+        );
+    }
+
+    loadSuitablePrints() {
+        const app = this.UI.App;
+
+        app.Ajax.getJSON('/find/prints/by/printType?types='+app.Project.base.getQueryStringPrintTypes())
+            .then( response => {
+                this.UI.App.Data.Prints = response.data.map((print) =>  Print.fromJSON(print));
+                this.setGallery();
+                this.setGalleryData(this.UI.App.Data.Prints);
+            })
     }
 
     changeGallery() {

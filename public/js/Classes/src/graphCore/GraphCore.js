@@ -21,7 +21,7 @@ class GraphCore {
         this.canvas_container = $('.product__preview');
 
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.translate(0.5,0.5);
+        //this.ctx.translate(0.5,0.5);
         this.ctx.save();
 
         this.draggable = null;
@@ -75,6 +75,7 @@ class GraphCore {
             height = width * variant.variant.image.height/variant.variant.image.width;
 
         this.setDimensions(width, height);
+        // this.resetScale();
     }
 
     findSprite(position) {

@@ -95,6 +95,10 @@
                                     <input class="style-ratio" type="checkbox" name="font_fancywork">
                                     Вышивка
                                 </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="font_3D">
+                                    3D
+                                </label>
                             </div>
 
                             <button class="panel__font-submit simple" name="font_upload">Загрузить</button>
@@ -233,6 +237,19 @@
                                     <button class="size-container__close"></button>
                                 </div>
                             </div>
+                            <div class="panel__column-item">
+                                <label class="panel__left-set-label" for="size">Задать цвет:</label>
+                                <div class="input-color">
+                                    <input type="number" class="base-color__input" name="baseColorInput_base">
+                                    <input type="number" class="base-color__input" name="baseColorInput_base">
+                                    <input type="number" class="base-color__input" name="baseColorInput_base">
+                                    <button class="add-color" name="baseAddColor_base">Добавить</button>
+                                </div>
+
+                                <div class="base__colors" name="baseColorsContainer_colors">
+                                </div>
+                            </div>
+
                             <div class="panel__column-item-radio">
                                 <p class="panel__column-item-radio-header">Качество: </p>
                                 <label class="panel__type-picture">
@@ -242,6 +259,10 @@
                                 <label class="panel__type-picture">
                                     <input class="style-ratio" type="checkbox" name="base_fancywork">
                                     Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="base_3D">
+                                    3D
                                 </label>
                             </div>
                             <button class="panel__font-submit simple add-basis-upload">Загрузить</button>
@@ -538,7 +559,7 @@
 
                     </div>
                 </div>
-                <div class="panel__card" name="printRedactor">
+                <div class="panel__card active" name="printRedactor">
                     <div class="panel__card-title">
                         Добавить новый принт
 
@@ -570,6 +591,10 @@
                                 <label class="panel__type-picture">
                                     <input class="style-ratio" type="checkbox" name="fancywork_print">
                                     Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="3D_print">
+                                    3D
                                 </label>
                             </div>
                             <div class="panel__column-item">

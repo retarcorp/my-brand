@@ -82,6 +82,52 @@ router.get('/find/font/by/name', (req, res, next) => {
     });
 });
 
+router.get('/find/fonts/by/printType', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/find/fonts/by/printType',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
+
+    Mongo.select({}, 'fonts', (response_db) => {
+        const fonts = response_db;
+
+        response.data = fonts.filter( font => {
+            if (query.types[0] == 'true') {
+                if (font.print == 'true') {
+                    return font;
+                }
+            }
+
+            if (query.types[1] == 'true') {
+                if (font.fancywork == 'true') {
+                    return font;
+                }
+            }
+
+            if (query.types[2] == 'true') {
+                if (font._3D == 'true') {
+                    return font;
+                }
+            }
+        });
+
+        response.status = true;
+        response.message = "Fonts loaded";
+
+        res.send(response);
+    });
+});
+
 router.post('/find/prints/by/tags', (req, res, next) => {
     const query = qrs.parse(URL.parse(req.url).query),
         request = req.body,
@@ -125,6 +171,52 @@ router.post('/find/prints/by/tags', (req, res, next) => {
         response.data = filter;
         response.status = true;
         response.message = "Prints filtered, sorted and loaded";
+
+        res.send(response);
+    });
+});
+
+router.get('/find/prints/by/printType', (req, res, next) => {
+    const query = qrs.parse(URL.parse(req.url).query),
+        response = {
+            status: false,
+            message: 'Unexpected error',
+            data: [],
+            query: query,
+            errors: [],
+            log: {
+                type: 'GET',
+                path: '/find/prints/by/printType',
+                headers: req.headers
+            }
+        },
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
+
+    Mongo.select({}, 'prints', (response_db) => {
+        const prints = response_db;
+
+        response.data = prints.filter( print => {
+            if (query.types[0] == 'true') {
+                if (print.print == 'true') {
+                    return print;
+                }
+            }
+
+            if (query.types[1] == 'true') {
+                if (print.fancywork == 'true') {
+                    return print;
+                }
+            }
+
+            if (query.types[2] == 'true') {
+                if (print._3D == 'true') {
+                    return print;
+                }
+            }
+        });
+
+        response.status = true;
+        response.message = "Prints loaded";
 
         res.send(response);
     });

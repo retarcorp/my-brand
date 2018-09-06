@@ -19,6 +19,7 @@ Admin = {
 
         data.append('fancywork', AdminApp.font_fancywork.prop('checked'));
         data.append('print', AdminApp.font_print.prop('checked'));
+        data.append('_3D', AdminApp.font_3D.prop('checked'));
 
         User.Ajax.post('/upload/font', data, (data) => {
             let status = JSON.parse(data).status;

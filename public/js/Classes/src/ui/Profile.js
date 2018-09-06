@@ -143,6 +143,8 @@ class Profile {
             return;
         }
 
+        Logger.logInstant('toCart', { id: project.id || project.base._id });
+
         this.inProgress = true;
         App.Ajax.postJSON('/cart/add/product', data, (response) => {
             response = JSON.parse(response);

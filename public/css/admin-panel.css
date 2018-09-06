@@ -537,15 +537,26 @@ select{
     font-family: Lato, sans-serif;
 }
 
-.input-btn{
+.input-btn,
+.input-color {
     display: flex;
 }
 
 .input-btn input{
     width: 130px;
 }
+.base-color__input {
+    width: 60px;
+    border: 1px solid #b7b7b7;
+    border-right: none;
+}
 
-.input-btn button{
+.base-color__input:last-of-type {
+    border-right: 1px solid #b7b7b7;
+}
+
+.input-btn button,
+.input-color button {
     flex: 1;
     background: none;
     border: 1px solid #b7b7b7;

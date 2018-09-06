@@ -25,7 +25,7 @@ router.get('/myOrders/load', (req, res, next) => {
                 headers: req.headers
             }
         },
-        user = User.checkSession(req, res, next);
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (user) {
         Mongo.select({ user: user.name }, 'order', (response_db) => {
@@ -68,7 +68,7 @@ router.post('/order/set', (req, res, next) => {
                 data: data,
                 query: query
             },
-            user = User.checkSession(req, res, next);
+            user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
         if (user) {
             // Mongo.select({ user: user.name }, 'cart', (response_db) => {
@@ -98,7 +98,7 @@ router.post('/order/set', (req, res, next) => {
 
                 } else {
                     response.status = false;
-                    response.message = "No user products cart found"
+                    response.message = "No user products cart found";
 
                     res.send(response);
                 }
@@ -128,7 +128,7 @@ router.get('/order/get', (req, res, next) => {
                 headers: req.headers
             }
         },
-        user = User.checkSession(req, res, next);
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (user) {
         query.number = parseInt(query.number);

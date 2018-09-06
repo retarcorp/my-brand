@@ -13,7 +13,8 @@ class FontsList {
 
 
         //this.injectFont();
-        this.formFontsList();
+        this.loadSuitableFonts();
+        //this.formFontsList();
         this.setFontsData();
     }
 
@@ -23,7 +24,7 @@ class FontsList {
         });
     }
 
-    formFontsList() {
+    formFontsList(Fonts) {
         this.container.html(
             this.UI.App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
         );
@@ -114,12 +115,17 @@ class FontsList {
         if (curr instanceof TextWidget) {
             if (this.UI.App.fontStyle.text().indexOf(font.name) >= 0) {
                 curr.fontSettings.fontFamily = font.name;
-                console.log(font.name);
+                curr.fancywork = font.fancywork == 'true';
+                curr.print = font.print == 'true';
+                curr._3D = font._3D == 'true';
             } else {
                 this.loadFont(font.name, (response) => {
                     response = JSON.stringify(response);
                     this.UI.App.fontStyle.append(TemplateFactory.getFontStyle(response.data));
                     curr.fontSettings.fontFamily = response.data.name;
+                    curr.fancywork = response.data.fancywork == 'true';
+                    curr._3D = response.data._3D == 'true';
+                    curr.print = response.data.print == 'true';
                 });
             }
         }
@@ -140,6 +146,25 @@ class FontsList {
                 }
             });
         }
+    }
+
+    loadSuitableFonts() {
+        const queryTypes = this.UI.App.Project.base.getQueryStringPrintTypes();
+        this.loadFontsByPrintTypes(queryTypes, 20);
+    }
+
+    loadFontsByPrintTypes(queryTypes, limit) {
+        this.UI.App.Ajax.getJSON('/find/fonts/by/printType?types='+queryTypes+'&limit='+limit)
+            .then( response => {
+                const fonts = response.data.map((font) => {
+                    this.addFont(font);
+                    return Font.fromJSON(font);
+                });
+
+                this.UI.App.Data.Fonts.push(...fonts);
+                this.formFontsList();
+            })
+            .catch(err => console.error(err));
     }
 
     loadFont(font, cb) {

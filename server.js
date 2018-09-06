@@ -36,6 +36,7 @@ var order = require('./routes/order');
 var find = require('./routes/find');
 var temp = require('./routes/temp');
 
+var log = require('./routes/log');
 
 /*TEST*/
 
@@ -119,6 +120,8 @@ app.post('/order/update', order);
 app.get('/constructor', constructor);
 
 app.get('/find/font/by/name', find);
+app.get('/find/fonts/by/printType', find);
+app.get('/find/prints/by/printType', find);
 app.post('/find/prints/by/tags', find);
 
 app.get('/temp/load', temp);
@@ -126,6 +129,8 @@ app.post('/temp/save', temp);
 /* TEST */
 
 app.post('/form_data', formData);
+
+app.post('/log/add', log);
 
 /*TEST*/
 
