@@ -421,7 +421,8 @@ body,
 }
 
 .type__basis-paint,
-.type__basis-needle{
+.type__basis-needle,
+.type__basis-3D {
     display: inline-block;
     height: 24px;
     width: 24px;
@@ -435,8 +436,13 @@ body,
     background-size: 200%;
 }
 
+.type__basis-3D {
+    background-image: url(../img/icon/3d.png);
+}
+
 .slider__container .type__basis-paint,
-.slider__container .type__basis-needle{
+.slider__container .type__basis-needle,
+.slider__container .type__basis-3D {
     width: 14px;
     height: 14px;
 }
@@ -476,7 +482,8 @@ body,
     padding-right:10px;
 }
 .select {
-    width: 260px;
+    max-width: 260px;
+    width: 100%;
     cursor:pointer;
     display:inline-block;
     position:relative;

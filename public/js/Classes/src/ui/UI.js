@@ -68,7 +68,8 @@ class UI {
         //this.Profile.init();
         //this.Menu.init();
 
-        $('body').on('click', this.closePopups.bind(this));
+        this.body = $('body');
+        this.body.on('click', this.closePopups.bind(this));
     }
 
     closePopups(e) {
@@ -83,6 +84,8 @@ class UI {
             this.Tabs.customization.base.removeClass('active');
             this.Tabs.customization.layer.removeClass('active');
             this.Tabs.customization.panel.removeClass('active');
+
+            $('.button__container.active').removeClass('active');
         }
     }
 
@@ -92,6 +95,14 @@ class UI {
         if (curr) {
             this.Tabs.customization.panel.addClass('active');
         }
+    }
+
+    setBodyUnscrollable() {
+        this.body.addClass('_unscroll');
+    }
+
+    setBodyScrollable() {
+        this.body.removeClass('_unscroll');
     }
 
     onBase(){
@@ -124,6 +135,8 @@ class UI {
             currentTarget = $(e.currentTarget);
 
         if (!currentTarget.hasClass('template__image')) {
+            this.setBodyUnscrollable();
+
             this.Tabs.customization.print.addClass('active');
             this.Tabs.customization.layer.removeClass('active');
             this.Tabs.customization.text.removeClass('active');
@@ -225,12 +238,12 @@ class UI {
 
                     collection.removeClass('active');
                 }
-            } else {
+            } else if ($(e.target).hasClass('details__color')){
                 let data = $(e.target).css('background-color'),
                     image = App.currentProjectVariant.variant.image;
 
                 const target = $(e.target),
-                    collection = App.UI.BaseSettings.color;
+                    collection = App.UI.BaseSettings.color.children();
 
                 collection.removeClass('active');
                 target.addClass('active');
@@ -414,4 +427,39 @@ class UI {
         }
     }
 
+    onHorizontalFlip() {
+        const curr = this.App.GraphCore.currentWidget;
+
+        if (curr) {
+            curr.toggleXReverse();
+        }
+    }
+
+    onVerticalFlip() {
+        const curr = this.App.GraphCore.currentWidget;
+
+        if (curr) {
+            curr.toggleYReverse();
+        }
+    }
+
+    onFlip(bin) {
+        !(bin ^ 0b001) ? this.onHorizontalFlip() : 0;
+        !(bin ^ 0b010) ? this.onVerticalFlip() : 0;
+        !(bin ^ 0b011) ? (this.onHorizontalFlip() || this.onVerticalFlip()) : 0;
+        console.log('flip');
+    }
+
+    onChangeWidget(widget) {
+        const app = this.App,
+            base = app.Project.base;
+
+        let bin = 0b000;
+
+        base.fancywork === 'true' && widget.fancywork && (bin = bin | 0b001);
+        base.print === 'true' && widget.print && (bin = bin | 0b010);
+        base._3D === 'true' && widget._3D && (bin = bin | 0b100);
+
+        this.Tabs.enablePrintButtons(bin);
+    }
 }

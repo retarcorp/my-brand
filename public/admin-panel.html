@@ -9,7 +9,9 @@
     <link rel="stylesheet" type="text/css" href="css/cart.css">
     <link rel="stylesheet" type="text/css" href="css/admin-panel.css">
     <link rel="stylesheet" type="text/css" href="css/adaptive.css">
-
+    <link type="application/x-font-ttf" href="http://localhost:3010/fonts/92f3e68230a4e6dd73b189e7a01391ac.ttf">
+    <link type="application/x-font-ttf" href="http://localhost:3010/fonts/92f3e68230a4e6dd73b189e7a01391ac.ttf">
+    <link type="application/x-font-ttf" href="http://localhost:3010/fonts/MuseoSansCyrl-900.ttf">
 
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
@@ -94,6 +96,10 @@
                                 <label class="panel__type-picture">
                                     <input class="style-ratio" type="checkbox" name="font_fancywork">
                                     Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="font_3D">
+                                    3D
                                 </label>
                             </div>
 
@@ -233,6 +239,19 @@
                                     <button class="size-container__close"></button>
                                 </div>
                             </div>
+                            <div class="panel__column-item">
+                                <label class="panel__left-set-label" for="size">Задать цвет:</label>
+                                <div class="input-color">
+                                    <input type="number" class="base-color__input" name="baseColorInput_base">
+                                    <input type="number" class="base-color__input" name="baseColorInput_base">
+                                    <input type="number" class="base-color__input" name="baseColorInput_base">
+                                    <button class="add-color" name="baseAddColor_base">Добавить</button>
+                                </div>
+
+                                <div class="base__colors" name="baseColorsContainer_colors">
+                                </div>
+                            </div>
+
                             <div class="panel__column-item-radio">
                                 <p class="panel__column-item-radio-header">Качество: </p>
                                 <label class="panel__type-picture">
@@ -242,6 +261,10 @@
                                 <label class="panel__type-picture">
                                     <input class="style-ratio" type="checkbox" name="base_fancywork">
                                     Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="base_3D">
+                                    3D
                                 </label>
                             </div>
                             <button class="panel__font-submit simple add-basis-upload">Загрузить</button>
@@ -538,7 +561,7 @@
 
                     </div>
                 </div>
-                <div class="panel__card" name="printRedactor">
+                <div class="panel__card active" name="printRedactor">
                     <div class="panel__card-title">
                         Добавить новый принт
 
@@ -570,6 +593,10 @@
                                 <label class="panel__type-picture">
                                     <input class="style-ratio" type="checkbox" name="fancywork_print">
                                     Вышивка
+                                </label>
+                                <label class="panel__type-picture">
+                                    <input class="style-ratio" type="checkbox" name="3D_print">
+                                    3D
                                 </label>
                             </div>
                             <div class="panel__column-item">

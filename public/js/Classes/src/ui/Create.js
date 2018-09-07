@@ -43,7 +43,9 @@ class Create {
         }
 
         if (data.src) {
-            let widget = ImageWidget.getDefault(data.src, data.tags, data._id, data.fancywork, data.print);
+            console.log(data);
+            Logger.logInstant('addPrint', { id: data._id || 'userAdds'} );
+            let widget = ImageWidget.getDefault(data.src, data.tags, data._id, data.fancywork, data.print, data._3D);
 
             widget.text = data.text;
             widget.id = App.UI.Layers.addLayer(widget, 'space');

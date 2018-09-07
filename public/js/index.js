@@ -5,7 +5,7 @@ let App = null;
 class Starter {
     constructor() {
         this.Libs = [
-            ['Base','BaseVariant','Position','Size','WorkZone','Project','VariantProject','FontSettings','Widget','ProjectSettings']
+            ['../Logger', 'Base','BaseVariant','Position','Size','WorkZone','Project','VariantProject','FontSettings','Widget','ProjectSettings']
             ,['TxtWidget','ImageWidget','ComplexWidget', 'Path', 'Font','Print', 'BaseLine']
             ,['VerticalBaseLine', 'HorizontalBaseLine']
             ,['src/ui/BaseList', 'src/ui/BaseSettings', 'src/ui/Create', 'src/ui/FontsList', 'src/ui/Keyboard', 'src/ui/Layers', 'src/ui/LightBox', 'src/ui/Logos', 'src/ui/Menu', 'src/ui/PrintsList', 'src/ui/Profile', 'src/ui/Slider', 'src/ui/Tabs', 'src/ui/TextSettings', 'src/ui/Cart', 'src/ui/Order', 'src/ui/Brand']
@@ -31,6 +31,9 @@ class Starter {
                                 requirejs(this.Libs[7], () => {
                                     this.App = new Application();
                                     App = this.App;
+                                    Logger.setOptions({
+                                        path: '/log/add',
+                                    });
                                     this.App.start();
                                     console.log("Application loaded");
                                 });
@@ -48,4 +51,5 @@ starter.Start();
 
 const PREVIEW_SCALE = 2,
     PREVIEW_OUT = 0.2,
-    CANVAS_WIDTH = 400;
+    CANVAS_WIDTH = 400,
+    PRINT_WIDTH = 100;

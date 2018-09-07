@@ -13,8 +13,9 @@ class FontsList {
 
 
         //this.injectFont();
-        this.formFontsList();
+        //this.formFontsList();
         this.setFontsData();
+        this.loadSuitableFonts();
     }
 
     setFontsData() {
@@ -23,10 +24,12 @@ class FontsList {
         });
     }
 
-    formFontsList() {
+    formFontsList(Fonts) {
         this.container.html(
             this.UI.App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
         );
+
+        const that = this;
 
         $('select#selectbox1').each(function () {
 
@@ -35,6 +38,8 @@ class FontsList {
                 numberOfOptions = $(this).children('option').length;
 
             // Hides the select element
+            $('.editor__fonts').after($this);
+            $('.select').remove();
             $this.addClass('s-hidden');
 
             // Wrap the select element in a div
@@ -61,8 +66,6 @@ class FontsList {
                     rel: $this.children('option').eq(i).val()
                 }).appendTo($list);
 
-
-                console.log(App.Data.Fonts[i])
 
                 li.data('font', App.Data.Fonts[i]);
                 li.css('font-family', App.Data.Fonts[i].name);
@@ -98,35 +101,69 @@ class FontsList {
                 $list.hide();
             });
 
-            this.list = $list;
-
+            that.list = $list;
         });
     }
 
     injectFont() {
-        $('head').append(TemplateFactory.getStyleTag());
-        this.UI.App.fontStyle = $('[name="FONTS_FACES"]')
+        $('head').append(TemplateFactory.getStyleTag('FONTS_FACES'));
+        $('head').append(TemplateFactory.getStyleTag('WIDGETS_FONTS'));
+        //this.UI.App.fontStyle = $('[name="FONTS_FACES"]')
     }
 
     setFont(font) {
         const curr = App.GraphCore.currentWidget;
 
         if (curr instanceof TextWidget) {
-            if (this.UI.App.fontStyle.text().indexOf(font.name) >= 0) {
+            if (document.fonts.check('12px '+ font.name)) {
                 curr.fontSettings.fontFamily = font.name;
-                console.log(font.name);
+                curr.fancywork = font.fancywork == 'true';
+                curr.print = font.print == 'true';
+                curr._3D = font._3D == 'true';
             } else {
-                this.loadFont(font.name, (response) => {
-                    response = JSON.stringify(response);
-                    this.UI.App.fontStyle.append(TemplateFactory.getFontStyle(response.data));
-                    curr.fontSettings.fontFamily = response.data.name;
-                });
+                this.addFont(font)
+                .then( () => {
+                    curr.fontSettings.fontFamily = font.name;
+                    curr.fancywork = font.fancywork == 'true';
+                    curr._3D = font._3D == 'true';
+                    curr.print = font.print == 'true';
+                })
+                .catch(err => console.error(err));
             }
         }
     }
 
+    insertFontFace() {
+
+    }
+
+    createFontFace(fontName, fontAsArrayBuffer) {
+        return new FontFace(fontName, fontAsArrayBuffer);
+    }
+
+    readFontAsArrayBuffer(fontBlob) {
+        return this.UI.App.Data.readAsArrayBuffer(fontBlob);
+    }
+
     addFont(font) {
-        this.UI.App.fontStyle.append(TemplateFactory.getFontStyle(font));
+        return new Promise( (rsv, rej) => {
+            App.Ajax.getBlob(font.src, (response) => {
+                this.readFontAsArrayBuffer(response)
+                    .then(fontArrayBuffer => {
+                        const fontFace = this.createFontFace(font.font || font.name, fontArrayBuffer);
+                        fontFace.loaded
+                            .then( () => {
+                                document.fonts.add(fontFace);
+                                rsv();
+                            })
+                            .catch( (err) => rej(err));
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        rej();
+                    });
+            });
+        });
     }
 
     checkFont(font) {
@@ -142,8 +179,36 @@ class FontsList {
         }
     }
 
+    checkFontInStyle(font) {
+        return App.fontStyle.text().indexOf(font.font) >= 0;
+    }
+
+    async loadSuitableFonts() {
+        const queryTypes = this.UI.App.Project.base.getQueryStringPrintTypes();
+        await this.loadFontsByPrintTypes(queryTypes, 20)
+            .then( response => {
+                const fonts = response.data.map((font) => {
+                    document.fonts.check('12px '+font.font) || this.addFont(font);
+                    return Font.fromJSON(font);
+                });
+
+                this.UI.App.Data.Fonts = [];
+                this.UI.App.Data.Fonts.push(...fonts);
+                this.formFontsList();
+            })
+            .catch(err => console.error(err));;
+    }
+
+    loadFontsByPrintTypes(queryTypes, limit) {
+        return this.UI.App.Ajax.getJSON('/find/fonts/by/printType?types='+queryTypes+'&limit='+limit);
+    }
+
     loadFont(font, cb) {
         App.Ajax.get('/find/font/by/name?font='+font, cb);
+    }
+
+    reloadFonts() {
+        this.UI.FontsList.container && this.UI.FontsList.loadSuitableFonts();
     }
 
     getFont(e) {

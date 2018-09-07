@@ -23,7 +23,7 @@ router.post('/temp/save', (req, res, next) => {
                 headers: req.headers
             }
         },
-        user = User.checkSession(req, res, next);
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (user) {
         request.user = user.name;
@@ -61,7 +61,7 @@ router.get('/temp/load', (req, res, next) => {
                 headers: req.headers
             }
         },
-        user = User.checkSession(req, res, next);
+        user = User.checkSession(req, res, next) || User.checkGuestSession(req, res);
 
     if (user) {
         Mongo.select({ user: user.name, temp: query.temp }, 'temp', (response_db) => {

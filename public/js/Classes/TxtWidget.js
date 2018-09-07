@@ -11,13 +11,15 @@
 
 // TODO replace TxtWidget to TextWidget filename
 class TextWidget extends Widget {
-    constructor(position, text, color, fontSettings) {
+    constructor(position, text, color, fontSettings, print, fancywork, _3D) {
         let size = new Size(0,0);
         super(position, size);
 
         this.type = "TextWidget";
         this.text = text;
         this.color = color;
+        this.reverseX = 1;
+        this.reverseY = 1;
 
         this.lines = [text];
         this.biggest_line = "";
@@ -26,6 +28,10 @@ class TextWidget extends Widget {
             dx: 0,
             dir: ""
         };
+
+        this.print = print;
+        this.fancywork = fancywork;
+        this._3D = _3D;
 
         if (fontSettings instanceof FontSettings) {
             this.fontSettings = fontSettings;
@@ -47,21 +53,16 @@ class TextWidget extends Widget {
 
     loadLazy() {
         return new Promise( (rsv, rjk) => {
-            if (App.fontStyle.text().indexOf(this.fontSettings.fontFamily) >= 0) {
+            if (document.fonts.check('12px ' + this.fontSettings.fontFamily)) {
                 rsv();
             } else {
                 App.UI.FontsList.loadFont(this.fontSettings.fontFamily, (response) => {
                     response = JSON.parse(response);
 
                     if (!(response.data instanceof Array)) {
-                        App.UI.FontsList.addFont(response.data);
-
-                        document.fonts.load('12px '+response.data.font)
-                            .then( d => rsv() )
-                            .catch(err =>  {
-                                console.log(err);
-                                rsv();
-                            });
+                        App.UI.FontsList.addFont(response.data)
+                            .then(() => rsv())
+                            .catch((err) => rjk(err));
                     } else {
                         rsv();
                     }
@@ -329,68 +330,17 @@ class TextWidget extends Widget {
         this.color = '#' + color;
     }
 
-    // TODO rename method corresponding to its real action
-    formTextLines(ctx) {
+    setContextSettings(ctx) {
         const fontSettings = this.fontSettings;
+        ctx = ctx || this.ctx;
 
-        this.lines = [];
-
-        let parse = this.text.split([" "]),
-            _w = App.currentWorkzone.size.width - this.position.x,
-            acc = "",
-            max_word = "",
-            width = 0;
-
-        parse.forEach( (text) => {
-            if (text.length > max_word.length)
-                max_word = text;
-        });
-
-        width = ctx.measureText(max_word).width;
-
-        let _int = fontSettings.fontSize/width;
-
-        if (width > _w) {
-            width = _w;
-            fontSettings.fontSize = _w * _int;
-        }
-
-        this.biggest_line = "";
-
-        let space = "";
-
-        parse.forEach( (text) => {
-            width = ctx.measureText(acc + text).width;
-
-            if (width > _w) {
-                if (ctx.measureText(acc).width > this.max_width) {
-                    this.max_width = ctx.measureText(acc).width;
-                }
-
-                this.lines.push(acc);
-                acc = text;
-
-            } else acc += space + text;
-
-            space = " ";
-
-            if (acc.length > this.biggest_line.length) this.biggest_line = acc;
-        });
-
-        this.lines.push(acc);
-
-        if (this.lines.length <= 1) this.max_width = ctx.measureText(acc).width;
-
-        this.size.width = this.max_width;
-        this.size.height = this.lines.length * fontSettings.fontSize;
-
-        this.edit = false;
-
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = this.color;
+        ctx.font = fontSettings.getFontString();
+        ctx.setTransform(this.reverseX, 0, 0, this.reverseY, 0, 0);
     }
 
     getData() {
-        console.log(this.size);
-
         return {
             position: this.position
             ,size: this.size
@@ -400,6 +350,10 @@ class TextWidget extends Widget {
             ,text: this.text
             ,color: this.color
             ,layer: this.layer
+            ,printType: this.printType
+            ,reverseX: this.reverseX
+            ,reverseY: this.reverseY
+            ,id: this.id
         }
     }
 
@@ -408,50 +362,37 @@ class TextWidget extends Widget {
             this.path.render(ctx);
     }
 
-    render(ctx) { //INNER
+    prerender() {
+        const ctx = this.ctx;
         const fontSettings = this.fontSettings;
-
-        ctx.textBaseline = "bottom";
-        ctx.textAlign = fontSettings.alignment;
-        ctx.fillStyle = this.color;
-        ctx.font = fontSettings.getFontString();
 
         let int = this.size.height/this.size.width,
             _x = this.position.x + App.currentWorkzone.position.x,
             _y = this.position.y + App.currentWorkzone.position.y;
 
-        ctx.font = fontSettings.getFontString();
+        this.setContextSettings();
+
         this.size.height = fontSettings.fontSize*this.lines.length;
+        this.size.width = ctx.measureText(this.text).width;
+        this.canvas.width = this.size.width;
+        this.canvas.height = this.size.height;
 
-        this.biggest_line = this.text;
+        this.setContextSettings();
 
-        if (this.biggest_line.length)
-            this.size.width = ctx.measureText(this.biggest_line).width;
-        else this.size.width = ctx.measureText(this.lines[0]).width;
-
-        // if (this.edit || !this.lines.length) {
-        //     this.formTextLines(ctx);
-        //     console.log(this.lines);
-        // }
-
-        this.lines[0] = this.text;
+        const reverseX = (this.reverseX < 0) ? -this.size.width : 0;
+        const reverseY = (this.reverseY < 0) ? Math.ceil(fontSettings.fontSize/6) : fontSettings.fontSize + Math.ceil(this.fontSettings.fontSize/6);
 
         fontSettings.fontSize = parseInt(fontSettings.fontSize);
+        ctx.fillText(this.text, reverseX, reverseY);
+    }
 
-        this.lines.forEach( (line, index) => {
-            ctx.fillText(line, _x, _y + index * fontSettings.fontSize + fontSettings.fontSize);
+    render(ctx) { //INNER
+        let int = this.size.height/this.size.width,
+            _x = this.position.x + App.currentWorkzone.position.x,
+            _y = this.position.y + App.currentWorkzone.position.y;
 
-            if (this.fontSettings.isUnderline) {
-                ctx.strokeStyle = this.color;
-                ctx.setLineDash([]);
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.moveTo(_x, _y + index * fontSettings.fontSize + fontSettings.fontSize - 5);
-                ctx.lineTo(_x + ctx.measureText(this.lines[index]).width, _y + index * fontSettings.fontSize + fontSettings.fontSize - 5);
-                ctx.stroke();
-            }
-        });
-
+        this.prerender();
+        ctx.drawImage(this.canvas, _x, _y);
     }
 
     static getDefault(text){
@@ -466,6 +407,9 @@ class TextWidget extends Widget {
             ,texts
             ,color
             ,fontSettings
+            ,'true'
+            ,'true'
+            ,'false'
         );
     }
 }

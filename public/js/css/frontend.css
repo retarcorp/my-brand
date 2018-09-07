@@ -196,3 +196,13 @@ canvas {
 .off {
     display: none;
 }
+
+._unscroll {
+    overflow-y: hidden;
+}
+
+.choose__fancywork.active,
+.choose__print.active,
+.choose__3D.active {
+    display: flex;
+}

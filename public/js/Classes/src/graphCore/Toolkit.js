@@ -6,14 +6,19 @@ class Toolkit {
     reset(){
         const curr = this.GraphCore.currentWidget;
 
+        if (!curr) {
+            return;
+        }
+
         if (curr instanceof TextWidget){
             this.resetTextToolkit();
             this.GraphCore.App.UI.Layers.setCurrentLayer(curr);
-
         } else if (curr instanceof ImageWidget) {
             this.resetImageToolkit();
             this.GraphCore.App.UI.Layers.setCurrentLayer(curr);
         }
+
+        this.resetPrintType(curr);
     }
 
     resetTextToolkit(){
@@ -22,24 +27,6 @@ class Toolkit {
         this.GraphCore.App.UI.TextSettings.setSettings();
 
         this.GraphCore.App.UI.onText();
-
-        // if (fontSettings.isItalic) {
-        //     $(".button__italic").addClass('active');
-        // } else{
-        //     $(".button__italic").removeClass('active');
-        // }
-        //
-        // if (fontSettings.isBold){
-        //     $(".button__bold").addClass('active');
-        // } else {
-        //     $(".button__bold").removeClass('active');
-        // }
-        //
-        // if (fontSettings.isUnderline) {
-        //     $(".button__underline").addClass('active');
-        // } else {
-        //     $(".button__underline").removeClass('active');
-        // }
     }
 
     resetImageToolkit(){
@@ -51,5 +38,9 @@ class Toolkit {
 
         collection.removeClass('selected');
         target.addClass('selected');
+    }
+
+    resetPrintType(widget) {
+        this.GraphCore.App.UI.onChangeWidget(widget || this.GraphCore.currentWidget);
     }
 }

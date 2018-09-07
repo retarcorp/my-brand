@@ -118,6 +118,7 @@ class Cart {
              this.UI.Profile.setCartAmount(amount-1);
 
              card.remove();
+             this.recountPrice();
              if (!this.container.children().length) {
                  this.hideOptions();
              }

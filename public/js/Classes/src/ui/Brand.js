@@ -108,15 +108,29 @@ class Brand {
     }
 
     checkCreateEvent(e) {
-        const target = $(e.target);
+        const currentTarget = $(e.currentTarget);
+        let target = $(e.target);
 
-        if (target.hasClass('create__button-create') || target.hasClass('button__edit-mbr')) {
+        if (target.is(currentTarget)) {
             const base = this.base || this.UI.App.Project.base;
 
             this.setBase(base);
             this.openSection();
 
             return;
+        }
+
+        while(!target.is(currentTarget)) {
+            if (target.hasClass('create__button-create') || target.hasClass('button_text') || target.hasClass('button__edit-mbr')) {
+                const base = this.base || this.UI.App.Project.base;
+
+                this.setBase(base);
+                this.openSection();
+
+                return;
+            }
+
+            target = target.parent();
         }
     }
 
@@ -189,7 +203,8 @@ class Brand {
         const data = {
             tags: this.search_tags || [],
             sign: (this.sign.val().length) ? this.sign.val() : 'Text',
-            _id: (this.base && this.base._id) || this.UI.App.Project.base._id
+            _id: (this.base && this.base._id) || this.UI.App.Project.base._id,
+            base: this.base || this.UI.App.Project.base
         };
 
         return data;
@@ -263,6 +278,7 @@ class Brand {
     }
 
     loadPrints() {
+        console.log(this.base);
         const data = localStorage.getItem('gen');
         this.text = JSON.parse(data).sign;
 
@@ -286,12 +302,35 @@ class Brand {
     }
 
     async loadBrandPage() {
-        const search_tags = JSON.parse(localStorage.getItem('gen')).tags;
-        this.sign_text = JSON.parse(localStorage.getItem('gen')).sign;
+        const genData = JSON.parse(localStorage.getItem('gen')),
+             search_tags = genData.tags;
+
+        this.sign_text = genData.sign;
+        this.base = genData.base;
+
         this.setSign();
         this.formTagsList(search_tags);
+        this.UI.App.setBreadcrumbs(this.base.name);
 
-        this.prints = await this.loadPrints();
+        this.prints = (await this.loadPrints()).filter( print => {
+            if (this.base.print === 'true') {
+                if (print.print === 'true') {
+                    return print;
+                }
+            }
+
+            if (this.base.fancywork === 'true') {
+                if (print.fancywork === 'true') {
+                    return print;
+                }
+            }
+
+            if (this.base._3D === 'true') {
+                if (print._3D === 'true') {
+                    return print;
+                }
+            }
+        });
         this.templates = await this.loadTemplates(this.prints.length);
 
         await this.generateProjects();

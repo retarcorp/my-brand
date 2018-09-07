@@ -6,7 +6,7 @@
  */
 
 class Base  {
-    constructor(name, price, color, colorArray, size, type, _id, fancywork, print) {
+    constructor(name, price, color, colorArray, size, type, _id, fancywork, print, _3D) {
         this.variants = [];
         this.price = price;
         this.name = name;
@@ -17,6 +17,7 @@ class Base  {
         this._id = _id;
         this.fancywork = fancywork;
         this.print = print;
+        this._3D = _3D;
     }
 
     /**
@@ -39,6 +40,10 @@ class Base  {
         return this.variants[0].src;
     }
 
+    getQueryStringPrintTypes() {
+        return [this.print, this.fancywork, this._3D].join('&types=')
+    }
+
     /**
      * Создаёт экземпляр класса Base из json строки.
      * @param {Object} obj - Объект из json.
@@ -50,7 +55,7 @@ class Base  {
         //console.log(obj.variants);
 
         return (
-            new this(obj.name, obj.price, obj.color, obj.colorArray, obj.size, obj.type, obj._id, obj.fancywork, obj.print)
+            new this(obj.name, obj.price, obj.color, obj.colorArray, obj.size, obj.type, obj._id, obj.fancywork, obj.print, obj._3D)
             .addVariants(
                 ...obj.variants.map(
                     variant => BaseVariant.fromJSON(variant)

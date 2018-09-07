@@ -4,7 +4,7 @@ class BaseSettings {
     }
 
     init() {
-        this.color = $('.details__color');
+        this.color = $('.color-btns');
         this.dynamic_color = $('#base_color');
 
         this.dynamic_color.on('change', this.UI.onBaseColor);

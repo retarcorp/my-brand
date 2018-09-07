@@ -12,6 +12,7 @@ AdminApp = {
 
         this.font_print = $('input[name="font_print"]');
         this.font_fancywork = $('input[name="font_fancywork"]');
+        this.font_3D = $('input[name="font_3D"]');
 
         this.fontPage = 1;
 
@@ -20,6 +21,7 @@ AdminApp = {
 
         this.font_print.on('click', this.checkPrint.bind(this));
         this.font_fancywork.on('click', this.checkPrint.bind(this));
+        this.font_3D.on('click', this.checkPrint.bind(this));
 
 
         this.getFonts(1);
@@ -78,15 +80,28 @@ AdminApp = {
     ,checkPrint(e) {
         const target = $(e.target);
 
-        if (target.attr('name') == "font_fancywork" && !target.prop('checked')) {
-            this.font_print.prop('checked', true);
-        } else if (target.attr('name') == 'font_print' && !target.prop('checked')){
+        if (!$('input[name="font_print"]').prop('checked') && !$('input[name="font_fancywork"]').prop('checked')) {
+            this.font_3D.prop('checked', true);
+        }
+
+        if (!$('input[name="font_print"]').prop('checked') && !$('input[name="font_3D"]').prop('checked')) {
             this.font_fancywork.prop('checked', true);
+        }
+
+        if (!$('input[name="font_3D"]').prop('checked') && !$('input[name="font_fancywork"]').prop('checked')) {
+            this.font_print.prop('checked', true);
         }
 
     }
 
-    ,uploadFont() {
+    ,uploadFont(e) {
+        e.preventDefault();
+
+        if (!document.querySelector('input[name="font_file"]').files.length) {
+            alert('Choose any font file! (.otf, .ttf)');
+            return;
+        }
+
         $('.panel__font-form').addClass('loading')
 
         Admin.uploadFont(() => {
@@ -250,6 +265,10 @@ AdminApp = {
             this.variants.on('click', this.checkVariantEvent);
             this.size.on('click', this.checkSizeEvent);
 
+            this.colorInputs.on('input', this.checkColorInputs.bind(this));
+            this.colorAdd.on('click', this.checkAddColorEvent.bind(this));
+            this.colorContainer.on('click', this.checkRemoveColorEvent.bind(this));
+
             this.workzoneInputs = {
                 x: $('input[name="workzone_x"]')
                 ,y: $('input[name="workzone_y"]')
@@ -264,10 +283,12 @@ AdminApp = {
                 ,fancywork: $('input[name="base_fancywork"]')
                 ,size: $('input[name="base_size"]')
                 ,type: $('select[name="base_type"]')
+                ,_3D: $('input[name="base_3D"]')
             }
 
             this.inputs.print.on('change', this.setPrintType);
             this.inputs.fancywork.on('change', this.setPrintType);
+            this.inputs._3D.on('change', this.setPrintType);
             this.inputs.price.on('input', this.checkPrice.bind(this));
 
             $('.base__add .add-size').on('click', this.addSize);
@@ -282,7 +303,7 @@ AdminApp = {
             this.canvas.addEventListener('mousemove', this.setWorkzoneSize);
 
             this.ctx = this.canvas.getContext('2d');
-            this.ctx.translate(0.5, 0.5);
+            //this.ctx.translate(0.5, 0.5);
 
             this.clearInputs();
 
@@ -308,6 +329,55 @@ AdminApp = {
             }
 
             this.setPrice(value);
+        }
+
+        ,checkColorInputs(e) {
+            const target = $(e.target);
+            let value = target.val();
+
+            if (isNaN(parseInt(value)) || value <= 0) {
+                value = "";
+                this.setInputValue(target, value);
+
+                return;
+            }
+
+            if (value > 255) {
+                value = 255;
+                this.setInputValue(target, value);
+
+                return;
+            }
+
+            this.setInputValue(target, value);
+        }
+
+        ,checkAddColorEvent(e) {
+            const target = $(e.target),
+                rgb = {
+                    r: this.colorInputs.eq(0).val() || 0,
+                    g: this.colorInputs.eq(1).val() || 0,
+                    b: this.colorInputs.eq(2).val() || 0,
+                },
+                color = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+
+            this.addBaseColor(color);
+            //TODO need to create addColor method and extend endpoint with constructor app
+            console.log('waiting..');
+        }
+
+        ,checkRemoveColorEvent(e) {
+            const target = $(e.target);
+
+            target.remove();
+        }
+
+        ,addBaseColor(color) {
+            this.colorContainer.append(TemplateFactory.getAdminPanelBaseColorHtml(color));
+        }
+
+        ,setInputValue(input, val) {
+            input.val(val);
         }
 
         ,sendData() {
@@ -361,11 +431,16 @@ AdminApp = {
 
                 if (!AdminApp.BasePanel._id.length) AdminApp.BasePanel._id = AdminApp.BasePanel.makeid();
 
+                $.each(AdminApp.BasePanel.colorContainer.children(), (index, ch) => {
+                    data.append('colors', ch.dataset.color);
+                });
+
                 data.append('name', name);
                 data.append('price', price);
                 data.append('type', AdminApp.BasePanel.inputs.type.val());
                 data.append('print', AdminApp.BasePanel.inputs.print.prop('checked'));
                 data.append('fancywork', AdminApp.BasePanel.inputs.fancywork.prop('checked'));
+                data.append('_3D', AdminApp.BasePanel.inputs._3D.prop('checked'));
                 data.append('_id', AdminApp.BasePanel._id);
                 //data.append('redact', AdminApp.BasePanel.redact || false);
                 AdminApp.BasePanel.panel.addClass('loading');
@@ -403,6 +478,7 @@ AdminApp = {
         ,parseData(data) {
             let base = data,
                 main = null;
+
             AdminApp.BasePanel.clearInputs();
 
             AdminApp.BasePanel.redact = '/redact';
@@ -416,6 +492,7 @@ AdminApp = {
 
             AdminApp.BasePanel.inputs.print.prop('checked', (base.print == "true") ? true : false);
             AdminApp.BasePanel.inputs.fancywork.prop('checked', (base.fancywork == "true") ? true : false);
+            AdminApp.BasePanel.inputs._3D.prop('checked', (base._3D == "true") ? true : false);
 
             $.each(options, (index, option) => {
                 if (option.value == base.value) {
@@ -431,6 +508,12 @@ AdminApp = {
             $.each(AdminApp.BasePanel.size.children(), (index, child) => {
                 $(child).data('size', base.size[index]);
             });
+
+            data.colorArray = data.colorArray || [];
+
+            AdminApp.BasePanel.colorContainer.html(
+                data.colorArray.reduce( (acc, color) => acc + TemplateFactory.getAdminPanelBaseColorHtml(color), ``)
+            );
 
             AdminApp.BasePanel.fileCount = base.variants.length;
 
@@ -588,13 +671,17 @@ AdminApp = {
             AdminApp.BasePanel.size.append(child);
         }
 
-        ,setPrintType() {
-            if (!$('input[name="base_print"]').prop('checked') && !$('input[type="base_fancywork"]').prop('checked')) {
-                if ($(this).attr('name') == "base_print") {
-                    AdminApp.BasePanel.inputs.fancywork.prop('checked', true);
-                } else {
-                    AdminApp.BasePanel.inputs.print.prop('checked', true);
-                }
+        ,setPrintType(e) {
+            if (!$('input[name="base_print"]').prop('checked') && !$('input[name="base_fancywork"]').prop('checked')) {
+                AdminApp.BasePanel.inputs._3D.prop('checked', true);
+            }
+
+            if (!$('input[name="base_print"]').prop('checked') && !$('input[name="base_3D"]').prop('checked')) {
+                AdminApp.BasePanel.inputs.fancywork.prop('checked', true);
+            }
+
+            if (!$('input[name="base_3D"]').prop('checked') && !$('input[name="base_fancywork"]').prop('checked')) {
+                AdminApp.BasePanel.inputs.print.prop('checked', true);
             }
         }
 
@@ -691,6 +778,9 @@ AdminApp = {
         ,workzoneResizing: false
         ,canvas: document.querySelector('.panel__main-variant canvas')
         ,size: $('.base__add .panel__size-container')
+        ,colorInputs: $('[name="baseColorInput_base"]')
+        ,colorAdd: $('[name="baseAddColor_base"]')
+        ,colorContainer: $('[name="baseColorsContainer_colors"]')
     }
 
     ,BaseList: {
@@ -701,7 +791,8 @@ AdminApp = {
             this.list.on('click', this.checkBaseListEvent);
             $('.button__add-basis').on('click', this.checkBaseListEvent);
 
-            this.pages.on('click', this.loadBasesPage)
+            this.pages.on('click', this.loadBasesPage);
+
         }
 
         ,openPanel() {
@@ -1452,16 +1543,21 @@ AdminApp = {
 
             this.options = {
                 print: $('[name="print_print"]'),
-                fancywork: $('[name="fancywork_print"]')
+                fancywork: $('[name="fancywork_print"]'),
+                _3D: $('[name="3D_print"]')
             }
+
+            this.optionsBin = 0b111;
+            this.setOption(this.optionsBin);
 
             this.file.on('change', this.onFileInput.bind(this));
             this.remove.on('click', this.clearFile.bind(this));
             this.add_tag.on('click', this.createTag.bind(this));
             this.tag_container.on('click', this.checkTagEvent.bind(this));
 
-            this.options.print.on('click', this.setOption.bind(this));
-            this.options.fancywork.on('click', this.setOption.bind(this));
+            this.options.print.on('click', this.checkOptionsEvent.bind(this));
+            this.options.fancywork.on('click', this.checkOptionsEvent.bind(this));
+            this.options._3D.on('click', this.checkOptionsEvent.bind(this));
 
             this.upload.on('click', this.uploadPrint.bind(this));
             this.back.on('click', this.goBack.bind(this));
@@ -1486,6 +1582,7 @@ AdminApp = {
                 data.append('name', this.name.val());
                 data.append('print', this.options.print.prop('checked'));
                 data.append('fancywork', this.options.fancywork.prop('checked'));
+                data.append('_3D', this.options._3D.prop('checked'));
 
                 $.each(this.tag_container.children(), (index, child) => {
                     tags.push($(child).data('tag'));
@@ -1566,20 +1663,38 @@ AdminApp = {
             this.closePreview();
         }
 
-        ,setOption(e) {
+        ,checkOptionsEvent(e) {
             const currentTarget = $(e.currentTarget);
+            let bin = 0b000;
 
             if (currentTarget.attr('name') == "print_print") {
-                if (!this.options.print.prop('checked')) {
-                    this.options.fancywork.prop('checked', true);
-                }
+                this.optionsBin ^= 0b001;
+                bin = 0b001;
             }
 
             if (currentTarget.attr('name') == "fancywork_print") {
-                if (!this.options.fancywork.prop('checked')) {
-                    this.options.print.prop('checked', true);
-                }
+                this.optionsBin ^= 0b010;
+                bin = 0b010;
             }
+
+            if (currentTarget.attr('name') == "3D_print") {
+                this.optionsBin ^= 0b100;
+                bin = 0b100;
+            }
+
+            this.checkOption(bin);
+        }
+
+        ,checkOption(bin) {
+            !(this.optionsBin & 0b111) ? this.setOption(bin) : "";
+        }
+
+        ,setOption(bin) {
+            this.optionsBin = bin;
+
+            (bin & 0b001) ? this.options.print.prop('checked', true) : "";
+            (bin & 0b010) ? this.options.fancywork.prop('checked', true): "";
+            (bin & 0b100) ? this.options._3D.prop('checked', true) : "";
         }
 
         ,usePrint(print) {
@@ -1606,6 +1721,7 @@ AdminApp = {
 
             this.options.print.prop('checked', (this.print.print == 'true') ? true : false);
             this.options.fancywork.prop('checked', (this.print.fancywork == 'true') ? true : false);
+            this.options._3D.prop('checked', (this.print._3D == 'true') ? true : false);
 
             this.preview.attr('src', this.print.src);
             this.openPreview();

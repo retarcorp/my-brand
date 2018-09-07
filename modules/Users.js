@@ -75,6 +75,18 @@ let Users = {
 		if (callback) callback();
 	}
 
+	,createGuestSession(req, res) {
+        console.log('create guest session');
+
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+			guest = { name : md5(ip) };
+
+		req.session.guest = req.session.guest || guest;
+		res.cookie('guest', guest);
+
+		return guest;
+	}
+
 	,closeSession(req, res, callback) {
         req.session.destroy(callback);
 	}
@@ -108,6 +120,16 @@ let Users = {
             }
             return req.cookies.user;
         }
+	}
+
+	,checkGuestSession(req, res) {
+		if (!req.cookies.guest || !req.session.guest) {
+            this.createGuestSession(req, res);
+
+			return req.session.guest;
+		}
+
+		return this.createGuestSession(req, res);
 	}
 
 	,genSalt(mss = 6) {

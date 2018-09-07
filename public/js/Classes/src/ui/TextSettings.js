@@ -52,7 +52,7 @@ class TextSettings {
     closeColorPicker(e) {
         const target = $(e.target);
 
-        if (!this.color_picker.has(target).length && !this.color_picker.is(target) && !target.is(this.color_button)) {
+        if (!this.color_picker.has(target).length && !this.color_picker.is(target) && !target.is(this.color_button) && !target[0]._jscInstance) {
             this.closeTextColorPicker();
         }
     }

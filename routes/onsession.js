@@ -28,6 +28,7 @@ router.get('/onsession', (req, res, next) => {
         }
 
     } else {
+        Users.checkGuestSession(req, res);
         res.send(JSON.stringify({status: false}));
     }
 });
