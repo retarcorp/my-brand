@@ -165,6 +165,8 @@ router.post('/upload/font', (req, res, next) => {
     }
 });
 
+router.post('/upload/')
+
 router.post('/upload/redact', (req, res, next) => {
     let form = new multiparty.Form();
 

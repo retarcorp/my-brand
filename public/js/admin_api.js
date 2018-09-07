@@ -1,11 +1,10 @@
 Admin = {
 
     uploadFont(callback) {
-        event.preventDefault();
+        //event.preventDefault();
 
         let files = document.querySelector('input[name="font_file"]').files,
             data = new FormData();
-
 
         $.each(files, (index, file) => {
             data.append(index, file);

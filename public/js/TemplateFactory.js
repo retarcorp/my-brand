@@ -163,6 +163,21 @@ const TemplateFactory = {
                 </div>
                 
                 <div class="panel__font-delete" data-src="${font.src}"></div>
+                
+                <!--<div class="panel__font-options">-->
+                    <!--<label class="panel__type-picture">-->
+                        <!--<input class="style-ratio" type="checkbox" name="font_print">-->
+                        <!--Печать-->
+                    <!--</label>-->
+                    <!--<label class="panel__type-picture">-->
+                        <!--<input class="style-ratio" type="checkbox" name="font_fancywork">-->
+                        <!--Вышивка-->
+                    <!--</label>-->
+                    <!--<label class="panel__type-picture">-->
+                        <!--<input class="style-ratio" type="checkbox" name="font_3D">-->
+                        <!--3D-->
+                    <!--</label>-->
+                <!--</div>-->
             </li>
         `
     }

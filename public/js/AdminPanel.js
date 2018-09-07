@@ -94,7 +94,14 @@ AdminApp = {
 
     }
 
-    ,uploadFont() {
+    ,uploadFont(e) {
+        e.preventDefault();
+
+        if (!document.querySelector('input[name="font_file"]').files.length) {
+            alert('Choose any font file! (.otf, .ttf)');
+            return;
+        }
+
         $('.panel__font-form').addClass('loading')
 
         Admin.uploadFont(() => {
