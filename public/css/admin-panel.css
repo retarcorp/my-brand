@@ -1556,6 +1556,11 @@ button.button__add-prints{
     background-size: 12px;
 }
 
+.application__type._3D{
+    background-image: url(../img/icon/3d.png);
+    background-size: 12px;
+}
+
 .layer__text-size{
     margin-left: 10px;
 }

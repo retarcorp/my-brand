@@ -592,8 +592,9 @@ const TemplateFactory = {
         return `
             <div class="order__layer-item">
                 <p class="layer__text">${widget.layer.text}</p>
-                ${(font.fancywork == "true" || !(font.print == 'true')) ?`<div class="application__type needle"></div>` : ""}
-                ${(font.print == "true")? `<div class="application__type paint"></div>` : ""}
+                ${widget.printType == 0b001 ? '<div class="application__type needle"></div>' : ""}
+                ${widget.printType == 0b010 ? '<div class="application__type paint"></div>' : ""}
+                ${widget.printType == 0b100 ? '<div class="application__type _3D"></div>' : ""}
                     <p class="layer__text-size">${widget.fontSettings.fontSize}</p>
                 <div class="layer__color" style="background-color: ${widget.color};"></div>
                 <p class="color__cmyk">CMYK (${App.GraphCore.Filter.RgbToCmyk(rgb[0], rgb[1], rgb[2]).map( c => Math.ceil(c*100)).join(' ')})</p>
@@ -619,9 +620,10 @@ const TemplateFactory = {
                 <div class="layer__img">
                     <img src="${widget.src}" alt="">
                 </div>
-                ${(print.fancywork == "true" || !(print.print == 'true')) ?`<div class="application__type needle"></div>` : ""}
-                ${(print.print == "true") ? `<div class="application__type paint"></div>` : ""}
-                    <a href="${widget.src}" download class="layer__img-link">Скачать</a>
+                ${widget.printType == 0b001 ?'<div class="application__type needle"></div>' : ""}
+                ${widget.printType == 0b010 ? '<div class="application__type paint"></div>' : ""}
+                ${widget.printType == 0b100 ? '<div class="application__type _3D"></div>' : ""}
+                        <a href="${widget.src}" download class="layer__img-link">Скачать</a>
                 <button class="button button__layer-info"></button>
                 <div class="layer__info">
                     <div class="layer__info-item">
@@ -757,9 +759,9 @@ const TemplateFactory = {
                 <span class="slider__item-name" name="myBrand_item-name">
                     ${template.base.name}
                     <div class="type__basis" name="myBrand_item-basis-type">
-                        ${(template.base.print) ? `<p class="type__basis-paint" title="Печать"></p>` : ""}
-                        ${(template.base.fancywork) ? `<p class="type__basis-needle" title="Вышивка"></p>` : ""}
-                        ${(template.base._3D) ? `<p class="type__basis-3D" title="3D"></p>` : ""}
+                        ${(template.base.print === 'true') ? `<p class="type__basis-paint" title="Печать"></p>` : ""}
+                        ${(template.base.fancywork === 'true') ? `<p class="type__basis-needle" title="Вышивка"></p>` : ""}
+                        ${(template.base._3D === 'true') ? `<p class="type__basis-3D" title="3D"></p>` : ""}
                         </div>
                     </span>
                     <p class="slider__item-price" name="myBrand_item-price">${template.base.price} P</p>
@@ -790,6 +792,29 @@ const TemplateFactory = {
                     <button class="button brand__create">
                         Создать
                     </button>
+                </div>
+            </div>
+        `
+    }
+
+    ,getCategoryHtml(category) {
+        return `
+            <div class="file__picture-category">
+                <h1 class="file__picture-category-header">${category.title}</h1>
+                <div class="file__picture-category-container">
+                    
+                </div>
+            </div>
+        `
+    }
+
+    ,getCategoryItemHtml(item) {
+        return `
+            <div class="picture-list__picture picture-list__picture_margin selected">
+                <img src="${item.src}" alt="" class="picture__img">
+            
+                <div class="picture-btns">
+                    <button class="button picture__button picture__clone button_gradient_blue">Добавить</button>
                 </div>
             </div>
         `

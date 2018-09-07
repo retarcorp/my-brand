@@ -62,7 +62,7 @@ class Application {
             this.UI.init();
             this.GraphCore.init();
 
-            this.GraphCore.ctx.translate(0.5,0.5);
+            //this.GraphCore.ctx.translate(0.5,0.5);
 
             await this.UI.Profile.setProjectsList();
 
@@ -244,6 +244,7 @@ class Application {
 
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
+        this.UI.Tabs.reload();
 
         if (preview) {
             await this.UI.BaseList.setVariantsList(this.Project);
@@ -268,6 +269,7 @@ class Application {
         $('.price__value').text(this.Project.base.price);
 
         await this.loadProjectAssets();
+        this.UI.Tabs.reload();
 
         if (preview) {
             await this.UI.BaseList.setVariantsList(this.Project);
@@ -293,6 +295,7 @@ class Application {
 
         this.GraphCore.setCurrentWidget(null);
         await this.loadProjectAssets();
+        this.UI.Tabs.reload();
 
         if (preview) {
             await this.UI.BaseList.setVariantsList(this.Project);
@@ -342,10 +345,10 @@ class Application {
         return this.Project;
     }
 
-    setBreadcrumbs() {
+    setBreadcrumbs(crumbName) {
         const crumb = $('[ name="productName"]');
 
-        crumb.text(this.Project.base.name);
+        crumb.text(crumbName || this.Project.base.name);
     }
 
     async loadProjectAssets() {
@@ -381,7 +384,7 @@ class Application {
 
     // TODO rename to verb-based name
     startRender() {
-        if (!App.inProcess && !App.inSettingProject) {
+        if (!App.inProcess /*&& !App.inSettingProject*/) {
             if (!App.isPreview)
                 App.GraphCore.RenderList.render(App.GraphCore.ctx);
             else

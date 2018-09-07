@@ -296,7 +296,7 @@ AdminApp = {
             this.canvas.addEventListener('mousemove', this.setWorkzoneSize);
 
             this.ctx = this.canvas.getContext('2d');
-            this.ctx.translate(0.5, 0.5);
+            //this.ctx.translate(0.5, 0.5);
 
             this.clearInputs();
 

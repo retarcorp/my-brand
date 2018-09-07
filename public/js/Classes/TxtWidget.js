@@ -380,7 +380,7 @@ class TextWidget extends Widget {
         this.setContextSettings();
 
         const reverseX = (this.reverseX < 0) ? -this.size.width : 0;
-        const reverseY = (this.reverseY < 0) ? 0 : fontSettings.fontSize;
+        const reverseY = (this.reverseY < 0) ? Math.ceil(fontSettings.fontSize/6) : fontSettings.fontSize + Math.ceil(this.fontSettings.fontSize/6);
 
         fontSettings.fontSize = parseInt(fontSettings.fontSize);
         ctx.fillText(this.text, reverseX, reverseY);

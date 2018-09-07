@@ -111,4 +111,9 @@ class Tabs {
         (bin & 0b010) ? this.printButtons.print.addClass('selected') : this.printButtons.print.removeClass('selected');
         (bin & 0b100) ? this.printButtons._3D.addClass('selected') : this.printButtons._3D.removeClass('selected');
     }
+
+    reload() {
+        this.UI.FontsList.reloadFonts();
+        this.UI.PrintsList.reloadPrints();
+    }
 }

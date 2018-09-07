@@ -9,6 +9,9 @@ class RenderList {
     }
 
     render(ctx) {
+        if (this.GraphCore.ctx){
+            this.GraphCore.resetScale();
+        }
         this.GraphCore.Canvas.clear(ctx);
         //this.GraphCore.defineDimensions();
         this.GraphCore.App.currentProjectVariant.render(ctx);

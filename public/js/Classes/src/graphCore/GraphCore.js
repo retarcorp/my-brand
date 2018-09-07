@@ -68,7 +68,7 @@ class GraphCore {
     }
 
     defineDimensions() {
-        this.resetScale();
+        // this.resetScale();
 
         const variant = App.currentProjectVariant,
             width = CANVAS_WIDTH,

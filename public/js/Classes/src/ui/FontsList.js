@@ -29,6 +29,8 @@ class FontsList {
             this.UI.App.Data.Fonts.reduce((acc, font) => acc + TemplateFactory.getFontHtml(font),``)
         );
 
+        const that = this;
+
         $('select#selectbox1').each(function () {
 
             // Cache the number of options
@@ -36,6 +38,8 @@ class FontsList {
                 numberOfOptions = $(this).children('option').length;
 
             // Hides the select element
+            $('.editor__fonts').after($this);
+            $('.select').remove();
             $this.addClass('s-hidden');
 
             // Wrap the select element in a div
@@ -62,8 +66,6 @@ class FontsList {
                     rel: $this.children('option').eq(i).val()
                 }).appendTo($list);
 
-
-                console.log(App.Data.Fonts[i])
 
                 li.data('font', App.Data.Fonts[i]);
                 li.css('font-family', App.Data.Fonts[i].name);
@@ -99,8 +101,7 @@ class FontsList {
                 $list.hide();
             });
 
-            this.list = $list;
-
+            that.list = $list;
         });
     }
 
@@ -152,7 +153,6 @@ class FontsList {
                         const fontFace = this.createFontFace(font.font || font.name, fontArrayBuffer);
                         fontFace.loaded
                             .then( () => {
-                                console.log(fontFace);
                                 document.fonts.add(fontFace);
                                 rsv();
                             })
@@ -188,10 +188,11 @@ class FontsList {
         await this.loadFontsByPrintTypes(queryTypes, 20)
             .then( response => {
                 const fonts = response.data.map((font) => {
-                    this.addFont(font);
+                    document.fonts.check('12px '+font.font) || this.addFont(font);
                     return Font.fromJSON(font);
                 });
 
+                this.UI.App.Data.Fonts = [];
                 this.UI.App.Data.Fonts.push(...fonts);
                 this.formFontsList();
             })
@@ -204,6 +205,10 @@ class FontsList {
 
     loadFont(font, cb) {
         App.Ajax.get('/find/font/by/name?font='+font, cb);
+    }
+
+    reloadFonts() {
+        this.UI.FontsList.container && this.UI.FontsList.loadSuitableFonts();
     }
 
     getFont(e) {
