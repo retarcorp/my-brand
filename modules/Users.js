@@ -60,23 +60,19 @@ let Users = {
 
 	,createSession(req, res, next, user, callback) {
 		//console.log(req.session)
-
-        user.password = null;
-        user.salt = null;
+		console.log(user, "CREATE SESSION");
+        delete user.salt;
 
 	    let session = req.session;
+		session.user = user;
 
-		session.logged = true;
-		session.user = session.user || user;
-
-		if (!req.cookies.user)
-			res.cookie('user', user);
+		res.cookie('user', user);
 
 		if (callback) callback();
 	}
 
 	,createGuestSession(req, res) {
-        console.log('create guest session');
+        //('create guest session');
 
         const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress,
 			guest = { name : md5(ip) };
@@ -91,14 +87,26 @@ let Users = {
         req.session.destroy(callback);
 	}
 
-	,checkCredentials(check, User) {
+	,checkUserInDB(_user, cb) {
+
+		Mongo.select({ name: _user.name}, 'users', (response_db) => {
+            console.log("IN DBCHECK");
+			const users = response_db;
+			console.log(_user);
+
+			if (cb) cb(!!users.find(user => this.checkCredentials(user, _user)));
+		});
+	}
+
+	,checkCredentials(check, user) {
 		//console.log(md5(check.salt + User.password + check.salt));
-		return check.password == md5(check.salt + User.password + check.salt);
+		//console.log(check.password, user.password);
+		return check.password == user.password;
 	}
 
 	,checkHash(data1, data2) {
 		return !Object.keys(data1).find( key => {
-            console.log('KEY: '+key, md5(JSON.stringify(data1[key])) == md5(JSON.stringify(data2[key])));
+            //console.log('KEY: '+key, md5(JSON.stringify(data1[key])) == md5(JSON.stringify(data2[key])));
 
             if (md5(JSON.stringify(data1[key])) != md5(JSON.stringify(data2[key]))) {
 				return true;

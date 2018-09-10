@@ -8,7 +8,7 @@
  */
 
 class ImageWidget extends Widget {
-    constructor(position, size, src, tags, _id, fancywork, print, _3D){
+    constructor(position, size, src, tags, _id, fancywork, print, _3D, category){
         super(position,size);
         this.type = "ImageWidget";
 
@@ -23,6 +23,7 @@ class ImageWidget extends Widget {
         this.fancywork = fancywork;
         this.print = print;
         this._3D = _3D;
+        this.category = category;
 
         // this.image.src = this.src;
 

@@ -47,7 +47,15 @@ class Profile {
         });
 
         this.logins_submit.on('click', () => this.logins.submit());
-        this.logins.on('submit', (e) => { this.login(e); return false;});
+        this.logins.on('submit', (e) => {
+            if ($(e.target).parent().hasClass('active') && !this.onLogin) {
+                e.preventDefault();
+                console.log('active');
+                this.onLogin = true;
+                this.login(e);
+            }
+            return false;
+        });
 
         this.logins_item.on('click', this.showLoginForm);
 
@@ -223,15 +231,43 @@ class Profile {
     }
 
     showLoginForm(e) {
-        if (!App.UI.Profile.logins_item.has($(e.target)).length || $(e.target).hasClass('login')) {
-            App.UI.Profile.logins_item.removeClass('active');
-        } else {
-            App.UI.Profile.logins_item.addClass('active');
+        const currentTarget = $(e.currentTarget);
+        let target = $(e.target);
+
+        if (target.is(currentTarget)) {
+            target.addClass('active');
+
+            return;
         }
 
-        if (!App.logged && ($(e.target).hasClass('save') || $(e.target).hasClass('post-reg__button'))) {
-            App.UI.Profile.logins_item.addClass('active');
+        while (!target.is(currentTarget)) {
+            if (target.hasClass('login')) {
+                target.addClass('active');
+
+                return;
+            }
+
+            if (!App.logged && (target.hasClass('save') || target.hasClass('post-reg__button'))) {
+                target.addClass('active');
+
+                return;
+            }
+
+            target = target.parent();
         }
+
+        App.UI.Profile.logins_item.removeClass('active');
+        // if (!App.UI.Profile.logins_item.has($(e.target)).length || $(e.target).hasClass('login')) {
+        //     App.UI.Profile.logins_item.removeClass('active');
+        // } else {
+        //     $(e.target).addClass('active');
+        //     //App.UI.Profile.logins_item.addClass('active');
+        // }
+        //
+        // if (!App.logged && ($(e.target).hasClass('save') || $(e.target).hasClass('post-reg__button'))) {
+        //     $(e.target).addClass('active');
+        //     // App.UI.Profile.logins_item.addClass('active');
+        // }
     }
 
     showRegistrationForm(e) {
@@ -264,12 +300,13 @@ class Profile {
     login(e) {
         e.preventDefault();
         let data = {
-            name: $('input[name="user"]').val()
-            ,password: $('input[name="pass"]').val()
+            name: $('li.login.active input[name="user"]').val()
+            ,password: $('li.login.active input[name="pass"]').val()
         };
 
         App.Ajax.post('/login', JSON.stringify(data), (data) => {
             data = JSON.parse(data);
+            this.onLogin = false;
 
             if (data.status) {
                 App.logged = true;

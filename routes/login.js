@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var Users = require('../modules/Users');
+var md5 = require('md5');
 
 router.post('/login', (req, res, next) => {
 	let parse = "";
@@ -22,6 +23,7 @@ router.post('/login', (req, res, next) => {
 			console.log(user, data)
 
 			if (data.length) {
+				user.password = md5(data[0].salt + user.password + data[0].salt);
 				if (Users.checkCredentials(data[0], user)) {
 					Users.createSession(req, res, next, data[0], (response_user) => {
 						res.send({status: true, data: { admin: data[0].admin }  });

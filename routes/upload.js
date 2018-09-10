@@ -286,6 +286,7 @@ router.post('/upload/print', (req, res, next) => {
             };
 
             print.name = fields.name[0];
+            print.category = fields.category[0];
             print.tags = JSON.parse(fields.tags[0]);
             print.fancywork = fields.fancywork[0];
             print.print = fields.print[0];

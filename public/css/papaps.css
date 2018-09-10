@@ -85,7 +85,7 @@
     margin: auto;
     width: 790px;
     padding-bottom: 30px;
-    /* height: 250px; */
+    /*height: 580px;*/
     border-radius: 10px;
     background-color: #fff;
     position: relative;
@@ -1045,8 +1045,43 @@ input[type=number]::-webkit-outer-spin-button {
     text-decoration: underline;
 }
 
+.file__picture-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 33px;
+    padding: 15px;
+    cursor: pointer;
+}
+
+.file__picture-title:hover {
+    background: #efefef;
+}
+
 .file__picture-category-header{
-    margin-top: 15px;
-    margin-bottom: 10px;
     font-size: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.file__open-accordeon {
+    width: 20px;
+    height: 20px;
+    background: #3a6ff6;
+    border-radius: 3px;
+    /* content: "-"; */
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file__open-accordeon::after {
+    content: "+";
+}
+
+.file__picture-category-container {
+    display: none;
 }
