@@ -219,8 +219,11 @@ body,
     color: #fff;
     border-radius: 28.5px;
     font-size: 18px;
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 0 auto;
+    text-decoration: none;
 }
 
 .dignity__header{

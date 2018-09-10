@@ -327,8 +327,36 @@
                 <li class="main-menu__item main-menu__item_margin">
                     <a href="#" class="main-menu__link text_color_main">Связаться с нами</a>
                 </li>
-                <li class="main-menu__item main-menu__item_margin">
-                    <a href="#" class="main-menu__link text_color_main login">Войти</a>
+                <li class="main-menu__item main-menu__item_margin login active">
+                    <a href="#" class="main-menu__link text_color_main">Войти</a>
+                    <form class="authorization__form form form_shadow form_radius form_padding">
+                        <header class="form__header">Вход пользователя</header>
+                        <div class="form__data">
+                            <input id="login" class="input_margin form__input input_padding input_border input_text" required="" name="user" type="text" placeholder="Ваш логин">
+                            <input id="password" class="form__input input_padding input_border input_text" type="password" required="" name="pass" placeholder="Пароль">
+                        </div>
+                        <div class="form__btns">
+                            <input type="submit" class="button_margin form__button button button_gradient_blue button_text_color" value="Вход">
+                            <a href="#" class="form__link">Восстановить пароль</a>
+                        </div>
+                        <div class="form__socials">
+                            <a href="#" class="social__link vk"></a>
+                            <a href="#" class="social__link odnoklas"></a>
+                            <a href="#" class="social__link facebook"></a>
+                            <a href="#" class="social__link google"></a>
+                            <a href="#" class="social__link twitter"></a>
+                        </div>
+                    </form>
+                </li>
+                <li class="main-menu__item main-menu__item_margin profile">
+                    <a href="#" class="profile__name">UserName</a>
+                    <section class="profile__menu">
+
+                        <a href="/profile" class="profile__link link__my-work">Мои работы (<span>22</span>)</a>
+                        <a href="/myOrders" class="profile__link link__my-orders">Мои заказы</a>
+
+                        <a href="#" class="profile__link link__logout">Выход</a>
+                    </section>
                 </li>
             </ul>
         </nav>

@@ -362,37 +362,36 @@ class TextWidget extends Widget {
             this.path.render(ctx);
     }
 
-    prerender() {
-        const ctx = this.ctx;
+    render(ctx) { //INNER
+        // let _int = this.size.height/this.size.width,
+        //     _x = this.position.x + App.currentWorkzone.position.x,
+        //     _y = this.position.y + App.currentWorkzone.position.y;
+
+        // const ctx = this.ctx;
         const fontSettings = this.fontSettings;
 
         let int = this.size.height/this.size.width,
             _x = this.position.x + App.currentWorkzone.position.x,
             _y = this.position.y + App.currentWorkzone.position.y;
 
-        this.setContextSettings();
+        this.setContextSettings(ctx);
 
         this.size.height = fontSettings.fontSize*this.lines.length;
         this.size.width = ctx.measureText(this.text).width;
-        this.canvas.width = this.size.width;
-        this.canvas.height = this.size.height;
+        // this.canvas.width = this.size.width;
+        // this.canvas.height = this.size.height;
+        //
+        // this.setContextSettings();
 
-        this.setContextSettings();
-
-        const reverseX = (this.reverseX < 0) ? -this.size.width : 0;
-        const reverseY = (this.reverseY < 0) ? Math.ceil(fontSettings.fontSize/6) : fontSettings.fontSize + Math.ceil(this.fontSettings.fontSize/6);
+        const reverseX = (this.reverseX < 0) ? this.reverseX * (_x + this.size.width) : _x;
+        const reverseY = (this.reverseY < 0) ? this.reverseY * _y/*Math.ceil(fontSettings.fontSize/6)*/ : _y + fontSettings.fontSize /*+ Math.ceil(this.fontSettings.fontSize/6)*/;
 
         fontSettings.fontSize = parseInt(fontSettings.fontSize);
-        ctx.fillText(this.text, reverseX, reverseY);
-    }
-
-    render(ctx) { //INNER
-        let int = this.size.height/this.size.width,
-            _x = this.position.x + App.currentWorkzone.position.x,
-            _y = this.position.y + App.currentWorkzone.position.y;
-
-        this.prerender();
-        ctx.drawImage(this.canvas, _x, _y);
+        ctx.fillText(this.text,  reverseX, reverseY);
+        ctx.setTransform(1,0,0,1,0.5,0.5);
+1
+        // this.prerender();
+        // ctx.drawImage(this.canvas, _x, _y);
     }
 
     static getDefault(text){

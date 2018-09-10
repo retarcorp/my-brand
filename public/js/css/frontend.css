@@ -206,3 +206,11 @@ canvas {
 .choose__3D.active {
     display: flex;
 }
+
+.file__picture-category.active .file__picture-category-container {
+    /*display: block;*/
+}
+
+.file__picture-category.active .file__open-accordeon::after {
+    content: "-";
+}

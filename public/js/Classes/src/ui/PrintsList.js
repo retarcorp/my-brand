@@ -44,12 +44,13 @@ class PrintsList {
         const children = [];
 
         categories.forEach( category => {
-            const child = $(TemplateFactory.getCategoryHtml(category));
+            const child = $(TemplateFactory.getCategoryHtml(category)),
+                printsContainer = child.find('.file__picture-category-container');
 
             category.prints.forEach( print => {
                 const childItem = $(TemplateFactory.getCategoryItemHtml(print));
                 childItem.data('print', print);
-                child.append(childItem);
+                printsContainer.append(childItem);
             });
 
             children.push(child);
@@ -62,15 +63,15 @@ class PrintsList {
     formCategories(prints) {
         prints = prints || this.UI.App.Data.Prints;
 
-        let uTags = [];
+        let uCategory = [];
         prints.map( print => {
-            print.tags.map( tag => uTags.find(t => tag == t) || uTags.push(tag));
+            uCategory.find(category => print.category === category) || uCategory.push(print.category);
         });
 
-        this.categories = uTags.map( tag => {
+        this.categories = uCategory.map( category => {
             return {
-                title: tag,
-                prints: prints.filter( print => print.tags.find(t => t == tag))
+                title: category,
+                prints: prints.filter( print => print.category === category)
             }
         });
     }

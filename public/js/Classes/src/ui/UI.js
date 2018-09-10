@@ -287,15 +287,47 @@ class UI {
     }
 
     onSelectPrint(e) {
-        if ($(e.target).hasClass('picture__clone')) {
-            let src = $(e.target).parent().parent().addClass('selected').find('img').attr('src');
-            $('.picture-list__picture').removeClass('selected');
+        const currentTarget = $(e.currentTarget);
+        let target = $(e.target);
 
-            App.UI.Create.createImageWidget(e);
+        while(!target.is(currentTarget)) {
+            if (target.hasClass('picture__clone')) {
+                let child = $(e.target).parent().parent(),
+                    src = child.find('img').attr('src');
+                // $('.piture-list__picture').removeClass('selected');c
 
-        } else if ($(e.target).hasClass('picture__remove')) {
-            $(e.target).parent().parent().remove();
+                App.UI.Create.createImageWidget(e);
+
+                return;
+            }
+
+            if(target.hasClass('picture__remove')) {
+                target.parent().parent().remove();
+                return;
+            }
+
+            if (target.hasClass('file__picture-title')) {
+                const child = target.parent(),
+                    printContainer = child.find('.file__picture-category-container');
+                child.toggleClass('active');
+
+                child.hasClass('active') ? printContainer.show(500) : printContainer.hide(500);
+
+                return;
+            }
+
+            target = target.parent();
         }
+
+        // if ($(e.target).hasClass('picture__clone')) {
+        //     let src = $(e.target).parent().parent().addClass('selected').find('img').attr('src');
+        //     $('.picture-list__picture').removeClass('selected');
+        //
+        //     App.UI.Create.createImageWidget(e);
+        //
+        // } else if ($(e.target).hasClass('picture__remove')) {
+        //     $(e.target).parent().parent().remove();
+        // }
     }
 
     onLoadImage() {

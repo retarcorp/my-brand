@@ -815,7 +815,10 @@ const TemplateFactory = {
     ,getCategoryHtml(category) {
         return `
             <div class="file__picture-category">
-                <h1 class="file__picture-category-header">${category.title}</h1>
+                <div class="file__picture-title">
+                    <h1 class="file__picture-category-header">${category.title}</h1>
+                    <div class="file__open-accordeon"></div>
+                </div>
                 <div class="file__picture-category-container">
                     
                 </div>

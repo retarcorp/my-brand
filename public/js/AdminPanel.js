@@ -1580,6 +1580,7 @@ AdminApp = {
                     tags = [];
 
                 data.append('name', this.name.val());
+                data.append('category', this.category.val());
                 data.append('print', this.options.print.prop('checked'));
                 data.append('fancywork', this.options.fancywork.prop('checked'));
                 data.append('_3D', this.options._3D.prop('checked'));
@@ -1717,6 +1718,7 @@ AdminApp = {
 
         ,formPanel() {
             this.name.val(this.print.name);
+            this.category.val(this.print.category || 'Другое');
             this.print.tags.forEach( tag => this.addTag(tag));
 
             this.options.print.prop('checked', (this.print.print == 'true') ? true : false);
@@ -1782,6 +1784,7 @@ AdminApp = {
         ,file_storage: null
         ,file_name: ""
         ,back: $('[name="backToPrintsList_print"]')
+        ,category: $('[name="printCategory_print"]')
     }
 
     ,OrdersList: {
