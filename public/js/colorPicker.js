@@ -17,15 +17,19 @@ var ColorPicker = {
     var ctx, colorLineCtx,
             mousedown = false,
             mouseup = false,
-            mouseMove = false;
+            mouseMove = false,
+            onPalette = false;
 
-    var palette, colorLine, colorCircle, placeForColorPicker;
+    var palette, colorLine, colorCircle, placeForColorPicker, paletteCircle, body;
 
     function init() {
         placeForColorPicker = document.querySelector('[data-place-for-color-picker]');
         insertColorPicker();
 
+        body = document.body;
+
         palette = document.querySelector('[data-palette]');
+        paletteCircle = document.querySelector('[data-palette-circle]')
         colorLine = document.querySelector('[data-color-line]');
         colorCircle = document.querySelector('[data-color-circle]');
 
@@ -48,8 +52,7 @@ var ColorPicker = {
             target = e.target;
 
         (e.type == "mousedown") && (mousedown = true) && (mouseup = false);
-        (e.type == "mousemove") && (mousemove = true);
-        (e.type == "mouseup") && (mouseup = true) && (mousedown = false);
+        (e.type == "mousemove") && (mouseMove = true);
 
         while (target !== currentTarget) {
             if (target.colorDetail && e.type == "mousedown") {
@@ -58,8 +61,12 @@ var ColorPicker = {
                     hexColor = rgbToHex(paletteColor[0], paletteColor[1], paletteColor[2]);
 
                 mousedown = true;
+                onPalette = true;
+
+                body.style.userSelect = 'none';
 
                 setPaletteColor(hexColor);
+                movePaletteColorCircle(X, Y);
                 ColorPicker.emmitColorChange(hexColor);
                 //fillPalette();
 
@@ -74,6 +81,7 @@ var ColorPicker = {
                 mouseMove = true;
 
                 setPaletteColor(hexColor);
+                movePaletteColorCircle(X, Y);
                 ColorPicker.emmitColorChange(hexColor);
 
                 //fillPalette();
@@ -81,7 +89,7 @@ var ColorPicker = {
                 return;
             }
 
-            if (target.colorLine && (e.type == "mousedown" || e.type == "mousemove") && mousedown) {
+            if (target.colorLine && (e.type == "mousedown" || e.type == "mousemove") && mousedown && !onPalette) {
                 var x = e.offsetX, y = e.offsetY,
                     color = getColorInColorLine(x,y),
                     hexColor = rgbToHex(color[0], color[1], color[2]);
@@ -95,9 +103,23 @@ var ColorPicker = {
                 return;
             }
 
-            if (target.classList.contains('color-picker__color')) {
-                const color = target.css('background');
-                ColorPicker.emmitColorChange(color);
+            if (target.classList.contains('color-picker__color') && e.type == 'click') {
+                const hexColor = target.getAttribute('data-color');
+
+                setColorLineColor(hexColor);
+                setPaletteColorInBorder(hexColor);
+                ColorPicker.emmitColorChange(hexColor);
+                fillPalette();
+                moveColorCircle(x, y);
+
+                return;
+            }
+
+            if (e.type == 'mouseup') {
+                mouseup = true;
+                mousedown = false;
+                onPalette = false;
+                body.style.userSelect = 'initial';
 
                 return;
             }
@@ -114,10 +136,33 @@ var ColorPicker = {
         document.addEventListener('mousedown', checkEvent);
         document.addEventListener('mousemove', checkEvent);
         document.addEventListener('mouseup', checkEvent);
+        document.addEventListener('click', checkEvent);
     }
 
     function setPaletteColor(color) {
         palette.color = color || '#ff0000';
+    }
+
+    function setPaletteColorInBorder(color) {
+        var rgbOld = hexToRgb(color),
+            rgb = hexToRgb(color),
+            binMin = (rgb.r <= rgb.g) ? (rgb.r <= rgb.b)
+                    ? 0b100 : 0b001 :
+                        (rgb.g <= rgb.b) ? 0b010
+                            : 0b001,
+            binMax = (rgb.r >= rgb.g) ? (rgb.r >= rgb.b)
+                        ? 0b100 : 0b001 :
+                        (rgb.g >= rgb.b) ? 0b010
+                            : 0b001;
+
+
+        (!(binMin ^ 0b100) && (rgb.r = 0)) || (!(binMin ^ 0b010) && (rgb.g = 0)) || (!(binMin ^ 0b001) && (rgb.b = 0));
+        (!(binMax ^ 0b100) && (rgb.r = 255)) || (!(binMax ^ 0b010) && (rgb.g = 255)) || (!(binMax ^ 0b001) && (rgb.b = 255));
+        color = rgbToHex(rgb.r ,rgb.g, rgb.b);
+
+        getPeletteCords();
+
+        setPaletteColor(color);
     }
 
     function setColorLineColor(color) {
@@ -182,6 +227,10 @@ var ColorPicker = {
         colorLineCtx.fillRect(x,y,pWidth,pHeight);
     }
 
+    function getPeletteCords(rgb) {
+
+    }
+
     function getColorInPalette(x, y) {
         var color = palette.color,
             pWidth = palette.width,
@@ -212,7 +261,11 @@ var ColorPicker = {
                 </div> -->
     
                 <div class="color-picker__workspace">
-                    <canvas data-palette class="color-picker__palette" width="193" height="192"></canvas>
+                    <div class="color-picker__palette-container">
+                        <canvas data-palette class="color-picker__palette" width="193" height="192"></canvas>
+                        <div data-palette-circle class="color-picker__palette-circle"></div>
+                    </div>
+                    
     
                     <div class="color-picker__colors">
                         <div class="color-picker__color-line">
@@ -221,26 +274,26 @@ var ColorPicker = {
                         </div>
     
                         <div class="color-picker__color-array">
-                            <div class="color-picker__color" style="background: #1AC5EB;"></div>
-                            <div class="color-picker__color" style="background: #FF2828;"></div>
-                            <div class="color-picker__color" style="background: #15505C;"></div>
-                            <div class="color-picker__color" style="background: #3FAD49;"></div>
-                            <div class="color-picker__color" style="background: #B611FA;"></div>
-                            <div class="color-picker__color" style="background: #F85D01;"></div>
-                            <div class="color-picker__color" style="background: #0B677C;"></div>
-                            <div class="color-picker__color" style="background: #3FC500;"></div>
-                            <div class="color-picker__color" style="background: #CE1AEB;"></div>
-                            <div class="color-picker__color" style="background: #474D69;"></div>
-                            <div class="color-picker__color" style="background: #474D69;"></div>
-                            <div class="color-picker__color" style="background: #CE1AEB;"></div>
-                            <div class="color-picker__color" style="background: #3FC500;"></div>
-                            <div class="color-picker__color" style="background: #0B677C;"></div>
-                            <div class="color-picker__color" style="background: #F85D01;"></div>
-                            <div class="color-picker__color" style="background: #B611FA;"></div>
-                            <div class="color-picker__color" style="background: #3FAD49;"></div>
-                            <div class="color-picker__color" style="background: #15505C;"></div>
-                            <div class="color-picker__color" style="background: #FF2828;"></div>
-                            <div class="color-picker__color" style="background: #1AC5EB;"></div>
+                            <div class="color-picker__color" style="background: #1AC5EB;" data-color="#1AC5EB"></div>
+                            <div class="color-picker__color" style="background: #FF2828;" data-color="#FF2828"></div>
+                            <div class="color-picker__color" style="background: #15505C;" data-color="#15505C"></div>
+                            <div class="color-picker__color" style="background: #3FAD49;" data-color="#3FAD49"></div>
+                            <div class="color-picker__color" style="background: #B611FA;" data-color="#B611FA"></div>
+                            <div class="color-picker__color" style="background: #F85D01;" data-color="#F85D01"></div>
+                            <div class="color-picker__color" style="background: #0B677C;" data-color="#0B677C"></div>
+                            <div class="color-picker__color" style="background: #3FC500;" data-color="#3FC500"></div>
+                            <div class="color-picker__color" style="background: #CE1AEB;" data-color="#CE1AEB"></div>
+                            <div class="color-picker__color" style="background: #474D69;" data-color="#474D69"></div>
+                            <div class="color-picker__color" style="background: #474D69;" data-color="#474D69"></div>
+                            <div class="color-picker__color" style="background: #CE1AEB;" data-color="#CE1AEB"></div>
+                            <div class="color-picker__color" style="background: #3FC500;" data-color="#3FC500"></div>
+                            <div class="color-picker__color" style="background: #0B677C;" data-color="#0B677C"></div>
+                            <div class="color-picker__color" style="background: #F85D01;" data-color="#F85D01"></div>
+                            <div class="color-picker__color" style="background: #B611FA;" data-color="#B611FA"></div>
+                            <div class="color-picker__color" style="background: #3FAD49;" data-color="#3FAD49"></div>
+                            <div class="color-picker__color" style="background: #15505C;" data-color="#15505C"></div>
+                            <div class="color-picker__color" style="background: #FF2828;" data-color="#FF2828"></div>
+                            <div class="color-picker__color" style="background: #1AC5EB;" data-color="#1AC5EB"></div>
                         </div>
                     </div>
                 </div>
@@ -252,6 +305,11 @@ var ColorPicker = {
         if (x > 5 && x < colorLine.width - 7) {
             colorCircle.style.left = `${x - 7}px`;
         }
+    }
+
+    function movePaletteColorCircle(x, y) {
+        paletteCircle.style.left = `${x - 6}px`;
+        paletteCircle.style.top = `${y - 6}px`;
     }
 
     function componentToHex(c) {
