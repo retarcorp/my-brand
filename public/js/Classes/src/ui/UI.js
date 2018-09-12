@@ -216,7 +216,7 @@ class UI {
         if (curr instanceof TextWidget) {
             if (data) {
                 curr.setHexColor(data);
-            } else if ((target.hasClass('example-pick') || target.hasClass('jscolor') ) && bgColor) {
+            } else if ((target.hasClass('color-picker__color') || target.hasClass('jscolor') ) && bgColor) {
                 curr.setColor(bgColor);
             }
             

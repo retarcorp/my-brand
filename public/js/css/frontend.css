@@ -75,7 +75,7 @@ canvas {
 }
 
 .color-picker.active {
-    display: flex;
+    display: block;
 }
 
 
