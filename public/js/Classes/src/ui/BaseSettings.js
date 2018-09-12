@@ -9,5 +9,15 @@ class BaseSettings {
 
         this.dynamic_color.on('change', this.UI.onBaseColor);
         this.color.on('click', this.UI.onBaseColor);
+
+        onchangecolor((color) => {
+            const curr = this.UI.App.GraphCore.currentWidget;
+
+            console.log(color);
+
+            if (curr){
+                curr.setColor(color);
+            }
+        });
     }
 }

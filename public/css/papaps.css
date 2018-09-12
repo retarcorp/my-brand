@@ -1003,20 +1003,20 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 
-.color-picker {
-    box-sizing: border-box;
-    position: absolute;
-    background-color: #fff;
-    z-index: 1000;
-    border-radius: 5px;
-    top: 53px;
-    right: 0;
-    width: 222px;
-    display: flex;
-    flex-wrap: wrap;
-    padding: 20px;
-    box-shadow: 0 0 79px rgba(56,49,187,0.18);
-}
+/*.color-picker {*/
+    /*box-sizing: border-box;*/
+    /*position: absolute;*/
+    /*background-color: #fff;*/
+    /*z-index: 1000;*/
+    /*border-radius: 5px;*/
+    /*top: 53px;*/
+    /*right: 0;*/
+    /*width: 222px;*/
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*padding: 20px;*/
+    /*box-shadow: 0 0 79px rgba(56,49,187,0.18);*/
+/*}*/
 .color-picker:after{
     content: ''; 
     position: absolute; /* Абсолютное позиционирование */

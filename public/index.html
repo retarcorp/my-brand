@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/papaps.css">
     <link rel="stylesheet" type="text/css" href="css/auth-admin.css">
     <link rel="stylesheet" href="css/adaptive.css">
+    <link rel="stylesheet" href="css/colorPicker.css">
 
     <title>My Brand</title>
 </head>
@@ -200,20 +201,44 @@
                         </div>
                         <div class="example-pick color-pick" style="background-color: #393939"></div>
                         <div class="color-picker">
-                            <div class="example-pick" style="background-color: red"></div>
-                            <div class="example-pick" style="background-color: green"></div>
-                            <div class="example-pick" style="background-color: blue"></div>
-                            <div class="example-pick" style="background-color: yellow"></div>
-                            <div class="example-pick" style="background-color: grey"></div>
-                            <div class="example-pick" style="background-color: orange"></div>
-                            <div class="example-pick" style="background-color: pink"></div>
-                            <div class="custom-color">
-                                <input type="hidden" value="" id="_color__text">
-                                <label for="color-text">
-                                    <button id="color-text" class="jscolor {valueElement:'_color__text'} button editor__color editor__item_margin"></button>
-                                    <!--<p>Выбрать свой цвет</p>-->
-                                </label>
+                            <!-- <div class="color-picker__head">
+                                <h3 class="color-picker___title">
+                                    Color Picker
+                                </h3>
+                            </div> -->
 
+                            <div class="color-picker__workspace">
+                                <canvas data-palette class="color-picker__palette" width="193" height="192"></canvas>
+
+                                <div class="color-picker__colors">
+                                    <div class="color-picker__color-line">
+                                        <canvas data-color-line width="181" height="11"></canvas>
+                                        <div data-color-circle class="color-picker__circle"></div>
+                                    </div>
+
+                                    <div class="color-picker__color-array">
+                                        <div class="color-picker__color" style="background: #1AC5EB;"></div>
+                                        <div class="color-picker__color" style="background: #FF2828;"></div>
+                                        <div class="color-picker__color" style="background: #15505C;"></div>
+                                        <div class="color-picker__color" style="background: #3FAD49;"></div>
+                                        <div class="color-picker__color" style="background: #B611FA;"></div>
+                                        <div class="color-picker__color" style="background: #F85D01;"></div>
+                                        <div class="color-picker__color" style="background: #0B677C;"></div>
+                                        <div class="color-picker__color" style="background: #3FC500;"></div>
+                                        <div class="color-picker__color" style="background: #CE1AEB;"></div>
+                                        <div class="color-picker__color" style="background: #474D69;"></div>
+                                        <div class="color-picker__color" style="background: #474D69;"></div>
+                                        <div class="color-picker__color" style="background: #CE1AEB;"></div>
+                                        <div class="color-picker__color" style="background: #3FC500;"></div>
+                                        <div class="color-picker__color" style="background: #0B677C;"></div>
+                                        <div class="color-picker__color" style="background: #F85D01;"></div>
+                                        <div class="color-picker__color" style="background: #B611FA;"></div>
+                                        <div class="color-picker__color" style="background: #3FAD49;"></div>
+                                        <div class="color-picker__color" style="background: #15505C;"></div>
+                                        <div class="color-picker__color" style="background: #FF2828;"></div>
+                                        <div class="color-picker__color" style="background: #1AC5EB;"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -494,6 +519,7 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="js/colorPicker.js"></script>
 <script type="text/javascript" src="js/slick.min.js"></script>
 <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
 
