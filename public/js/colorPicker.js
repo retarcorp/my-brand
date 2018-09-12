@@ -1,36 +1,37 @@
-var Palette = document.querySelector('[data-palette]');
-var ColorLine = document.querySelector('[data-color-line]');
-var ColorCircle = document.querySelector('[data-color-circle]');
-
-var ColorPickerEmmiter = {
+var ColorPicker = {
     onchangecolor: function(cb) {
-        ColorPickerEmmiter.onChangeColorStack.push(cb);
+        ColorPicker.onChangeColorStack.push(cb);
     }
 
     ,emmitColorChange: function(color) {
-        ColorPickerEmmiter.onChangeColorStack.forEach(function(f) {
+        ColorPicker.onChangeColorStack.forEach(function(f) {
             f(color);
         });
     }
 
     ,onChangeColorStack: []
-}
+};
 
-var onchangecolor = ColorPickerEmmiter.onchangecolor;
+(function() {
 
-(function(
-    palette
-    ,colorLine
-    ,colorCircle
-) {
-
-    var ctx = palette.getContext('2d'),
-            colorLineCtx = colorLine.getContext('2d'),
+    var ctx, colorLineCtx,
             mousedown = false,
             mouseup = false,
             mouseMove = false;
 
+    var palette, colorLine, colorCircle, placeForColorPicker;
+
     function init() {
+        placeForColorPicker = document.querySelector('[data-place-for-color-picker]');
+        insertColorPicker();
+
+        palette = document.querySelector('[data-palette]');
+        colorLine = document.querySelector('[data-color-line]');
+        colorCircle = document.querySelector('[data-color-circle]');
+
+        ctx = palette.getContext('2d');
+        colorLineCtx = colorLine.getContext('2d');
+
         palette.colorDetail = true;
         colorLine.colorLine = true;
         colorCircle.colorCircle = true;
@@ -59,7 +60,7 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
                 mousedown = true;
 
                 setPaletteColor(hexColor);
-                ColorPickerEmmiter.emmitColorChange(hexColor);
+                ColorPicker.emmitColorChange(hexColor);
                 //fillPalette();
 
                 return;
@@ -73,7 +74,7 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
                 mouseMove = true;
 
                 setPaletteColor(hexColor);
-                ColorPickerEmmiter.emmitColorChange(hexColor);
+                ColorPicker.emmitColorChange(hexColor);
 
                 //fillPalette();
 
@@ -87,9 +88,16 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
 
                 setColorLineColor(hexColor);
                 setPaletteColor(hexColor);
-                ColorPickerEmmiter.emmitColorChange(hexColor);
+                ColorPicker.emmitColorChange(hexColor);
                 fillPalette();
                 moveColorCircle(x, y);
+
+                return;
+            }
+
+            if (target.classList.contains('color-picker__color')) {
+                const color = target.css('background');
+                ColorPicker.emmitColorChange(color);
 
                 return;
             }
@@ -99,7 +107,7 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
     }
 
     function insertColorPicker() {
-
+        placeForColorPicker.innerHTML += getColorPickerHTML();
     }
 
     function setListeners() {
@@ -120,7 +128,7 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
         var pWidth = palette.width,
             pHeight = palette.height,
             x = 0, y = 0,
-            data = colorLineCtx.getImageData(0,0,pWidth,pHeight),
+            data = ctx.getImageData(0,0,pWidth,pHeight),
             pixels = data.data,
             length = pixels.length,
             color = palette.color,
@@ -194,6 +202,52 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
         return [pixels[x*4], pixels[x*4+1], pixels[x*4+2]];
     }
 
+    function getColorPickerHTML() {
+        return `
+            <div class="color-picker">
+                <!-- <div class="color-picker__head">
+                    <h3 class="color-picker___title">
+                        Color Picker
+                    </h3>
+                </div> -->
+    
+                <div class="color-picker__workspace">
+                    <canvas data-palette class="color-picker__palette" width="193" height="192"></canvas>
+    
+                    <div class="color-picker__colors">
+                        <div class="color-picker__color-line">
+                            <canvas data-color-line width="181" height="11"></canvas>
+                            <div data-color-circle class="color-picker__circle"></div>
+                        </div>
+    
+                        <div class="color-picker__color-array">
+                            <div class="color-picker__color" style="background: #1AC5EB;"></div>
+                            <div class="color-picker__color" style="background: #FF2828;"></div>
+                            <div class="color-picker__color" style="background: #15505C;"></div>
+                            <div class="color-picker__color" style="background: #3FAD49;"></div>
+                            <div class="color-picker__color" style="background: #B611FA;"></div>
+                            <div class="color-picker__color" style="background: #F85D01;"></div>
+                            <div class="color-picker__color" style="background: #0B677C;"></div>
+                            <div class="color-picker__color" style="background: #3FC500;"></div>
+                            <div class="color-picker__color" style="background: #CE1AEB;"></div>
+                            <div class="color-picker__color" style="background: #474D69;"></div>
+                            <div class="color-picker__color" style="background: #474D69;"></div>
+                            <div class="color-picker__color" style="background: #CE1AEB;"></div>
+                            <div class="color-picker__color" style="background: #3FC500;"></div>
+                            <div class="color-picker__color" style="background: #0B677C;"></div>
+                            <div class="color-picker__color" style="background: #F85D01;"></div>
+                            <div class="color-picker__color" style="background: #B611FA;"></div>
+                            <div class="color-picker__color" style="background: #3FAD49;"></div>
+                            <div class="color-picker__color" style="background: #15505C;"></div>
+                            <div class="color-picker__color" style="background: #FF2828;"></div>
+                            <div class="color-picker__color" style="background: #1AC5EB;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `
+    }
+
     function moveColorCircle(x, y) {
         if (x > 5 && x < colorLine.width - 7) {
             colorCircle.style.left = `${x - 7}px`;
@@ -219,8 +273,4 @@ var onchangecolor = ColorPickerEmmiter.onchangecolor;
     }
 
     init();
-})(
-    Palette
-    ,ColorLine
-    ,ColorCircle
-)
+})();
