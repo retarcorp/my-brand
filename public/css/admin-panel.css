@@ -1132,6 +1132,7 @@ button.window-button__add-print{
     text-align: center;
     line-height: 45px;
     border-radius: 6px;
+    cursor: pointer;
 }
 
 .select__type.active{

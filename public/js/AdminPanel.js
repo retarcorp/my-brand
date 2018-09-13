@@ -18,6 +18,7 @@ AdminApp = {
 
         this.style = $('[name="FONTS_FACES"]');
 
+        this.loadingPage = false;
 
         this.font_print.on('click', this.checkPrint.bind(this));
         this.font_fancywork.on('click', this.checkPrint.bind(this));
@@ -135,7 +136,7 @@ AdminApp = {
         $('input[name="font"]').val('');
 
         $('input[type="file"][name="font_file"]').val('');
-        $('input[type="file"][name="font_file"]')[0].dataset.after = "Введите имя файла";
+        $('input[type="file"][name="font_file"]')[0].dataset.after = "Выберите файл";
         // $('input[name="font"]').after(TemplateFactory.getAdminPanelFontFileInput());
         // $('input[type="file"]').on('change', this.updateFile);
 
@@ -664,11 +665,13 @@ AdminApp = {
         }
 
         ,addSize(e) {
-            let size = AdminApp.BasePanel.inputs.size.val(),
+            let size = (AdminApp.BasePanel.inputs.size.val()).replace(/[ ]+/, ""),
                 child = $(TemplateFactory.getAdminPanelSizeHtml(size));
 
-            child.data('size', size);
-            AdminApp.BasePanel.size.append(child);
+            if (size.length) {
+                child.data('size', size);
+                AdminApp.BasePanel.size.append(child);
+            }
         }
 
         ,setPrintType(e) {
@@ -1601,8 +1604,11 @@ AdminApp = {
         }
 
         ,uploadPrint() {
-            const data = this.formData()
-            this.sendData(data, '?_id=' + data.get('_id'));
+            if (!this.uploading) {
+                this.uploading = true;
+                const data = this.formData()
+                this.sendData(data, '?_id=' + data.get('_id'));
+            }
         }
 
         ,checkTagEvent(e) {
@@ -1657,10 +1663,11 @@ AdminApp = {
             this.tag_container.html('');
             this.file.val('');
 
+            this.uploading = false;
+
             this.preview.attr('src', '');
             this.print = null;
             this.file_storage = null;
-
             this.closePreview();
         }
 
@@ -1698,11 +1705,23 @@ AdminApp = {
             (bin & 0b100) ? this.options._3D.prop('checked', true) : "";
         }
 
+        ,setPanleLoading() {
+            this.panel.addClass('loading');
+            this.loading = true;
+        }
+
+        ,unsetPanleLoading() {
+            this.panel.removeClass('loading');
+            this.loading = false;
+        }
+
         ,usePrint(print) {
             this.loadPanel();
+            this.setPanleLoading();
             this.print = print;
 
             App.Ajax.getBlob(print.src, (response) => {
+                this.unsetPanleLoading();
                 const file = new File([response], print.src.replace(/[a-zA-Z0-9\.\-\_\\]+\//g, ""), {type: response.type });
 
                 this.file_name = file.name;
@@ -1785,6 +1804,8 @@ AdminApp = {
         ,file_name: ""
         ,back: $('[name="backToPrintsList_print"]')
         ,category: $('[name="printCategory_print"]')
+        ,loading: false
+        ,uploading: false
     }
 
     ,OrdersList: {
