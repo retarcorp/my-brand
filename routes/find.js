@@ -152,7 +152,7 @@ router.post('/find/prints/by/tags', (req, res, next) => {
             filter = (tags.length) ? prints.filter( print => {
                 const pTags = print.tags,
                     fTags = pTags.filter( pTag => {
-                        return tags.find( tag => pTag == tag);
+                        return tags.find( tag => pTag.toLowerCase() == tag.toLowerCase());
                     }),
                     relevation = fTags.length;
 
