@@ -55,6 +55,8 @@ class Brand {
 
         this.blurTagInput();
 
+        e.preventDefault();
+
         if (target.is(currentTarget)) {
             this.closeSection();
 
@@ -95,12 +97,21 @@ class Brand {
             }
 
             if (target.attr('name') == 'myBrand_item-btn-edit') {
-                const child = target.parent().parent(),
+                const child = target.parent().parent().parent(),
                     brand = child.data('brand');
 
                 this.editBrand(brand);
                 return;
             }
+
+            if (target.attr('name') == 'myBrand_item-btn-to-cart') {
+                const child = target.parent().parent().parent(),
+                    brand = child.data('brand');
+
+                this.addBrandToCart(brand);
+                return;
+            }
+
             console.log('Cycle Brand 1')
             target = target.parent();
         }
@@ -389,7 +400,7 @@ class Brand {
                 }
 
                 await app.setCurrentVariant(app.Project.variants[0]);
-                child.find('> img').attr('src', await app.getVariantPreview());
+                child.find('.slider__item-img').attr('src', await app.getVariantPreview());
                 child.data('brand', JSON.parse(JSON.stringify(app.Data.getProjectData())));
                 children.push(child);
             }
@@ -397,6 +408,8 @@ class Brand {
 
         this.container.html('');
         children.forEach( ch => this.container.append(ch));
+        BrandSlider.init();
+        $('.slider__item:nth-child(2)').addClass('middle-slide');
     }
 
     editBrand(brand) {
@@ -411,5 +424,12 @@ class Brand {
         });
         // localStorage.setItem('brand', JSON.stringify(brand));
         // location.href = "/constructor";
+    }
+
+    addBrandToCart(brand) {
+        const app = this.UI.App,
+            project = app.getProject(brand);
+
+        this.UI.Profile.addToCartProject(project);
     }
 }

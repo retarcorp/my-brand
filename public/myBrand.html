@@ -105,9 +105,20 @@
                     <button class="button button_gradient_blue button__edit-mbr">Изменить</button>
                 </div>
                 <h1 class="my-brand__header">Подобранные товары</h1>
-                <div class="my-brand__container" name="brandProductsGeneration_brand">
-                    <div class="loader-container">
+                <div class="my-brand__container">
+                    <!-- <div class="loader-container">
                         <div class="loader"></div>
+                    </div> -->
+                    <div class="slider-brand">
+                        <button class="btn-slider-prev"></button>
+                        <div class="viewport">
+                            <div class="slider__wrapper" name="brandProductsGeneration_brand">
+                                <div class="loader-container static">
+                                    <div class="loader"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn-slider-next"></button>
                     </div>
                 </div>
             </section>
@@ -226,5 +237,6 @@
     <script src="js/user_api.js"></script>
     <script src="js/index.js"></script>
     <script src="js/jscolor.js"></script>
+    <script src="brandSlider.js"></script>
 </body>
 </html>
