@@ -69,7 +69,9 @@ class UI {
         //this.Menu.init();
 
         this.body = $('body');
-        this.body.on('click', this.closePopups.bind(this));
+        this.body.on('click', (e) => {
+            this.closePopups(e);
+        });
     }
 
     closePopups(e) {
@@ -315,7 +317,7 @@ class UI {
 
                 return;
             }
-
+            console.log('Cycle UI 1')
             target = target.parent();
         }
 

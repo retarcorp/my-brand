@@ -90,7 +90,7 @@ class Tabs {
 
                 curr.setPrintType(printType);
             }
-
+            console.log('Cycle Tabs 1')
             target = target.parent();
         }
     }

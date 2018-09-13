@@ -102,7 +102,7 @@ class Order {
 
                 return;
             }
-
+            console.log('Cycle Order 1')
             target = target.parent();
         }
     }

@@ -73,7 +73,7 @@ class BaseList {
 
                 this.selectProjectVariant(variant, target);
             }
-
+            console.log('Cycle BaseList 1')
             target = target.parent();
         }
     }
@@ -125,7 +125,7 @@ class BaseList {
 
                 return;
             }
-
+            console.log('Cycle BaseList 2')
             target = target.parent();
         }
     }

@@ -54,6 +54,7 @@ var ColorPicker = {
         (e.type == "mousedown") && (mousedown = true) && (mouseup = false);
         (e.type == "mousemove") && (mouseMove = true);
 
+
         while (target !== currentTarget) {
             if (target.colorDetail && e.type == "mousedown") {
                 var X = e.offsetX, Y = e.offsetY,
@@ -123,7 +124,7 @@ var ColorPicker = {
 
                 return;
             }
-
+            console.log('Cycle Color');
             target = target.parentNode;
         }
     }
