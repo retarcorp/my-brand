@@ -1024,7 +1024,7 @@ AdminApp = {
                     this.deleteTemplate(template, child);
                     break;
                 }
-
+                console.log('Cycle AdminPanel1')
                 target = target.parent();
             }
 
@@ -1414,7 +1414,7 @@ AdminApp = {
 
                     break;
                 }
-
+                console.log('Cycle AdminPanel 1')
                 target = target.parent();
             }
 
@@ -1616,7 +1616,7 @@ AdminApp = {
                     this.removeTag(tag);
                     break;
                 }
-
+                console.log('Cycle AdminPanel 3')
                 target = target.parent();
             }
         }
@@ -1819,7 +1819,7 @@ AdminApp = {
 
                     return;
                 }
-
+                console.log('Cycle AdminPanel 4')
                 target = target.parent()
             }
         }
@@ -2037,7 +2037,7 @@ AdminApp = {
                     this.hideOrderItem(child, target);
                     return;
                 }
-
+                console.log('Cycle AdminPanel 5')
                 target = target.parent();
             }
         }
@@ -2053,7 +2053,7 @@ AdminApp = {
 
                     return;
                 }
-
+                console.log('Cycle AdminPanel 6')
                 target = target.parent();
             }
         }

@@ -44,7 +44,7 @@ class Cart {
                  this.recountPrice();
                  break;
              }
-
+             console.log('Cycle Cart 1')
              target = target.parent();
          }
      }

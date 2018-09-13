@@ -94,7 +94,7 @@ class Profile {
                 this.addToCartProject(project);
                 return;
             }
-
+            console.log('Cycle Profile 1')
             target = target.parent();
         }
     }
@@ -240,7 +240,7 @@ class Profile {
             return;
         }
 
-        while (!target.is(currentTarget)) {
+        while (target[0] != currentTarget[0] && target.length) {
             if (target.hasClass('login')) {
                 target.addClass('active');
 
@@ -252,8 +252,9 @@ class Profile {
 
                 return;
             }
+            console.log('Cycle Profile 2');
 
-            target = target.parent();
+            target = $(target[0].parentNode);
         }
 
         App.UI.Profile.logins_item.removeClass('active');

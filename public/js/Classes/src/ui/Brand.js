@@ -101,7 +101,7 @@ class Brand {
                 this.editBrand(brand);
                 return;
             }
-
+            console.log('Cycle Brand 1')
             target = target.parent();
         }
 
@@ -129,14 +129,14 @@ class Brand {
 
                 return;
             }
-
+            console.log('Cycle brand 2')
             target = target.parent();
         }
     }
 
     blurTagInput() {
         this.tag_input.blur();
-        this.closeHint();
+        // this.closeHint();
     }
 
     addTag(tag) {
