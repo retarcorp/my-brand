@@ -794,8 +794,8 @@ const TemplateFactory = {
                     </span>
                     <p class="slider__item-price">${template.base.price} P</p>
                     <div class="slider__buttons">
-                        <button class="button slider__btn-cart button_gradient_blue"></button>
-                        <button class="button slider__btn-edit-brand button_gradient_yellow">Редактировать</button>
+                        <button class="button slider__btn-cart button_gradient_blue" name="myBrand_item-btn-to-cart"></button>
+                        <button class="button slider__btn-edit-brand button_gradient_yellow" name="myBrand_item-btn-edit">Редактировать</button>
                     </div>
                 </a>
             </div>

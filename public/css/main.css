@@ -603,6 +603,11 @@ body,
     padding: 20px;
 }
 
+.loader-container.static {
+    width: auto;
+    height: auto;
+}
+
 .loader{
     margin: auto;
 }

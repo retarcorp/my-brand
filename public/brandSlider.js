@@ -5,6 +5,11 @@ var BrandSlider = {
         let btnNextSlide = document.querySelector('.btn-slider-next'),
             btnPrevSlide = document.querySelector('.btn-slider-prev');
 
+        let sliderContainer = document.querySelector('.slider__wrapper'),
+            sliderItemsLength = this.getAllSlides().length;
+
+        sliderContainer.style.width = 100 * sliderItemsLength/3 + '%';
+
         btnPrevSlide.style.display = "none";
         btnNextSlide.addEventListener('click', BrandSlider.onNextBtn.bind(this));
         btnPrevSlide.addEventListener('click', BrandSlider.onPrevBtn.bind(this));
@@ -33,9 +38,9 @@ var BrandSlider = {
             console.log(arraySlides.indexOf(currentSlide) + 2);
             arraySlides[arraySlides.indexOf(currentSlide) + 1].classList.add('middle-slide');
             currentSlide.classList.remove('middle-slide');
-            if(arraySlides.indexOf(currentSlide) + 2 < arraySlides.length){
-                btnNext.style.display = 'none'; 
-            }
+            // if(arraySlides.indexOf(currentSlide) + 2 < arraySlides.length){
+            //     btnNext.style.display = 'none';
+            // }
             btnPrev.style.display = 'block';
             this.scrollWrapperRight();
         }
@@ -50,9 +55,9 @@ var BrandSlider = {
         if(1 < arraySlides.indexOf(currentSlide)){
             arraySlides[arraySlides.indexOf(currentSlide) - 1].classList.add('middle-slide');
             currentSlide.classList.remove('middle-slide');
-            if(arraySlides.indexOf(currentSlide) > 1){
-                btnPrev.style.display = 'none';
-            }
+            // if(arraySlides.indexOf(currentSlide) > 1){
+            //     btnPrev.style.display = 'none';
+            // }
             btnNext.style.display = 'block'; 
             this.scrollWrapperLeft();    
         }
