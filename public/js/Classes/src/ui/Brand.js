@@ -389,7 +389,7 @@ class Brand {
                 }
 
                 await app.setCurrentVariant(app.Project.variants[0]);
-                child.find('> img').attr('src', await app.getVariantPreview());
+                child.find('.slider__item-img').attr('src', await app.getVariantPreview());
                 child.data('brand', JSON.parse(JSON.stringify(app.Data.getProjectData())));
                 children.push(child);
             }
@@ -397,6 +397,8 @@ class Brand {
 
         this.container.html('');
         children.forEach( ch => this.container.append(ch));
+        BrandSlider.init();
+        $('.slider__item:nth-child(2)').addClass('middle-slide');
     }
 
     editBrand(brand) {
